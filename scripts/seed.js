@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-// Caminho do banco
+// Caminho do banco de dados
 const dbPath = path.resolve(__dirname, '..', 'oportunidades.db');
 const db = new sqlite3.Database(dbPath);
 
