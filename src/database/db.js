@@ -1,13 +1,22 @@
-const sqlite3 = require('sqlite3').verbose();
+import Database from "better-sqlite3";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const db = new sqlite3.Database('./oportunidades.db', (err) => {
-  if (err) {
-    console.error('Erro ao conectar no banco:', err.message);
-  } else {
-    console.log('Conectado ao banco SQLite!');
-  }
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-db.run('PRAGMA foreign_keys = ON');
+// usa o arquivo na raiz do projeto
+const dbPath = path.resolve(__dirname, "../../oportunidades.db");
 
-module.exports = db;
+// abre/cria o banco
+export const db = new Database(dbPath, { verbose: null });
+
+// cria tabela se não existir
+export function ensureCategoriasTable() {
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS categorias (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL UNIQUE
+    )
+  `).run();
+}

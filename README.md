@@ -15,7 +15,7 @@ Este é um projeto de API desenvolvido para gerenciar e disponibilizar oportunid
 
 - Node.js
 - Express
-- MySQL
+- SQLite
 - Outras dependências (listadas no package.json)
 
 ## Status do Projeto

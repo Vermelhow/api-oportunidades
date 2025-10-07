@@ -1,19 +1,21 @@
-const express = require('express');
-const app = express();
-const db = require('./src/database/db');
+import express from "express";
+import categorias from "./src/routes/categorias.routes.js";
+import { db, ensureCategoriasTable } from "./src/database/db.js";
 
+const app = express();
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('API Oportunidades rodando!');
+app.get("/health", (_req, res) => {
+  try { db.prepare("SELECT 1").get(); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ ok: false, error: String(e?.message||e) }); }
 });
 
-app.get('/teste-db', (req, res) => {
-  db.all('SELECT datetime("now") as agora', [], (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows[0]);
-  });
-});
+app.use("/categorias", categorias); // << base da rota
+
+app.use((_req, res) => res.status(404).json({ message: "Rota não encontrada" }));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(PORT, () => {
+  ensureCategoriasTable();
+  console.log(`API rodando em http://localhost:${PORT}`);
+});
