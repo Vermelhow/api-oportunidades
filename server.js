@@ -6,8 +6,13 @@ const app = express();
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
-  try { db.prepare("SELECT 1").get(); res.json({ ok: true }); }
-  catch (e) { res.status(500).json({ ok: false, error: String(e?.message||e) }); }
+  db.get("SELECT 1", [], (err) => {
+    if (err) {
+      res.status(500).json({ ok: false, error: String(err?.message || err) });
+    } else {
+      res.json({ ok: true });
+    }
+  });
 });
 
 app.use("/categorias", categorias); // << base da rota
@@ -16,6 +21,11 @@ app.use((_req, res) => res.status(404).json({ message: "Rota não encontrada" })
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  ensureCategoriasTable();
-  console.log(`API rodando em http://localhost:${PORT}`);
+  ensureCategoriasTable((err) => {
+    if (err) {
+      console.error('Erro ao inicializar banco:', err);
+      process.exit(1);
+    }
+    console.log(`API rodando em http://localhost:${PORT}`);
+  });
 });

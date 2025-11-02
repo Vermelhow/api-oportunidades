@@ -1,37 +1,41 @@
-// scripts/seed.js
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
+import { db } from "../src/database/db.js";
 
-// Caminho do banco 
-const dbPath = path.resolve(__dirname, "..", "oportunidades.db");
-const db = new sqlite3.Database(dbPath);
+console.log('Criando tabela e inserindo categorias...');
 
+// Cria a tabela e insere as categorias em uma única transação
 const sql = `
-PRAGMA foreign_keys = ON;
-
--- 1) Garante a tabela de categorias
-CREATE TABLE IF NOT EXISTS categoria (
+CREATE TABLE IF NOT EXISTS categorias (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nome TEXT NOT NULL UNIQUE,
-  descricao TEXT,
-  ativa INTEGER NOT NULL DEFAULT 1
+  nome TEXT NOT NULL UNIQUE
 );
 
--- 2) Índice útil para buscas por nome
-CREATE INDEX IF NOT EXISTS idx_categoria_nome ON categoria (nome);
-
--- 3) Seeds (não duplica)
-INSERT OR IGNORE INTO categoria (id, nome, descricao, ativa) VALUES
-  (1,'Curso','Cursos gratuitos e de curta duração',1),
-  (2,'Emprego','Vagas de emprego e estágios',1),
-  (3,'Mutirão','Ações sociais e serviços comunitários',1);
+INSERT OR IGNORE INTO categorias (id, nome) VALUES
+  (1, 'Estágio'),
+  (2, 'Emprego'),
+  (3, 'Trainee'),
+  (4, 'Projeto de Extensão'),
+  (5, 'Iniciação Científica'),
+  (6, 'Monitoria'),
+  (7, 'Voluntariado'),
+  (8, 'Curso');
 `;
 
+// Executa a transação
 db.exec(sql, (err) => {
   if (err) {
-    console.error("Erro ao aplicar seeds:", err.message);
+    console.error('Erro ao inserir categorias:', err);
+    process.exit(1);
   } else {
-    console.log("Seeds de categorias aplicados com sucesso.");
+    console.log('Categorias inseridas com sucesso!');
+    
+    // Verifica se as categorias foram inseridas
+    db.all('SELECT * FROM categorias ORDER BY id', [], (err, rows) => {
+      if (err) {
+        console.error('Erro ao verificar categorias:', err);
+      } else {
+        console.log('Categorias no banco:', rows);
+      }
+      process.exit(0);
+    });
   }
-  db.close();
 });
