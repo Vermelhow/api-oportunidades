@@ -1,34 +1,20 @@
-import express from "express";
-import categorias from "./src/routes/categorias.routes.js";
-import { db } from "./src/database/db.js";
+import "dotenv/config";
+import app from "./src/app.js";
 import { runMigrations } from "./src/database/migrations.js";
 
-const app = express();
-app.use(express.json());
-
-// root endpoint
-app.get("/", (_req, res) => {
-  res.json({
-    name: "API Oportunidades",
-    status: "ok",
-    endpoints: ["/health", "/categorias"],
-  });
-});
-
-// health check endpoint
-app.get("/health", (_req, res) => {
-  try { db.prepare("SELECT 1").get(); res.json({ ok: true }); }
-  catch (e) { res.status(500).json({ ok: false, error: String(e?.message||e) }); }
-});
-
-// suas rotas 
-app.use("/categorias", categorias);
-
-// 404 handler
-app.use((_req, res) => res.status(404).json({ message: "Rota não encontrada" }));
-
 const PORT = process.env.PORT || 3000;
+const ENV = process.env.NODE_ENV || "development";
+
+// Inicia o servidor
 app.listen(PORT, async () => {
+  // Executa as migrations pendentes
   await runMigrations();
-  console.log(`API rodando em http://localhost:${PORT}`);
+  
+  // Log de inicialização
+  console.log(`
+🚀 Servidor iniciado!
+📍 URL: http://localhost:${PORT}
+🌍 Ambiente: ${ENV}
+⏰ ${new Date().toLocaleString()}
+  `);
 });
