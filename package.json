@@ -1,12 +1,15 @@
 {
   "name": "api-oportunidades",
   "version": "1.0.0",
-  "description": "",
+  "description": "API para gerenciamento de oportunidades profissionais, acadêmicas e sociais",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "dev": "node --watch server.js",
     "start": "node server.js",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "clean": "rm -f oportunidades.db*",
+    "reset": "npm run clean && npm run seed"
   },
   "keywords": [],
   "author": "",
