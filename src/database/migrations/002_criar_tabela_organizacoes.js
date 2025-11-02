@@ -4,10 +4,9 @@ export function up(db) {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL,
       descricao TEXT,
-      email TEXT NOT NULL UNIQUE,
-      telefone TEXT,
       website TEXT,
-      endereco TEXT,
+      email TEXT,
+      telefone TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )

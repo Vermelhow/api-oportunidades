@@ -1,0 +1,38 @@
+# Arquivo de teste da API de Oportunidades
+# Use a extensão REST Client do VSCode para executar estes testes
+
+### Teste de Saúde
+GET http://localhost:3000/health
+
+### Listar Organizações
+GET http://localhost:3000/api/organizacoes
+
+### Buscar Organização por ID
+GET http://localhost:3000/api/organizacoes/1
+
+### Criar Nova Organização
+POST http://localhost:3000/api/organizacoes
+Content-Type: application/json
+
+{
+  "nome": "IFSP São Carlos",
+  "descricao": "Instituto Federal de São Paulo - Campus São Carlos",
+  "website": "https://scl.ifsp.edu.br",
+  "email": "contato@ifsp.edu.br",
+  "telefone": "(16) 3306-6900"
+}
+
+### Atualizar Organização
+PUT http://localhost:3000/api/organizacoes/1
+Content-Type: application/json
+
+{
+  "nome": "UFSCar",
+  "descricao": "Universidade Federal de São Carlos - Campus São Carlos",
+  "website": "https://www.ufscar.br",
+  "email": "contato@ufscar.br",
+  "telefone": "(16) 3351-8111"
+}
+
+### Excluir Organização
+DELETE http://localhost:3000/api/organizacoes/6

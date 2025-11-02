@@ -1,6 +1,7 @@
 import express from "express";
 import categorias from "./src/routes/categorias.routes.js";
-import { db, ensureCategoriasTable } from "./src/database/db.js";
+import organizacoes from "./src/routes/organizacoes.routes.js";
+import { db, ensureCategoriasTable, ensureOrganizacoesTable } from "./src/database/db.js";
 
 const app = express();
 app.use(express.json());
@@ -15,17 +16,13 @@ app.get("/health", (_req, res) => {
   });
 });
 
-app.use("/categorias", categorias); // << base da rota
+app.use("/api/categorias", categorias);
+app.use("/api/organizacoes", organizacoes);
 
 app.use((_req, res) => res.status(404).json({ message: "Rota não encontrada" }));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  ensureCategoriasTable((err) => {
-    if (err) {
-      console.error('Erro ao inicializar banco:', err);
-      process.exit(1);
-    }
-    console.log(`API rodando em http://localhost:${PORT}`);
-  });
+
+const server = app.listen(PORT, () => {
+  console.log(`API rodando em http://localhost:${PORT}`);
 });
