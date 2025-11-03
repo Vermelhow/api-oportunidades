@@ -4,6 +4,10 @@
 ### Teste de Saúde
 GET http://localhost:3000/health
 
+###
+# TESTES DAS ROTAS DE ORGANIZAÇÕES
+###
+
 ### Listar Organizações
 GET http://localhost:3000/api/organizacoes
 
@@ -36,3 +40,75 @@ Content-Type: application/json
 
 ### Excluir Organização
 DELETE http://localhost:3000/api/organizacoes/6
+
+###
+# TESTES DAS ROTAS DE PESSOAS INTERESSADAS
+###
+
+### Listar Pessoas Interessadas
+GET http://localhost:3000/api/pessoas
+
+### Buscar Pessoa Interessada por ID
+GET http://localhost:3000/api/pessoas/1
+
+### Criar Nova Pessoa Interessada
+POST http://localhost:3000/api/pessoas
+Content-Type: application/json
+
+{
+  "nome": "João da Silva",
+  "email": "joao@email.com",
+  "telefone": "(16) 99999-9999",
+  "cidade": "São Carlos",
+  "estado": "SP",
+  "area_interesse": "Desenvolvimento Web",
+  "curriculo_url": "https://drive.google.com/file/curriculo-joao.pdf"
+}
+
+### Atualizar Pessoa Interessada
+PUT http://localhost:3000/api/pessoas/1
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao.silva@email.com",
+  "telefone": "(16) 98888-8888",
+  "cidade": "São Carlos",
+  "estado": "SP",
+  "area_interesse": "Desenvolvimento Full Stack",
+  "curriculo_url": "https://drive.google.com/file/curriculo-joao-atualizado.pdf"
+}
+
+### Excluir Pessoa Interessada
+DELETE http://localhost:3000/api/pessoas/1
+
+###
+# TESTES DAS ROTAS DE INSCRIÇÕES
+###
+
+### Criar Nova Inscrição
+POST http://localhost:3000/api/inscricoes
+Content-Type: application/json
+
+{
+  "pessoa_id": 1,
+  "oportunidade_id": 1,
+  "mensagem": "Tenho interesse nesta oportunidade e gostaria de me candidatar."
+}
+
+### Listar Inscrições por Pessoa
+GET http://localhost:3000/api/inscricoes/pessoa/1
+
+### Listar Inscrições por Oportunidade
+GET http://localhost:3000/api/inscricoes/oportunidade/1
+
+### Atualizar Status da Inscrição
+PATCH http://localhost:3000/api/inscricoes/1/status
+Content-Type: application/json
+
+{
+  "status": "aprovada"
+}
+
+### Cancelar Inscrição
+DELETE http://localhost:3000/api/inscricoes/1
