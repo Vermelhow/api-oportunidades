@@ -6,6 +6,111 @@
 A **API Oportunidades** é uma aplicação backend desenvolvida em **Node.js**, com **Express** e **SQLite**, voltada para o **gerenciamento e divulgação de oportunidades profissionais, acadêmicas e sociais**.
 Faz parte de um **projeto de extensão universitária** do curso de **Análise e Desenvolvimento de Sistemas**, com foco em soluções de impacto social.
 
+### ✨ Funcionalidades Principais
+
+- 📂 Cadastro e gerenciamento de categorias
+- 🏢 Cadastro e gerenciamento de organizações
+- 💼 Publicação e gerenciamento de oportunidades
+- 👥 Cadastro de pessoas interessadas
+- 🤝 Sistema de demonstração de interesse
+- 🔍 Filtros e buscas avançadas
+- 📨 Notificações de status
+
+## 🚀 Tecnologias
+
+- Node.js
+- Express
+- SQLite
+- Better-SQLite3
+- BCrypt (hash de senhas)
+- CORS
+- Dotenv
+- Express Validator
+
+## ⚙️ Requisitos
+
+- Node.js 18+
+- NPM ou Yarn
+- Git
+
+## 📦 Instalação
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/Vermelhow/api-oportunidades.git
+cd api-oportunidades
+```
+
+2. Instale as dependências:
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente:
+```bash
+cp .env.example .env
+```
+
+4. Execute as migrations:
+```bash
+npm run migrate
+```
+
+5. (Opcional) Popule o banco com dados iniciais:
+```bash
+npm run seed
+```
+
+## 🎯 Uso
+
+### Desenvolvimento
+```bash
+npm run dev
+```
+
+### Produção
+```bash
+npm start
+```
+
+## 📚 Estrutura da API
+
+### Categorias
+- GET `/api/categorias` - Lista todas as categorias
+- GET `/api/categorias/:id` - Busca uma categoria
+- POST `/api/categorias` - Cria uma categoria
+- PUT `/api/categorias/:id` - Atualiza uma categoria
+- DELETE `/api/categorias/:id` - Remove uma categoria
+
+### Organizações
+- GET `/api/organizacoes` - Lista todas as organizações
+- GET `/api/organizacoes/:id` - Busca uma organização
+- POST `/api/organizacoes` - Cria uma organização
+- PUT `/api/organizacoes/:id` - Atualiza uma organização
+- DELETE `/api/organizacoes/:id` - Remove uma organização
+
+### Oportunidades
+- GET `/api/oportunidades` - Lista todas as oportunidades
+- GET `/api/oportunidades/:id` - Busca uma oportunidade
+- POST `/api/oportunidades` - Cria uma oportunidade
+- PUT `/api/oportunidades/:id` - Atualiza uma oportunidade
+- PATCH `/api/oportunidades/:id/status` - Atualiza status
+- DELETE `/api/oportunidades/:id` - Remove uma oportunidade
+
+### Pessoas
+- GET `/api/pessoas` - Lista todas as pessoas
+- GET `/api/pessoas/:id` - Busca uma pessoa
+- POST `/api/pessoas` - Cria uma pessoa
+- PUT `/api/pessoas/:id` - Atualiza uma pessoa
+- DELETE `/api/pessoas/:id` - Remove uma pessoa
+
+### Interesses
+- GET `/api/interesses` - Lista todos os interesses
+- GET `/api/interesses/:id` - Busca um interesse
+- POST `/api/interesses` - Cria um interesse
+- PATCH `/api/interesses/:id/status` - Atualiza status
+- DELETE `/api/interesses/:id` - Remove um interesse
+
 ---
 
 ## 🎯 Objetivos
