@@ -1,37 +1,24 @@
-// scripts/seed.js
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
+import { db } from "../src/database/db.js";
 
-// Caminho do banco 
-const dbPath = path.resolve(__dirname, "..", "oportunidades.db");
-const db = new sqlite3.Database(dbPath);
+console.log("Aplicando seeds...");
 
-const sql = `
-PRAGMA foreign_keys = ON;
+// Seeds de categorias
+const categorias = [
+  { nome: "Curso", descricao: "Cursos gratuitos e de curta duração" },
+  { nome: "Emprego", descricao: "Vagas de emprego e estágios" },
+  { nome: "Mutirão", descricao: "Ações sociais e serviços comunitários" }
+];
 
--- 1) Garante a tabela de categorias
-CREATE TABLE IF NOT EXISTS categoria (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nome TEXT NOT NULL UNIQUE,
-  descricao TEXT,
-  ativa INTEGER NOT NULL DEFAULT 1
-);
-
--- 2) Índice útil para buscas por nome
-CREATE INDEX IF NOT EXISTS idx_categoria_nome ON categoria (nome);
-
--- 3) Seeds (não duplica)
-INSERT OR IGNORE INTO categoria (id, nome, descricao, ativa) VALUES
-  (1,'Curso','Cursos gratuitos e de curta duração',1),
-  (2,'Emprego','Vagas de emprego e estágios',1),
-  (3,'Mutirão','Ações sociais e serviços comunitários',1);
-`;
-
-db.exec(sql, (err) => {
-  if (err) {
-    console.error("Erro ao aplicar seeds:", err.message);
-  } else {
-    console.log("Seeds de categorias aplicados com sucesso.");
+// Insere cada categoria se não existir
+categorias.forEach(cat => {
+  try {
+    db.prepare(`
+      INSERT OR IGNORE INTO categorias (nome) 
+      VALUES (?)
+    `).run(cat.nome);
+  } catch (e) {
+    console.error(`Erro ao inserir categoria ${cat.nome}:`, e.message);
   }
-  db.close();
 });
+
+console.log("Seeds aplicados com sucesso!");
