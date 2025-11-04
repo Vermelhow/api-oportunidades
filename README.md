@@ -136,12 +136,22 @@ npm start
 
 ## 🚧 Status do Projeto
 
-✅ **CRUD de Categorias concluído**
-🚧 Em desenvolvimento: demais entidades (`instituicao`, `oportunidade`, `pessoa_interessada`, `interesse`)
+### Funcionalidades Implementadas ✅
+- **CRUD de Categorias**: Gerenciamento completo de categorias de oportunidades
+- **CRUD de Organizações**: Cadastro e gestão de instituições e empresas
+- **CRUD de Oportunidades**: Publicação e gerenciamento de vagas e ações
+- **CRUD de Pessoas**: Gestão de perfis de pessoas interessadas
+- **Sistema de Interesses**: Conexão entre pessoas e oportunidades
+
+### Próximos Passos 🚀
+- Implementação de autenticação JWT
+- Sistema de notificações
+- Documentação com Swagger
+- Melhorias de validação com Joi/Zod
 
 ---
 
-## 🧠 Funcionalidades Implementadas
+## 🧠 Funcionalidades Detalhadas
 
 ### 📂 **Categorias**
 
