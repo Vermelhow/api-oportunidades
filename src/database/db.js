@@ -1,12 +1,19 @@
 import Database from 'better-sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // usa o arquivo na pasta data
 const dbPath = path.resolve(__dirname, "../../data/oportunidades.db");
+const dbDir = path.dirname(dbPath);
+
+// cria o diretório se não existir
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
 
 // abre/cria o banco
 const db = new Database(dbPath, { verbose: console.log });
