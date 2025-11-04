@@ -1,9 +1,6 @@
-import sqlite3 from 'sqlite3';
-
-const db = new sqlite3.Database('data/oportunidades.db');
-
-db.serialize(() => {
-    db.run(`
+export function up(db) {
+    // Criar tabela
+    db.prepare(`
         CREATE TABLE IF NOT EXISTS interesses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             pessoa_id INTEGER NOT NULL,
@@ -17,15 +14,14 @@ db.serialize(() => {
             FOREIGN KEY (oportunidade_id) REFERENCES oportunidades(id) ON DELETE CASCADE,
             UNIQUE(pessoa_id, oportunidade_id)
         )
-    `, err => {
-        if (err) {
-            console.error('Erro ao criar tabela:', err);
-        } else {
-            console.log('Tabela criada com sucesso');
-            db.run('CREATE INDEX IF NOT EXISTS idx_interesses_pessoa ON interesses(pessoa_id)');
-            db.run('CREATE INDEX IF NOT EXISTS idx_interesses_oportunidade ON interesses(oportunidade_id)');
-            db.run('CREATE INDEX IF NOT EXISTS idx_interesses_status ON interesses(status)');
-        }
-        db.close();
-    });
-});
+    `).run();
+
+    // Criar índices para melhor performance
+    db.prepare('CREATE INDEX IF NOT EXISTS idx_interesses_pessoa ON interesses(pessoa_id)').run();
+    db.prepare('CREATE INDEX IF NOT EXISTS idx_interesses_oportunidade ON interesses(oportunidade_id)').run();
+    db.prepare('CREATE INDEX IF NOT EXISTS idx_interesses_status ON interesses(status)').run();
+}
+
+export function down(db) {
+    db.prepare('DROP TABLE IF EXISTS interesses').run();
+}

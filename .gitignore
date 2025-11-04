@@ -9,6 +9,10 @@ node_modules/
 *.db
 *.sqlite
 *.sqlite3
+*.db-journal
+
+# Documentação
+/docs/
 
 # Logs / caches
 npm-debug.log*
@@ -18,6 +22,14 @@ pnpm-debug.log*
 coverage/
 .cache/
 .tmp/
+
+# Documentação interna
+docs/evidencias/relatorio-outubro/
+CONTEXTO.md
+
+# Sistema
+.DS_Store
+Thumbs.db
 dist/
 build/
 
