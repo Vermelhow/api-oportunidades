@@ -1,22 +1,24 @@
-import { db, getAll, getOne, runQuery } from '../database/db.js';
+import { getAll, getOne, runQuery } from '../database/db.js';
 import bcrypt from 'bcrypt';
+import { generateToken } from '../middlewares/authMiddleware.js';
+import { successResponse, createdResponse, noContentResponse } from '../helpers/responseHelper.js';
+import { AppError } from '../middlewares/errorHandler.js';
 
 export class PessoasController {
-    listar(req, res) {
+    listar(req, res, next) {
         try {
             const pessoas = getAll(
                 `SELECT id, nome, email, bio, linkedin_url, github_url, portfolio_url, created_at, updated_at
                 FROM pessoas`
             );
             
-            return res.json(pessoas);
+            return successResponse(res, pessoas);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar pessoas' });
+            next(error);
         }
     }
 
-    buscarPorId(req, res) {
+    buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
             
@@ -28,17 +30,16 @@ export class PessoasController {
             );
 
             if (!pessoa) {
-                return res.status(404).json({ erro: 'Pessoa não encontrada' });
+                throw new AppError('Pessoa não encontrada', 404);
             }
 
-            return res.json(pessoa);
+            return successResponse(res, pessoa);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao buscar pessoa' });
+            next(error);
         }
     }
 
-    listarInteresses(req, res) {
+    listarInteresses(req, res, next) {
         try {
             const { id } = req.params;
             
@@ -50,25 +51,15 @@ export class PessoasController {
                 [id]
             );
 
-            return res.json(interesses);
+            return successResponse(res, interesses);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar interesses' });
+            next(error);
         }
     }
 
-    async criar(req, res) {
+    async criar(req, res, next) {
         try {
             const { nome, email, senha, bio, linkedin_url, github_url, portfolio_url } = req.body;
-
-            if (!nome || !email || !senha) {
-                return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios' });
-            }
-
-            // Validar email
-            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                return res.status(400).json({ erro: 'Email inválido' });
-            }
 
             const pessoaExistente = getOne(
                 'SELECT id FROM pessoas WHERE email = ?',
@@ -76,13 +67,16 @@ export class PessoasController {
             );
             
             if (pessoaExistente) {
-                return res.status(400).json({ erro: 'Email já cadastrado' });
+                throw new AppError('Email já cadastrado', 400);
             }
+
+            // Hash da senha
+            const senhaHash = await bcrypt.hash(senha, 10);
 
             const result = await runQuery(
                 `INSERT INTO pessoas (nome, email, senha, bio, linkedin_url, github_url, portfolio_url)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
-                [nome, email, senha, bio, linkedin_url, github_url, portfolio_url]
+                [nome, email, senhaHash, bio, linkedin_url, github_url, portfolio_url]
             );
 
             const pessoa = await getOne(
@@ -92,14 +86,13 @@ export class PessoasController {
                 [result.lastID]
             );
 
-            return res.status(201).json(pessoa);
+            return createdResponse(res, pessoa, 'Pessoa criada com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao criar pessoa' });
+            next(error);
         }
     }
 
-    async atualizar(req, res) {
+    async atualizar(req, res, next) {
         try {
             const { id } = req.params;
             const { nome, email, senha, bio, linkedin_url, github_url, portfolio_url } = req.body;
@@ -110,7 +103,7 @@ export class PessoasController {
             );
 
             if (!pessoa) {
-                return res.status(404).json({ erro: 'Pessoa não encontrada' });
+                throw new AppError('Pessoa não encontrada', 404);
             }
 
             if (email && email !== pessoa.email) {
@@ -120,18 +113,21 @@ export class PessoasController {
                 );
                 
                 if (pessoaExistente) {
-                    return res.status(400).json({ erro: 'Email já cadastrado' });
+                    throw new AppError('Email já cadastrado', 400);
                 }
             }
+
+            // Hash da nova senha se fornecida
+            const senhaHash = senha ? await bcrypt.hash(senha, 10) : pessoa.senha;
 
             const dadosAtualizacao = {
                 nome: nome || pessoa.nome,
                 email: email || pessoa.email,
-                senha: senha || pessoa.senha, // Em uma implementação real, a senha deve ser hasheada
-                bio: bio !== undefined ? bio : pessoa.bio,
-                linkedin_url: linkedin_url !== undefined ? linkedin_url : pessoa.linkedin_url,
-                github_url: github_url !== undefined ? github_url : pessoa.github_url,
-                portfolio_url: portfolio_url !== undefined ? portfolio_url : pessoa.portfolio_url
+                senha: senhaHash,
+                bio: bio === undefined ? pessoa.bio : bio,
+                linkedin_url: linkedin_url === undefined ? pessoa.linkedin_url : linkedin_url,
+                github_url: github_url === undefined ? pessoa.github_url : github_url,
+                portfolio_url: portfolio_url === undefined ? pessoa.portfolio_url : portfolio_url
             };
 
             await runQuery(
@@ -157,14 +153,13 @@ export class PessoasController {
                 [id]
             );
 
-            return res.json(pessoaAtualizada);
+            return successResponse(res, pessoaAtualizada, 'Pessoa atualizada com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao atualizar pessoa' });
+            next(error);
         }
     }
 
-    async excluir(req, res) {
+    async excluir(req, res, next) {
         try {
             const { id } = req.params;
 
@@ -174,34 +169,66 @@ export class PessoasController {
             );
 
             if (!pessoa) {
-                return res.status(404).json({ erro: 'Pessoa não encontrada' });
+                throw new AppError('Pessoa não encontrada', 404);
             }
 
-            await db.serialize(async () => {
-                await runQuery('BEGIN TRANSACTION');
-                try {
-                    // Excluir interesses relacionados
-                    await runQuery(
-                        'DELETE FROM interesses WHERE pessoa_id = ?',
-                        [id]
-                    );
+            // Excluir interesses relacionados
+            await runQuery(
+                'DELETE FROM interesses WHERE pessoa_id = ?',
+                [id]
+            );
 
-                    // Excluir a pessoa
-                    await runQuery(
-                        'DELETE FROM pessoas WHERE id = ?',
-                        [id]
-                    );
+            // Excluir a pessoa
+            await runQuery(
+                'DELETE FROM pessoas WHERE id = ?',
+                [id]
+            );
 
-                    await runQuery('COMMIT');
-                    return res.status(204).send();
-                } catch (error) {
-                    await runQuery('ROLLBACK');
-                    throw error;
-                }
-            });
+            return noContentResponse(res);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao excluir pessoa' });
+            next(error);
+        }
+    }
+
+    async login(req, res, next) {
+        try {
+            const { email, senha } = req.body;
+
+            // Busca a pessoa pelo email (incluindo a senha)
+            const pessoa = await getOne(
+                'SELECT id, nome, email, senha FROM pessoas WHERE email = ?',
+                [email]
+            );
+
+            if (!pessoa) {
+                throw new AppError('Credenciais inválidas', 401);
+            }
+
+            // Verifica a senha
+            const senhaValida = await bcrypt.compare(senha, pessoa.senha);
+
+            if (!senhaValida) {
+                throw new AppError('Credenciais inválidas', 401);
+            }
+
+            // Gera o token JWT
+            const token = generateToken({
+                id: pessoa.id,
+                nome: pessoa.nome,
+                email: pessoa.email
+            });
+
+            // Retorna os dados do usuário (sem a senha) e o token
+            return successResponse(res, {
+                user: {
+                    id: pessoa.id,
+                    nome: pessoa.nome,
+                    email: pessoa.email
+                },
+                token
+            }, 'Login realizado com sucesso');
+        } catch (error) {
+            next(error);
         }
     }
 }

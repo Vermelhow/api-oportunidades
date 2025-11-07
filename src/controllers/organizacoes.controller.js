@@ -1,7 +1,9 @@
 import { getAll, getOne, runQuery } from '../database/db.js';
+import { successResponse, createdResponse, noContentResponse } from '../helpers/responseHelper.js';
+import { AppError } from '../middlewares/errorHandler.js';
 
 class OrganizacoesController {
-    async listar(req, res) {
+    async listar(req, res, next) {
         try {
             const organizacoes = await getAll(`
                 SELECT id, nome, descricao, email, telefone, website, endereco, created_at, updated_at
@@ -9,14 +11,13 @@ class OrganizacoesController {
                 ORDER BY nome
             `);
             
-            return res.json(organizacoes);
+            return successResponse(res, organizacoes);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar organizações' });
+            next(error);
         }
     }
 
-    async buscarPorId(req, res) {
+    async buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
             
@@ -27,17 +28,16 @@ class OrganizacoesController {
             `, [id]);
 
             if (!organizacao) {
-                return res.status(404).json({ erro: 'Organização não encontrada' });
+                throw new AppError('Organização não encontrada', 404);
             }
 
-            return res.json(organizacao);
+            return successResponse(res, organizacao);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao buscar organização' });
+            next(error);
         }
     }
 
-    async criar(req, res) {
+    async criar(req, res, next) {
         try {
             const {
                 nome,
@@ -50,7 +50,7 @@ class OrganizacoesController {
 
             // Validações básicas
             if (!nome || !email) {
-                return res.status(400).json({ erro: 'Nome e email são obrigatórios' });
+                throw new AppError('Nome e email são obrigatórios', 400);
             }
 
             // Verifica se já existe uma organização com este email
@@ -60,7 +60,7 @@ class OrganizacoesController {
             );
 
             if (organizacaoExistente) {
-                return res.status(400).json({ erro: 'Já existe uma organização com este email' });
+                throw new AppError('Já existe uma organização com este email', 400);
             }
 
             // Insere a organização
@@ -75,14 +75,13 @@ class OrganizacoesController {
                 [result.lastID]
             );
 
-            return res.status(201).json(organizacao);
+            return createdResponse(res, organizacao, 'Organização criada com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao criar organização' });
+            next(error);
         }
     }
 
-    async atualizar(req, res) {
+    async atualizar(req, res, next) {
         try {
             const { id } = req.params;
             const {
@@ -97,7 +96,7 @@ class OrganizacoesController {
             // Verifica se a organização existe
             const organizacao = await getOne('SELECT * FROM organizacoes WHERE id = ?', [id]);
             if (!organizacao) {
-                return res.status(404).json({ erro: 'Organização não encontrada' });
+                throw new AppError('Organização não encontrada', 404);
             }
 
             // Se o email foi alterado, verifica se já existe
@@ -108,7 +107,7 @@ class OrganizacoesController {
                 );
 
                 if (organizacaoExistente) {
-                    return res.status(400).json({ erro: 'Já existe uma organização com este email' });
+                    throw new AppError('Já existe uma organização com este email', 400);
                 }
             }
 
@@ -139,28 +138,26 @@ class OrganizacoesController {
                 [id]
             );
 
-            return res.json(organizacaoAtualizada);
+            return successResponse(res, organizacaoAtualizada, 'Organização atualizada com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao atualizar organização' });
+            next(error);
         }
     }
 
-    async excluir(req, res) {
+    async excluir(req, res, next) {
         try {
             const { id } = req.params;
 
             const organizacao = await getOne('SELECT id FROM organizacoes WHERE id = ?', [id]);
             if (!organizacao) {
-                return res.status(404).json({ erro: 'Organização não encontrada' });
+                throw new AppError('Organização não encontrada', 404);
             }
 
             await runQuery('DELETE FROM organizacoes WHERE id = ?', [id]);
 
-            return res.status(204).send();
+            return noContentResponse(res);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao excluir organização' });
+            next(error);
         }
     }
 }

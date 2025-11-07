@@ -1,7 +1,9 @@
 import { getAll, getOne, runQuery } from '../database/db.js';
+import { successResponse, createdResponse, noContentResponse } from '../helpers/responseHelper.js';
+import { AppError } from '../middlewares/errorHandler.js';
 
 class OportunidadesController {
-    async listar(req, res) {
+    async listar(req, res, next) {
         try {
             const oportunidades = await getAll(`
                 SELECT 
@@ -15,14 +17,13 @@ class OportunidadesController {
                 ORDER BY o.created_at DESC
             `);
             
-            return res.json(oportunidades);
+            return successResponse(res, oportunidades);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar oportunidades' });
+            next(error);
         }
     }
 
-    async buscarPorId(req, res) {
+    async buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
             
@@ -39,17 +40,16 @@ class OportunidadesController {
             `, [id]);
 
             if (!oportunidade) {
-                return res.status(404).json({ erro: 'Oportunidade não encontrada' });
+                throw new AppError('Oportunidade não encontrada', 404);
             }
 
-            return res.json(oportunidade);
+            return successResponse(res, oportunidade);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao buscar oportunidade' });
+            next(error);
         }
     }
 
-    async criar(req, res) {
+    async criar(req, res, next) {
         try {
             const {
                 titulo, descricao, categoria_id, organizacao_id, tipo,
@@ -60,21 +60,19 @@ class OportunidadesController {
 
             // Validações básicas
             if (!titulo || !descricao || !categoria_id || !organizacao_id || !tipo) {
-                return res.status(400).json({ 
-                    erro: 'Campos obrigatórios: titulo, descricao, categoria_id, organizacao_id, tipo' 
-                });
+                throw new AppError('Campos obrigatórios: titulo, descricao, categoria_id, organizacao_id, tipo', 400);
             }
 
             // Verifica se a categoria existe
             const categoria = await getOne('SELECT id FROM categorias WHERE id = ?', [categoria_id]);
             if (!categoria) {
-                return res.status(404).json({ erro: 'Categoria não encontrada' });
+                throw new AppError('Categoria não encontrada', 404);
             }
 
             // Verifica se a organização existe
             const organizacao = await getOne('SELECT id FROM organizacoes WHERE id = ?', [organizacao_id]);
             if (!organizacao) {
-                return res.status(404).json({ erro: 'Organização não encontrada' });
+                throw new AppError('Organização não encontrada', 404);
             }
 
             // Insere a oportunidade
@@ -103,129 +101,118 @@ class OportunidadesController {
                 WHERE o.id = ?
             `, [result.lastID]);
 
-            return res.status(201).json(oportunidade);
+            return createdResponse(res, oportunidade, 'Oportunidade criada com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao criar oportunidade' });
+            next(error);
         }
     }
 
-    async atualizar(req, res) {
+    async _validarCategoriaOrganizacao(categoria_id, organizacao_id) {
+        if (categoria_id) {
+            const categoria = await getOne('SELECT id FROM categorias WHERE id = ?', [categoria_id]);
+            if (!categoria) return { erro: 'Categoria não encontrada' };
+        }
+        
+        if (organizacao_id) {
+            const organizacao = await getOne('SELECT id FROM organizacoes WHERE id = ?', [organizacao_id]);
+            if (!organizacao) return { erro: 'Organização não encontrada' };
+        }
+        
+        return null;
+    }
+
+    _prepararDadosAtualizacao(dadosNovos, dadosAtuais) {
+        const valorOuAtual = (novo, atual) => novo === undefined ? atual : novo;
+        
+        return [
+            dadosNovos.titulo || dadosAtuais.titulo,
+            dadosNovos.descricao || dadosAtuais.descricao,
+            dadosNovos.categoria_id || dadosAtuais.categoria_id,
+            dadosNovos.organizacao_id || dadosAtuais.organizacao_id,
+            dadosNovos.tipo || dadosAtuais.tipo,
+            dadosNovos.status || dadosAtuais.status,
+            valorOuAtual(dadosNovos.data_inicio, dadosAtuais.data_inicio),
+            valorOuAtual(dadosNovos.data_fim, dadosAtuais.data_fim),
+            valorOuAtual(dadosNovos.requisitos, dadosAtuais.requisitos),
+            valorOuAtual(dadosNovos.beneficios, dadosAtuais.beneficios),
+            valorOuAtual(dadosNovos.salario_min, dadosAtuais.salario_min),
+            valorOuAtual(dadosNovos.salario_max, dadosAtuais.salario_max),
+            valorOuAtual(dadosNovos.formato, dadosAtuais.formato),
+            valorOuAtual(dadosNovos.localizacao, dadosAtuais.localizacao),
+            valorOuAtual(dadosNovos.link_inscricao, dadosAtuais.link_inscricao)
+        ];
+    }
+
+    async atualizar(req, res, next) {
         try {
             const { id } = req.params;
-            const {
-                titulo, descricao, categoria_id, organizacao_id, tipo,
-                status, data_inicio, data_fim, requisitos, beneficios,
-                salario_min, salario_max, formato, localizacao, link_inscricao
-            } = req.body;
+            const dadosNovos = req.body;
 
-            // Verifica se a oportunidade existe
             const oportunidade = await getOne('SELECT * FROM oportunidades WHERE id = ?', [id]);
             if (!oportunidade) {
-                return res.status(404).json({ erro: 'Oportunidade não encontrada' });
+                throw new AppError('Oportunidade não encontrada', 404);
             }
 
-            // Se informou categoria_id, verifica se existe
-            if (categoria_id) {
-                const categoria = await getOne('SELECT id FROM categorias WHERE id = ?', [categoria_id]);
-                if (!categoria) {
-                    return res.status(404).json({ erro: 'Categoria não encontrada' });
-                }
+            const erroValidacao = await this._validarCategoriaOrganizacao(
+                dadosNovos.categoria_id, 
+                dadosNovos.organizacao_id
+            );
+            if (erroValidacao) {
+                throw new AppError(erroValidacao.erro, 404);
             }
 
-            // Se informou organizacao_id, verifica se existe
-            if (organizacao_id) {
-                const organizacao = await getOne('SELECT id FROM organizacoes WHERE id = ?', [organizacao_id]);
-                if (!organizacao) {
-                    return res.status(404).json({ erro: 'Organização não encontrada' });
-                }
-            }
-
-            // Atualiza a oportunidade mantendo os valores existentes se não fornecidos
+            const valores = this._prepararDadosAtualizacao(dadosNovos, oportunidade);
+            
             await runQuery(
                 `UPDATE oportunidades 
-                SET titulo = ?,
-                    descricao = ?,
-                    categoria_id = ?,
-                    organizacao_id = ?,
-                    tipo = ?,
-                    status = ?,
-                    data_inicio = ?,
-                    data_fim = ?,
-                    requisitos = ?,
-                    beneficios = ?,
-                    salario_min = ?,
-                    salario_max = ?,
-                    formato = ?,
-                    localizacao = ?,
-                    link_inscricao = ?,
-                    updated_at = CURRENT_TIMESTAMP
+                SET titulo = ?, descricao = ?, categoria_id = ?, organizacao_id = ?,
+                    tipo = ?, status = ?, data_inicio = ?, data_fim = ?, requisitos = ?,
+                    beneficios = ?, salario_min = ?, salario_max = ?, formato = ?,
+                    localizacao = ?, link_inscricao = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?`,
-                [
-                    titulo || oportunidade.titulo,
-                    descricao || oportunidade.descricao,
-                    categoria_id || oportunidade.categoria_id,
-                    organizacao_id || oportunidade.organizacao_id,
-                    tipo || oportunidade.tipo,
-                    status || oportunidade.status,
-                    data_inicio === undefined ? oportunidade.data_inicio : data_inicio,
-                    data_fim === undefined ? oportunidade.data_fim : data_fim,
-                    requisitos === undefined ? oportunidade.requisitos : requisitos,
-                    beneficios === undefined ? oportunidade.beneficios : beneficios,
-                    salario_min === undefined ? oportunidade.salario_min : salario_min,
-                    salario_max === undefined ? oportunidade.salario_max : salario_max,
-                    formato === undefined ? oportunidade.formato : formato,
-                    localizacao === undefined ? oportunidade.localizacao : localizacao,
-                    link_inscricao === undefined ? oportunidade.link_inscricao : link_inscricao,
-                    id
-                ]
+                [...valores, id]
             );
 
             const oportunidadeAtualizada = await getOne(`
-                SELECT 
-                    o.*,
-                    c.nome as categoria_nome,
-                    org.nome as organizacao_nome,
-                    org.email as organizacao_email
+                SELECT o.*, c.nome as categoria_nome, org.nome as organizacao_nome,
+                       org.email as organizacao_email
                 FROM oportunidades o
                 JOIN categorias c ON o.categoria_id = c.id
                 JOIN organizacoes org ON o.organizacao_id = org.id
                 WHERE o.id = ?
             `, [id]);
 
-            return res.json(oportunidadeAtualizada);
+            return successResponse(res, oportunidadeAtualizada, 'Oportunidade atualizada com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao atualizar oportunidade' });
+            next(error);
         }
     }
 
-    async excluir(req, res) {
+    async excluir(req, res, next) {
         try {
             const { id } = req.params;
 
             const oportunidade = await getOne('SELECT id FROM oportunidades WHERE id = ?', [id]);
             if (!oportunidade) {
-                return res.status(404).json({ erro: 'Oportunidade não encontrada' });
+                throw new AppError('Oportunidade não encontrada', 404);
             }
 
             await runQuery('DELETE FROM oportunidades WHERE id = ?', [id]);
 
-            return res.status(204).send();
+            return noContentResponse(res);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao excluir oportunidade' });
+            next(error);
         }
     }
 
-    async listarPorCategoria(req, res) {
+    async listarPorCategoria(req, res, next) {
         try {
             const { categoria_id } = req.params;
 
             // Verifica se a categoria existe
             const categoria = await getOne('SELECT id FROM categorias WHERE id = ?', [categoria_id]);
             if (!categoria) {
-                return res.status(404).json({ erro: 'Categoria não encontrada' });
+                throw new AppError('Categoria não encontrada', 404);
             }
 
             const oportunidades = await getAll(`
@@ -241,21 +228,20 @@ class OportunidadesController {
                 ORDER BY o.created_at DESC
             `, [categoria_id]);
 
-            return res.json(oportunidades);
+            return successResponse(res, oportunidades);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar oportunidades por categoria' });
+            next(error);
         }
     }
 
-    async listarPorOrganizacao(req, res) {
+    async listarPorOrganizacao(req, res, next) {
         try {
             const { organizacao_id } = req.params;
 
             // Verifica se a organização existe
             const organizacao = await getOne('SELECT id FROM organizacoes WHERE id = ?', [organizacao_id]);
             if (!organizacao) {
-                return res.status(404).json({ erro: 'Organização não encontrada' });
+                throw new AppError('Organização não encontrada', 404);
             }
 
             const oportunidades = await getAll(`
@@ -271,10 +257,9 @@ class OportunidadesController {
                 ORDER BY o.created_at DESC
             `, [organizacao_id]);
 
-            return res.json(oportunidades);
+            return successResponse(res, oportunidades);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar oportunidades por organização' });
+            next(error);
         }
     }
 }

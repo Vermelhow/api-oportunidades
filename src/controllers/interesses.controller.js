@@ -1,7 +1,9 @@
 import { getAll, getOne, runQuery } from '../database/db.js';
+import { successResponse, createdResponse, noContentResponse } from '../helpers/responseHelper.js';
+import { AppError } from '../middlewares/errorHandler.js';
 
 class InteressesController {
-    async listar(req, res) {
+    async listar(req, res, next) {
         try {
             const interesses = await getAll(`
                 SELECT 
@@ -14,14 +16,13 @@ class InteressesController {
                 JOIN oportunidades o ON i.oportunidade_id = o.id
             `);
             
-            return res.json(interesses);
+            return successResponse(res, interesses);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar interesses' });
+            next(error);
         }
     }
 
-    async buscarPorId(req, res) {
+    async buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
             
@@ -38,34 +39,33 @@ class InteressesController {
             `, [id]);
 
             if (!interesse) {
-                return res.status(404).json({ erro: 'Interesse não encontrado' });
+                throw new AppError('Interesse não encontrado', 404);
             }
 
-            return res.json(interesse);
+            return successResponse(res, interesse);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao buscar interesse' });
+            next(error);
         }
     }
 
-    async criar(req, res) {
+    async criar(req, res, next) {
         try {
             const { pessoa_id, oportunidade_id, mensagem } = req.body;
 
             if (!pessoa_id || !oportunidade_id) {
-                return res.status(400).json({ erro: 'pessoa_id e oportunidade_id são obrigatórios' });
+                throw new AppError('pessoa_id e oportunidade_id são obrigatórios', 400);
             }
 
             // Verificar se a pessoa existe
             const pessoa = await getOne('SELECT id FROM pessoas WHERE id = ?', [pessoa_id]);
             if (!pessoa) {
-                return res.status(404).json({ erro: 'Pessoa não encontrada' });
+                throw new AppError('Pessoa não encontrada', 404);
             }
 
             // Verificar se a oportunidade existe
             const oportunidade = await getOne('SELECT id FROM oportunidades WHERE id = ?', [oportunidade_id]);
             if (!oportunidade) {
-                return res.status(404).json({ erro: 'Oportunidade não encontrada' });
+                throw new AppError('Oportunidade não encontrada', 404);
             }
 
             // Verificar se já existe um interesse para esta pessoa e oportunidade
@@ -75,7 +75,7 @@ class InteressesController {
             );
                 
             if (interesseExistente) {
-                return res.status(400).json({ erro: 'Já existe um interesse registrado para esta pessoa nesta oportunidade' });
+                throw new AppError('Já existe um interesse registrado para esta pessoa nesta oportunidade', 400);
             }
 
             const result = await runQuery(
@@ -96,25 +96,24 @@ class InteressesController {
                 WHERE i.id = ?
             `, [result.lastID]);
 
-            return res.status(201).json(interesse);
+            return createdResponse(res, interesse, 'Interesse criado com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao criar interesse' });
+            next(error);
         }
     }
 
-    async atualizar(req, res) {
+    async atualizar(req, res, next) {
         try {
             const { id } = req.params;
             const { status, mensagem } = req.body;
 
             const interesse = await getOne('SELECT * FROM interesses WHERE id = ?', [id]);
             if (!interesse) {
-                return res.status(404).json({ erro: 'Interesse não encontrado' });
+                throw new AppError('Interesse não encontrado', 404);
             }
 
             if (status && !['pendente', 'aceito', 'recusado'].includes(status)) {
-                return res.status(400).json({ erro: 'Status inválido' });
+                throw new AppError('Status inválido', 400);
             }
 
             await runQuery(
@@ -140,38 +139,36 @@ class InteressesController {
                 WHERE i.id = ?
             `, [id]);
 
-            return res.json(interesseAtualizado);
+            return successResponse(res, interesseAtualizado, 'Interesse atualizado com sucesso');
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao atualizar interesse' });
+            next(error);
         }
     }
 
-    async excluir(req, res) {
+    async excluir(req, res, next) {
         try {
             const { id } = req.params;
 
             const interesse = await getOne('SELECT id FROM interesses WHERE id = ?', [id]);
             if (!interesse) {
-                return res.status(404).json({ erro: 'Interesse não encontrado' });
+                throw new AppError('Interesse não encontrado', 404);
             }
 
             await runQuery('DELETE FROM interesses WHERE id = ?', [id]);
 
-            return res.status(204).send();
+            return noContentResponse(res);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao excluir interesse' });
+            next(error);
         }
     }
 
-    async listarPorPessoa(req, res) {
+    async listarPorPessoa(req, res, next) {
         try {
             const { pessoa_id } = req.params;
 
             const pessoa = await getOne('SELECT id FROM pessoas WHERE id = ?', [pessoa_id]);
             if (!pessoa) {
-                return res.status(404).json({ erro: 'Pessoa não encontrada' });
+                throw new AppError('Pessoa não encontrada', 404);
             }
 
             const interesses = await getAll(`
@@ -183,20 +180,19 @@ class InteressesController {
                 WHERE i.pessoa_id = ?
             `, [pessoa_id]);
 
-            return res.json(interesses);
+            return successResponse(res, interesses);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar interesses da pessoa' });
+            next(error);
         }
     }
 
-    async listarPorOportunidade(req, res) {
+    async listarPorOportunidade(req, res, next) {
         try {
             const { oportunidade_id } = req.params;
 
             const oportunidade = await getOne('SELECT id FROM oportunidades WHERE id = ?', [oportunidade_id]);
             if (!oportunidade) {
-                return res.status(404).json({ erro: 'Oportunidade não encontrada' });
+                throw new AppError('Oportunidade não encontrada', 404);
             }
 
             const interesses = await getAll(`
@@ -209,10 +205,9 @@ class InteressesController {
                 WHERE i.oportunidade_id = ?
             `, [oportunidade_id]);
 
-            return res.json(interesses);
+            return successResponse(res, interesses);
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ erro: 'Erro ao listar interesses na oportunidade' });
+            next(error);
         }
     }
 }
