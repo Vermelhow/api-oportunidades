@@ -1,17 +1,27 @@
 import { Router } from 'express';
 import { PessoasController } from '../controllers/pessoas.controller.js';
+import { authMiddleware, checkResourceOwner } from '../middlewares/authMiddleware.js';
+import { 
+    validateId, 
+    validateLogin, 
+    validatePessoaCriar, 
+    validatePessoaAtualizar 
+} from '../middlewares/validators.js';
 
 const router = Router();
 const controller = new PessoasController();
 
-// Rotas básicas
+// Rotas públicas
+router.post('/login', validateLogin, controller.login);
+router.post('/', validatePessoaCriar, controller.criar);
 router.get('/', controller.listar);
-router.get('/:id', controller.buscarPorId);
-router.post('/', controller.criar);
-router.put('/:id', controller.atualizar);
-router.delete('/:id', controller.excluir);
+router.get('/:id', validateId, controller.buscarPorId);
+
+// Rotas protegidas (requerem autenticação)
+router.put('/:id', validateId, validatePessoaAtualizar, authMiddleware, checkResourceOwner, controller.atualizar);
+router.delete('/:id', validateId, authMiddleware, checkResourceOwner, controller.excluir);
 
 // Rotas específicas
-router.get('/:id/interesses', controller.listarInteresses);
+router.get('/:id/interesses', validateId, controller.listarInteresses);
 
 export default router;
