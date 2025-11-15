@@ -8,24 +8,25 @@ Faz parte de um **projeto de extensão universitária** do curso de **Análise e
 
 ### ✨ Funcionalidades Principais
 
-- 📂 Cadastro e gerenciamento de categorias
-- 🏢 Cadastro e gerenciamento de organizações
-- 💼 Publicação e gerenciamento de oportunidades
-- 👥 Cadastro de pessoas interessadas
-- 🤝 Sistema de demonstração de interesse
-- 🔍 Filtros e buscas avançadas
-- 📨 Notificações de status
+- 📂 **CRUD completo** de categorias, organizações, oportunidades, pessoas e interesses
+- 🔐 **Autenticação JWT** com tokens de 7 dias
+- ✅ **Validação automática** de dados com express-validator
+- 🛡️ **Rotas protegidas** (apenas usuários autenticados)
+- 📝 **Logs detalhados** com timestamp, status e tempo de execução
+- ⚠️ **Tratamento centralizado de erros** com mensagens padronizadas
+- 🔍 **Filtros** por categoria, organização e pessoa
+- 📨 **Sistema de interesses** com status (pendente, aceito, rejeitado)
 
 ## 🚀 Tecnologias
 
-- Node.js
-- Express
-- SQLite
-- Better-SQLite3
-- BCrypt (hash de senhas)
-- CORS
-- Dotenv
-- Express Validator
+- **Node.js** - Runtime JavaScript
+- **Express** - Framework web
+- **SQLite** + **Better-SQLite3** - Banco de dados
+- **BCrypt** - Hash de senhas (10 rounds)
+- **JWT (jsonwebtoken)** - Autenticação baseada em tokens
+- **Express Validator** - Validação de dados
+- **CORS** - Compartilhamento de recursos
+- **Dotenv** - Gerenciamento de variáveis de ambiente
 
 ## ⚙️ Requisitos
 
@@ -51,9 +52,14 @@ npm install
 cp .env.example .env
 ```
 
-4. Execute as migrations:
+Edite o arquivo `.env` e configure:
+- `JWT_SECRET` - Chave secreta para tokens JWT (troque em produção!)
+- `JWT_EXPIRES_IN` - Tempo de expiração dos tokens (padrão: 7d)
+- `PORT` - Porta do servidor (padrão: 3000)
+
+4. Execute as migrations (executam automaticamente no primeiro start):
 ```bash
-npm run migrate
+npm run reset
 ```
 
 5. (Opcional) Popule o banco com dados iniciais:
@@ -73,43 +79,67 @@ npm run dev
 npm start
 ```
 
-## 📚 Estrutura da API
+## 📚 Documentação da API
 
-### Categorias
-- GET `/api/categorias` - Lista todas as categorias
-- GET `/api/categorias/:id` - Busca uma categoria
-- POST `/api/categorias` - Cria uma categoria
-- PUT `/api/categorias/:id` - Atualiza uma categoria
-- DELETE `/api/categorias/:id` - Remove uma categoria
+### 📖 Documentação Completa
+Acesse a documentação detalhada em: **[docs/endpoints.md](docs/endpoints.md)**
 
-### Organizações
-- GET `/api/organizacoes` - Lista todas as organizações
-- GET `/api/organizacoes/:id` - Busca uma organização
-- POST `/api/organizacoes` - Cria uma organização
-- PUT `/api/organizacoes/:id` - Atualiza uma organização
-- DELETE `/api/organizacoes/:id` - Remove uma organização
+### 🔐 Autenticação
+```bash
+# 1. Fazer login
+POST /api/pessoas/login
+{
+  "email": "usuario@exemplo.com",
+  "senha": "senha123"
+}
 
-### Oportunidades
-- GET `/api/oportunidades` - Lista todas as oportunidades
-- GET `/api/oportunidades/:id` - Busca uma oportunidade
-- POST `/api/oportunidades` - Cria uma oportunidade
-- PUT `/api/oportunidades/:id` - Atualiza uma oportunidade
-- PATCH `/api/oportunidades/:id/status` - Atualiza status
-- DELETE `/api/oportunidades/:id` - Remove uma oportunidade
+# 2. Usar o token nas requisições protegidas
+Authorization: Bearer SEU_TOKEN_JWT
+```
 
-### Pessoas
-- GET `/api/pessoas` - Lista todas as pessoas
-- GET `/api/pessoas/:id` - Busca uma pessoa
-- POST `/api/pessoas` - Cria uma pessoa
-- PUT `/api/pessoas/:id` - Atualiza uma pessoa
-- DELETE `/api/pessoas/:id` - Remove uma pessoa
+### 🚀 Rotas Principais
 
-### Interesses
-- GET `/api/interesses` - Lista todos os interesses
-- GET `/api/interesses/:id` - Busca um interesse
-- POST `/api/interesses` - Cria um interesse
-- PATCH `/api/interesses/:id/status` - Atualiza status
-- DELETE `/api/interesses/:id` - Remove um interesse
+#### 📂 Categorias (públicas)
+- `GET /api/categorias` - Listar
+- `GET /api/categorias/:id` - Buscar por ID
+- `POST /api/categorias` - Criar
+- `PUT /api/categorias/:id` - Atualizar
+- `DELETE /api/categorias/:id` - Excluir
+
+#### 👥 Pessoas
+- `GET /api/pessoas` - Listar
+- `GET /api/pessoas/:id` - Buscar por ID
+- `POST /api/pessoas` - Criar (cadastro)
+- `POST /api/pessoas/login` - Login (retorna JWT)
+- `PUT /api/pessoas/:id` 🔒 - Atualizar (próprio usuário)
+- `DELETE /api/pessoas/:id` 🔒 - Excluir (próprio usuário)
+
+#### 🏢 Organizações (públicas)
+- `GET /api/organizacoes` - Listar
+- `GET /api/organizacoes/:id` - Buscar por ID
+- `POST /api/organizacoes` - Criar
+- `PUT /api/organizacoes/:id` - Atualizar
+- `DELETE /api/organizacoes/:id` - Excluir
+
+#### 💼 Oportunidades
+- `GET /api/oportunidades` - Listar
+- `GET /api/oportunidades/:id` - Buscar por ID
+- `GET /api/oportunidades/categoria/:id` - Por categoria
+- `GET /api/oportunidades/organizacao/:id` - Por organização
+- `POST /api/oportunidades` 🔒 - Criar
+- `PUT /api/oportunidades/:id` 🔒 - Atualizar
+- `DELETE /api/oportunidades/:id` 🔒 - Excluir
+
+#### 🤝 Interesses
+- `GET /api/interesses` - Listar
+- `GET /api/interesses/:id` - Buscar por ID
+- `GET /api/interesses/pessoa/:id` - Por pessoa
+- `GET /api/interesses/oportunidade/:id` - Por oportunidade
+- `POST /api/interesses` 🔒 - Criar
+- `PUT /api/interesses/:id` 🔒 - Atualizar
+- `DELETE /api/interesses/:id` 🔒 - Excluir
+
+🔒 = Requer autenticação JWT
 
 ---
 
