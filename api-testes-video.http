@@ -1,0 +1,206 @@
+### === API OPORTUNIDADES - TESTES PARA VÍDEO ===
+
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6Ikpvw6NvIFNpbHZhIiwiZW1haWwiOiJqb2FvLnNpbHZhQGVtYWlsLmNvbSIsImlhdCI6MTc2NTEzNDc4OSwiZXhwIjoxNzY1NzM5NTg5fQ.xbipe_i41vPk-D-zE6v6W3fZeVzZNs_rg6fBDo14xM4
+
+
+### ========================================
+### 🔐 AUTENTICAÇÃO
+### ========================================
+
+### 01 - Login
+POST {{baseUrl}}/api/pessoas/login
+Content-Type: application/json
+
+{
+  "email": "joao.silva@email.com",
+  "senha": "senha123"
+}
+
+### 02 - PUT Sem Token (Erro 401)
+PUT {{baseUrl}}/api/pessoas/1
+Content-Type: application/json
+
+{
+  "nome": "João Silva Atualizado"
+}
+
+### 03 - PUT Com Token (Sucesso)
+PUT {{baseUrl}}/api/pessoas/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6Ikpvw6NvIFNpbHZhIEF0dWFsaXphZG8iLCJlbWFpbCI6ImpvYW8uc2lsdmFAZW1haWwuY29tIiwiaWF0IjoxNzY1MTQwOTcyLCJleHAiOjE3NjU3NDU3NzJ9.2t2OcYtpaTjIXfpXuVQr6H5j-55j_wM29GTKxWkmGZE
+
+{
+  "nome": "João Silva Atualizado"
+}
+
+
+### ========================================
+### 📁 CATEGORIAS
+### ========================================
+
+### 04 - GET Categorias
+GET {{baseUrl}}/api/categorias
+
+### 05 - POST Categoria
+POST {{baseUrl}}/api/categorias
+Content-Type: application/json
+
+{
+  "nome": "Voluntariado",
+  "descricao": "Ações voluntárias e serviços comunitários"
+}
+
+### 06 - PUT Categoria
+PUT {{baseUrl}}/api/categorias/1
+Content-Type: application/json
+
+{
+  "nome": "Curso Atualizado",
+  "descricao": "Cursos gratuitos de qualificação profissional"
+}
+
+### 07 - DELETE Categoria
+DELETE {{baseUrl}}/api/categorias/4
+
+
+### ========================================
+### 🏢 ORGANIZAÇÕES
+### ========================================
+
+### 08 - GET Organizações
+GET {{baseUrl}}/api/organizacoes
+
+### 09 - POST Organização
+POST {{baseUrl}}/api/organizacoes
+Content-Type: application/json
+
+{
+  "nome": "Instituto Aprender",
+  "email": "contato@aprender.org.br",
+  "senha": "senha123",
+  "descricao": "Instituto focado em educação comunitária",
+  "website": "https://aprender.org.br",
+  "linkedin_url": "https://linkedin.com/company/aprender"
+}
+
+
+### ========================================
+### 💼 OPORTUNIDADES
+### ========================================
+
+### 10 - POST Oportunidade
+POST {{baseUrl}}/api/oportunidades
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "titulo": "Desenvolvedor Full Stack Júnior",
+  "descricao": "Vaga para pessoa desenvolvedora com conhecimento em React e Node.js",
+  "categoria_id": 2,
+  "organizacao_id": 1,
+  "tipo": "emprego",
+  "status": "ativa",
+  "data_inicio": "2025-12-15",
+  "formato": "hibrido",
+  "localizacao": "São Paulo, SP",
+  "salario_min": 3000,
+  "salario_max": 5000
+}
+
+### 11 - GET Oportunidades
+GET {{baseUrl}}/api/oportunidades
+
+### 12 - GET Filtrar por Tipo
+GET {{baseUrl}}/api/oportunidades?tipo=emprego
+
+### 13 - GET Filtrar por Categoria
+GET {{baseUrl}}/api/oportunidades?categoria_id=2
+
+
+### ========================================
+### 👤 PESSOAS
+### ========================================
+
+### 14 - POST Criar Pessoa
+POST {{baseUrl}}/api/pessoas
+Content-Type: application/json
+
+{
+  "nome": "Maria Costa",
+  "email": "maria.costa@email.com",
+  "senha": "senha123",
+  "bio": "Desenvolvedora em transição de carreira",
+  "linkedin_url": "https://linkedin.com/in/mariacosta"
+}
+
+### 15 - GET Pessoas
+GET {{baseUrl}}/api/pessoas
+
+
+### ========================================
+### ⭐ INTERESSES (Parte Forte!)
+### ========================================
+
+### 16 - POST Demonstrar Interesse
+POST {{baseUrl}}/api/interesses
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "pessoa_id": 1,
+  "oportunidade_id": 1,
+  "mensagem": "Tenho grande interesse nesta vaga. Possuo 2 anos de experiência."
+}
+
+### 17 - POST Duplicar Interesse (Erro Esperado)
+POST {{baseUrl}}/api/interesses
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "pessoa_id": 1,
+  "oportunidade_id": 1,
+  "mensagem": "Tentando novamente..."
+}
+
+### 18 - GET Listar Interesses
+GET {{baseUrl}}/api/interesses
+
+### 19 - PUT Aceitar Interesse
+PUT {{baseUrl}}/api/interesses/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "status": "aceito"
+}
+
+
+### ========================================
+### 📊 EXTRAS - VALIDAÇÕES
+### ========================================
+
+### Email Inválido (Erro de Validação)
+POST {{baseUrl}}/api/pessoas
+Content-Type: application/json
+
+{
+  "nome": "Teste",
+  "email": "emailinvalido",
+  "senha": "123"
+}
+
+### Tipo Enum Inválido (Erro de Validação)
+POST {{baseUrl}}/api/oportunidades
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "titulo": "Teste",
+  "descricao": "Descrição de teste com mais de 20 caracteres",
+  "categoria_id": 1,
+  "organizacao_id": 1,
+  "tipo": "tipo_invalido",
+  "status": "ativa"
+}
