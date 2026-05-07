@@ -22,8 +22,14 @@ const app = express();
 
 // Middlewares básicos
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ charset: 'utf-8' }));
+app.use(express.urlencoded({ extended: true, charset: 'utf-8' }));
+
+// Middleware para garantir charset UTF-8 em todas as respostas
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
 
 // Middleware de logging
 app.use(logger);
