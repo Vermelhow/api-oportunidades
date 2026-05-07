@@ -138,4 +138,15 @@ export async function getCategorias() {
   return response.json();
 }
 
+/**
+ * AUTENTICAÇÃO
+ */
+export async function loginUser(credentials) {
+  return api.post('/pessoas/login', credentials);
+}
+
+export async function registerUser(userData) {
+  return api.post('/pessoas', userData);
+}
+
 export default api;
