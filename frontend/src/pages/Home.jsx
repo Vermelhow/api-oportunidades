@@ -1,8 +1,11 @@
-import '../styles/App.css'
+import { Link } from 'react-router-dom';
+import Layout from '../components/Layout';
+import '../styles/App.css';
 
 export default function Home() {
   return (
-    <div className="app-container">
+    <Layout>
+      <div className="app-container">
       <div className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
@@ -15,8 +18,8 @@ export default function Home() {
               em um só lugar
             </p>
             <div className="hero-buttons">
-              <button className="btn btn-primary">Começar Agora</button>
-              <button className="btn btn-secondary">Saiba Mais</button>
+              <Link to="/oportunidades" className="btn btn-primary">Começar Agora</Link>
+              <a href="#features" className="btn btn-secondary">Saiba Mais</a>
             </div>
           </div>
           
@@ -55,7 +58,7 @@ export default function Home() {
         </div>
       </div>
       
-      <div className="features-section">
+      <div id="features" className="features-section">
         <div className="feature-card">
           <h3>📋 Oportunidades</h3>
           <p>Cadastre e gerencie oportunidades de voluntariado</p>
@@ -72,5 +75,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }

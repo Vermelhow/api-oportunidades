@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getOportunidades } from "../services/api";
+import Layout from '../components/Layout';
 
 export default function Oportunidades() {
   const [dados, setDados] = useState([]);
@@ -18,11 +19,21 @@ export default function Oportunidades() {
       });
   }, []);
 
-  if (loading) return <div style={{ padding: '20px' }}><h1>Carregando...</h1></div>;
-  if (error) return <div style={{ padding: '20px' }}><h1>Erro: {error}</h1></div>;
+  if (loading) return (
+    <Layout>
+      <div style={{ padding: '20px' }}><h1>Carregando...</h1></div>
+    </Layout>
+  );
+  
+  if (error) return (
+    <Layout>
+      <div style={{ padding: '20px' }}><h1>Erro: {error}</h1></div>
+    </Layout>
+  );
 
   return (
-    <div style={{ padding: '20px' }}>
+    <Layout>
+      <div style={{ padding: '20px' }}>
       <h1>Oportunidades</h1>
       <p>Total de oportunidades: {dados.length}</p>
       <div style={{ display: 'grid', gap: '15px', marginTop: '20px' }}>
@@ -43,5 +54,6 @@ export default function Oportunidades() {
         ))}
       </div>
     </div>
+    </Layout>
   );
 }
