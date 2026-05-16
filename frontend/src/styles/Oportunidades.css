@@ -15,6 +15,11 @@
   align-items: center;
   gap: var(--spacing-xl);
   flex-wrap: wrap;
+  padding: var(--spacing-xl);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  color: white;
 }
 
 .header-content {
@@ -25,14 +30,15 @@
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: white;
   margin-bottom: var(--spacing-md);
   line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .page-subtitle {
   font-size: 1.1rem;
-  color: var(--text-medium);
+  color: rgba(255, 255, 255, 0.95);
   line-height: 1.6;
   max-width: 600px;
 }
@@ -44,7 +50,7 @@
 }
 
 .stat-item {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   padding: var(--spacing-lg) var(--spacing-xl);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -54,6 +60,12 @@
   gap: var(--spacing-xs);
   min-width: 150px;
   border-left: 4px solid var(--accent-teal);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
 }
 
 .stat-number {
@@ -67,14 +79,26 @@
   font-size: 0.9rem;
   color: var(--text-medium);
   text-align: center;
+  font-weight: 500;
 }
 
 /* Opportunities Grid */
 .opportunities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: var(--spacing-2xl);
   animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Loading State */
@@ -117,6 +141,9 @@
   gap: var(--spacing-md);
   text-align: center;
   padding: var(--spacing-xl);
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
 }
 
 .error-container h2 {
@@ -127,6 +154,7 @@
 .error-container p {
   color: var(--text-medium);
   max-width: 500px;
+  font-size: 1rem;
 }
 
 /* Empty State */
@@ -138,7 +166,7 @@
   min-height: 400px;
   gap: var(--spacing-md);
   text-align: center;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-3xl);
   background: white;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
@@ -147,6 +175,115 @@
 .empty-state h2 {
   color: var(--text-dark);
   font-size: 1.8rem;
+}
+
+.empty-state p {
+  color: var(--text-medium);
+  font-size: 1rem;
+  max-width: 500px;
+}
+
+/* Responsive Design */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .opportunities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-xl);
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .page-subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile Large */
+@media (max-width: 768px) {
+  .oportunidades-page {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--spacing-lg);
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .page-stats {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stat-item {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .opportunities-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+/* Mobile Small */
+@media (max-width: 480px) {
+  .oportunidades-page {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .page-header {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .page-stats {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .stat-item {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .empty-state,
+  .error-container,
+  .loading-container {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .empty-state h2,
+  .error-container h2 {
+    font-size: 1.5rem;
+  }
 }
 
 .empty-state p {
