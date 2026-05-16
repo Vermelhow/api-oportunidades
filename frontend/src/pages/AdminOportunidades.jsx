@@ -47,8 +47,9 @@ export default function AdminOportunidades() {
           getCategorias(),
           getOrganizacoes()
         ]);
-        setCategorias(categoriasData);
-        setOrganizacoes(organizacoesData);
+        // Garantir que sempre sejam arrays
+        setCategorias(Array.isArray(categoriasData) ? categoriasData : []);
+        setOrganizacoes(Array.isArray(organizacoesData) ? organizacoesData : []);
       } catch (err) {
         setError('Erro ao carregar dados. Tente novamente.');
         console.error(err);
