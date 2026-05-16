@@ -250,8 +250,8 @@ export const validateOportunidadeCriar = [
         .trim()
         .notEmpty()
         .withMessage('Tipo é obrigatório')
-        .isIn(['emprego', 'estagio', 'curso', 'evento', 'projeto'])
-        .withMessage('Tipo deve ser: emprego, estagio, curso, evento ou projeto'),
+        .isIn(['emprego', 'estagio', 'curso', 'evento', 'projeto', 'voluntariado'])
+        .withMessage('Tipo deve ser: emprego, estagio, curso, evento, projeto ou voluntariado'),
     
     body('status')
         .optional()

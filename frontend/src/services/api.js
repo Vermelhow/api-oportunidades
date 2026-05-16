@@ -17,9 +17,13 @@ export const api = {
   async request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     
+    // Pegar token do localStorage
+    const token = localStorage.getItem('@api-oportunidades:token');
+    
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers,
       },
       ...options,
@@ -84,9 +88,13 @@ export async function getOportunidadeById(id) {
 }
 
 export async function createOportunidade(data) {
+  const token = localStorage.getItem('@api-oportunidades:token');
   const response = await fetch(`${API_URL}/api/oportunidades`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    },
     body: JSON.stringify(data),
   });
   if (!response.ok) throw new Error('Erro ao criar oportunidade');
@@ -94,9 +102,13 @@ export async function createOportunidade(data) {
 }
 
 export async function updateOportunidade(id, data) {
+  const token = localStorage.getItem('@api-oportunidades:token');
   const response = await fetch(`${API_URL}/api/oportunidades/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    },
     body: JSON.stringify(data),
   });
   if (!response.ok) throw new Error('Erro ao atualizar oportunidade');
@@ -104,8 +116,12 @@ export async function updateOportunidade(id, data) {
 }
 
 export async function deleteOportunidade(id) {
+  const token = localStorage.getItem('@api-oportunidades:token');
   const response = await fetch(`${API_URL}/api/oportunidades/${id}`, {
     method: 'DELETE',
+    headers: {
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    },
   });
   if (!response.ok) throw new Error('Erro ao deletar oportunidade');
   return response.json();
