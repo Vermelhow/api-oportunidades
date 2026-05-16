@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
@@ -11,8 +11,15 @@ export default function Login() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login } = useAuth();
+  const { login, signed } = useAuth();
   const navigate = useNavigate();
+
+  // Redireciona para dashboard se já estiver autenticado
+  useEffect(() => {
+    if (signed) {
+      navigate('/dashboard');
+    }
+  }, [signed, navigate]);
 
   async function handleSubmit(e) {
     e.preventDefault();

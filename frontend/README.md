@@ -1,6 +1,22 @@
 # Frontend - API de Oportunidades
 
-## 📁 Estrutura de Pastas
+## � Rotas Protegidas
+
+Este projeto implementa um sistema de rotas protegidas que restringe o acesso a páginas administrativas apenas para usuários autenticados.
+
+**Documentação completa:** [docs/ROTAS-PROTEGIDAS.md](docs/ROTAS-PROTEGIDAS.md)
+
+### Rotas Públicas
+- `/` - Home
+- `/login` - Login
+- `/oportunidades` - Listagem de oportunidades
+
+### Rotas Protegidas (requer autenticação)
+- `/dashboard` - Área administrativa do usuário
+
+---
+
+## �📁 Estrutura de Pastas
 
 ```
 src/

@@ -1,34 +1,9 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 import '../styles/Dashboard.css';
 
 export default function Dashboard() {
-  const { user, signed, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Redireciona para login se não estiver autenticado
-    if (!loading && !signed) {
-      navigate('/login');
-    }
-  }, [signed, loading, navigate]);
-
-  if (loading) {
-    return (
-      <Layout>
-        <div className="dashboard-loading">
-          <div className="loading-spinner"></div>
-          <p>Carregando...</p>
-        </div>
-      </Layout>
-    );
-  }
-
-  if (!signed) {
-    return null;
-  }
+  const { user } = useAuth();
 
   return (
     <Layout>
