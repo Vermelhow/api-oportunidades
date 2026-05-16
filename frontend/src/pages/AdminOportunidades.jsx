@@ -43,13 +43,13 @@ export default function AdminOportunidades() {
     const fetchData = async () => {
       try {
         setLoadingData(true);
-        const [categoriasData, organizacoesData] = await Promise.all([
+        const [categoriasResponse, organizacoesResponse] = await Promise.all([
           getCategorias(),
           getOrganizacoes()
         ]);
-        // Garantir que sempre sejam arrays
-        setCategorias(Array.isArray(categoriasData) ? categoriasData : []);
-        setOrganizacoes(Array.isArray(organizacoesData) ? organizacoesData : []);
+        // A API retorna { success, data }, então pegamos o .data
+        setCategorias(categoriasResponse?.data || []);
+        setOrganizacoes(organizacoesResponse?.data || []);
       } catch (err) {
         setError('Erro ao carregar dados. Tente novamente.');
         console.error(err);
