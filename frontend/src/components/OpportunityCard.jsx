@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/OpportunityCard.css';
 
 export default function OpportunityCard({ oportunidade }) {
   const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const {
     titulo,
@@ -152,10 +154,16 @@ export default function OpportunityCard({ oportunidade }) {
 
       {/* Actions */}
       <div className="card-actions">
-        <button className="btn btn-outline">
+        <button 
+          className="btn btn-outline"
+          onClick={() => navigate(`/oportunidades/${id}`)}
+        >
           Ver detalhes
         </button>
-        <button className="btn btn-primary">
+        <button 
+          className="btn btn-primary"
+          onClick={() => navigate(`/oportunidades/${id}`)}
+        >
           {link_inscricao ? 'Candidatar-se' : 'Demonstrar Interesse'}
         </button>
       </div>

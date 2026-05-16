@@ -5,6 +5,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Oportunidades from "./pages/Oportunidades";
+import OportunidadeDetalhe from "./pages/OportunidadeDetalhe";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/oportunidades" element={<Oportunidades />} />
+          <Route path="/oportunidades/:id" element={<OportunidadeDetalhe />} />
           <Route 
             path="/dashboard" 
             element={
