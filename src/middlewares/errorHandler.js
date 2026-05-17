@@ -47,7 +47,7 @@ function errorHandler(err, req, res, next) {
         success: false,
         status,
         message,
-        ...(details && { details }),
+        ...(details && { errors: details }), // Renomeia 'details' para 'errors' para clareza
         ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
     });
 }

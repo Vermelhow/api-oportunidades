@@ -68,9 +68,12 @@ export default function AdminOportunidades() {
       ...prev,
       [name]: value
     }));
-    // Limpar erro do campo
+    // Limpar erro do campo e mensagem geral
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    if (error) {
+      setError('');
     }
   };
 
@@ -148,14 +151,15 @@ export default function AdminOportunidades() {
     try {
       setLoading(true);
 
-      // Preparar dados para envio
+      // Preparar dados para envio (removendo campo vagas que não existe no banco)
+      const { vagas, ...restFormData } = formData;
+      
       const dataToSend = {
-        ...formData,
+        ...restFormData,
         categoria_id: parseInt(formData.categoria_id),
         organizacao_id: parseInt(formData.organizacao_id),
         salario_min: formData.salario_min ? parseFloat(formData.salario_min) : null,
         salario_max: formData.salario_max ? parseFloat(formData.salario_max) : null,
-        vagas: formData.vagas ? parseInt(formData.vagas) : null,
       };
 
       await createOportunidade(dataToSend);
@@ -168,8 +172,36 @@ export default function AdminOportunidades() {
       }, 2000);
 
     } catch (err) {
-      setError('Erro ao criar oportunidade. Tente novamente.');
-      console.error(err);
+      console.error('Erro ao criar oportunidade:', err);
+      
+      // Verificar se há erros de validação específicos da API
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const apiErrors = {};
+        err.response.data.errors.forEach(error => {
+          if (error.field) {
+            apiErrors[error.field] = error.message;
+          }
+        });
+        
+        if (Object.keys(apiErrors).length > 0) {
+          setErrors(apiErrors);
+          setError('Por favor, corrija os erros indicados nos campos abaixo.');
+          
+          // Scroll suave até o primeiro campo com erro
+          setTimeout(() => {
+            const firstErrorField = Object.keys(apiErrors)[0];
+            const element = document.getElementById(firstErrorField);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              element.focus();
+            }
+          }, 100);
+        } else {
+          setError('Erro ao criar oportunidade. Verifique os dados e tente novamente.');
+        }
+      } else {
+        setError(err.response?.data?.message || 'Erro ao criar oportunidade. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }
@@ -272,6 +304,7 @@ export default function AdminOportunidades() {
                     className={`form-input ${errors.titulo ? 'error' : ''}`}
                     placeholder="Ex: Voluntário para projeto social"
                   />
+                  {!errors.titulo && <span className="field-hint">Mínimo de 5 caracteres</span>}
                   {errors.titulo && <span className="error-message">{errors.titulo}</span>}
                 </div>
               </div>
@@ -334,6 +367,7 @@ export default function AdminOportunidades() {
                     rows="5"
                     placeholder="Descreva os detalhes da oportunidade..."
                   ></textarea>
+                  {!errors.descricao && <span className="field-hint">Mínimo de 20 caracteres</span>}
                   {errors.descricao && <span className="error-message">{errors.descricao}</span>}
                 </div>
               </div>
@@ -521,6 +555,7 @@ export default function AdminOportunidades() {
                     step="0.01"
                     placeholder="Ex: 2000.00"
                   />
+                  {!errors.salario_min && <span className="field-hint">Valor opcional em reais (R$)</span>}
                   {errors.salario_min && <span className="error-message">{errors.salario_min}</span>}
                 </div>
 
@@ -539,6 +574,7 @@ export default function AdminOportunidades() {
                     step="0.01"
                     placeholder="Ex: 5000.00"
                   />
+                  {!errors.salario_max && <span className="field-hint">Valor opcional em reais (R$)</span>}
                   {errors.salario_max && <span className="error-message">{errors.salario_max}</span>}
                 </div>
               </div>
@@ -559,12 +595,15 @@ export default function AdminOportunidades() {
                     name="link_inscricao"
                     value={formData.link_inscricao}
                     onChange={handleChange}
-                    className="form-input"
+                    className={`form-input ${errors.link_inscricao ? 'error' : ''}`}
                     placeholder="https://exemplo.com/inscricao"
                   />
-                  <small className="form-hint">
-                    Link externo onde os interessados podem se inscrever
-                  </small>
+                  {!errors.link_inscricao && (
+                    <small className="form-hint">
+                      Link externo onde os interessados podem se inscrever
+                    </small>
+                  )}
+                  {errors.link_inscricao && <span className="error-message">{errors.link_inscricao}</span>}
                 </div>
               </div>
             </div>
