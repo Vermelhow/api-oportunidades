@@ -2,12 +2,13 @@ import Database from 'better-sqlite3';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import os from 'node:os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// usa o arquivo na pasta data
-const dbPath = path.resolve(__dirname, "../../data/oportunidades.db");
+// usa o arquivo no Mac (melhor compatibilidade com HD externo ExFAT)
+const dbPath = path.join(os.homedir(), 'Library', 'Application Support', 'api-oportunidades', 'data', 'oportunidades.db');
 const dbDir = path.dirname(dbPath);
 
 // cria o diretório se não existir
