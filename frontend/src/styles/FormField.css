@@ -1,0 +1,73 @@
+/* Form Field Styles - Complementa AdminOportunidades.css */
+
+/* Campo obrigatório - já definido em AdminOportunidades.css */
+
+/* Adicionais para FormField component */
+.form-input.error,
+.form-select.error,
+.form-textarea.error {
+  border-color: #ef4444;
+}
+
+.field-hint,
+.form-hint {
+  font-size: 0.875rem;
+  color: var(--text-medium);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.error-message {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.error-message::before {
+  content: '⚠';
+}
+
+/* Form Actions Alignment */
+.form-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-2xl);
+  border-top: 2px solid var(--bg-gray);
+}
+
+.form-actions.align-right {
+  justify-content: flex-end;
+}
+
+.form-actions.align-left {
+  justify-content: flex-start;
+}
+
+.form-actions.align-center {
+  justify-content: center;
+}
+
+.form-actions.align-space-between {
+  justify-content: space-between;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-group.half,
+  .form-group.third {
+    flex: 1 1 100%;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

@@ -11,6 +11,8 @@ import OportunidadeDetalhe from "./pages/OportunidadeDetalhe";
 import Dashboard from "./pages/Dashboard";
 import AdminOportunidades from "./pages/AdminOportunidades";
 import AdminOportunidadesLista from "./pages/AdminOportunidadesLista";
+import AdminOrganizacoes from "./pages/AdminOrganizacoes";
+import AdminOrganizacoesLista from "./pages/AdminOrganizacoesLista";
 
 function App() {
   return (
@@ -52,6 +54,38 @@ function App() {
                 element={
                   <PrivateRoute>
                     <AdminOportunidades />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/admin/organizacoes" 
+                element={
+                  <PrivateRoute>
+                    <AdminOrganizacoesLista />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/admin/organizacoes/nova" 
+                element={
+                  <PrivateRoute>
+                    <AdminOrganizacoes />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/admin/organizacoes/:id/editar" 
+                element={
+                  <PrivateRoute>
+                    <AdminOrganizacoes />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/admin/organizacoes/:id/detalhes" 
+                element={
+                  <PrivateRoute>
+                    <AdminOrganizacoesLista />
                   </PrivateRoute>
                 } 
               />

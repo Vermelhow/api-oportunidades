@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import { Sidebar, Loading } from '../components';
 import { createOportunidade, updateOportunidade, getOportunidadeById, getCategorias, getOrganizacoes } from '../services/api';
+import { useNotification } from '../context/NotificationContext';
 import '../styles/AdminOportunidades.css';
 
 export default function AdminOportunidades() {
   const navigate = useNavigate();
   const { id } = useParams(); // Captura ID da URL se estiver editando
   const isEditMode = Boolean(id); // Define se está em modo de edição
+  const { showSuccess, showError } = useNotification();
 
   // Estados para listas
   const [categorias, setCategorias] = useState([]);
@@ -114,10 +116,14 @@ export default function AdminOportunidades() {
 
     if (!formData.titulo.trim()) {
       newErrors.titulo = 'Título é obrigatório';
+    } else if (formData.titulo.trim().length < 5) {
+      newErrors.titulo = 'Título deve ter no mínimo 5 caracteres';
     }
 
     if (!formData.descricao.trim()) {
       newErrors.descricao = 'Descrição é obrigatória';
+    } else if (formData.descricao.trim().length < 20) {
+      newErrors.descricao = 'Descrição deve ter no mínimo 20 caracteres';
     }
 
     if (!formData.categoria_id) {
@@ -163,6 +169,15 @@ export default function AdminOportunidades() {
       newErrors.vagas = 'Número de vagas deve ser maior que 0';
     }
 
+    // Validar URL
+    if (formData.link_inscricao && formData.link_inscricao.trim()) {
+      try {
+        new URL(formData.link_inscricao);
+      } catch {
+        newErrors.link_inscricao = 'URL inválida. Use o formato: https://exemplo.com';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -196,16 +211,16 @@ export default function AdminOportunidades() {
       // Criar ou atualizar baseado no modo
       if (isEditMode) {
         await updateOportunidade(id, dataToSend);
-        setSuccess('Oportunidade atualizada com sucesso! Redirecionando...');
+        showSuccess('Oportunidade atualizada com sucesso!');
       } else {
         await createOportunidade(dataToSend);
-        setSuccess('Oportunidade criada com sucesso! Redirecionando...');
+        showSuccess('Oportunidade criada com sucesso!');
       }
       
-      // Redirecionar após 2 segundos
+      // Redirecionar após breve delay
       setTimeout(() => {
-        navigate('/oportunidades');
-      }, 2000);
+        navigate('/admin/oportunidades/lista');
+      }, 1000);
 
     } catch (err) {
       console.error(isEditMode ? 'Erro ao atualizar oportunidade:' : 'Erro ao criar oportunidade:', err);
@@ -221,7 +236,9 @@ export default function AdminOportunidades() {
         
         if (Object.keys(apiErrors).length > 0) {
           setErrors(apiErrors);
-          setError('Por favor, corrija os erros indicados nos campos abaixo.');
+          const errorMsg = 'Por favor, corrija os erros indicados nos campos abaixo.';
+          setError(errorMsg);
+          showError(errorMsg);
           
           // Scroll suave até o primeiro campo com erro
           setTimeout(() => {
@@ -233,10 +250,14 @@ export default function AdminOportunidades() {
             }
           }, 100);
         } else {
-          setError(isEditMode ? 'Erro ao atualizar oportunidade. Verifique os dados e tente novamente.' : 'Erro ao criar oportunidade. Verifique os dados e tente novamente.');
+          const errorMsg = isEditMode ? 'Erro ao atualizar oportunidade. Verifique os dados e tente novamente.' : 'Erro ao criar oportunidade. Verifique os dados e tente novamente.';
+          setError(errorMsg);
+          showError(errorMsg);
         }
       } else {
-        setError(err.response?.data?.message || (isEditMode ? 'Erro ao atualizar oportunidade. Tente novamente.' : 'Erro ao criar oportunidade. Tente novamente.'));
+        const errorMsg = err.response?.data?.message || (isEditMode ? 'Erro ao atualizar oportunidade. Tente novamente.' : 'Erro ao criar oportunidade. Tente novamente.');
+        setError(errorMsg);
+        showError(errorMsg);
       }
     } finally {
       setLoading(false);
@@ -273,10 +294,11 @@ export default function AdminOportunidades() {
       <div className="dashboard-layout">
         <Sidebar />
         <main className="dashboard-content">
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Carregando dados...</p>
-          </div>
+          <Loading 
+            fullscreen={false}
+            text={isEditMode ? 'Carregando oportunidade...' : 'Carregando dados...'}
+            size="lg"
+          />
         </main>
       </div>
     );
@@ -298,10 +320,10 @@ export default function AdminOportunidades() {
             </div>
             <button 
               type="button" 
-              onClick={() => navigate('/oportunidades')}
+              onClick={() => navigate('/admin/oportunidades/lista')}
               className="btn btn-outline"
             >
-              ← Voltar
+              ← Voltar para Lista
             </button>
           </div>
 

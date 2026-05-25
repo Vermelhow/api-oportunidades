@@ -233,6 +233,42 @@ export async function getOrganizacoes() {
   }
 }
 
+export async function getOrganizacaoById(id) {
+  try {
+    return await api.get(`/organizacoes/${id}`);
+  } catch (error) {
+    console.error(`Erro ao buscar organização ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function createOrganizacao(data) {
+  try {
+    return await api.post('/organizacoes', data);
+  } catch (error) {
+    console.error('Erro ao criar organização:', error);
+    throw error;
+  }
+}
+
+export async function updateOrganizacao(id, data) {
+  try {
+    return await api.put(`/organizacoes/${id}`, data);
+  } catch (error) {
+    console.error(`Erro ao atualizar organização ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function deleteOrganizacao(id) {
+  try {
+    return await api.delete(`/organizacoes/${id}`);
+  } catch (error) {
+    console.error(`Erro ao deletar organização ${id}:`, error);
+    throw error;
+  }
+}
+
 /**
  * PESSOAS
  */
