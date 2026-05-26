@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { createOportunidade, getCategorias, getOrganizacoes } from '../services/api';
+import { createOportunidade, updateOportunidade, getOportunidadeById, getCategorias, getOrganizacoes } from '../services/api';
 import '../styles/AdminOportunidades.css';
 
 export default function AdminOportunidades() {
   const navigate = useNavigate();
+  const { id } = useParams(); // Captura ID da URL se estiver editando
+  const isEditMode = Boolean(id); // Define se está em modo de edição
 
   // Estados para listas
   const [categorias, setCategorias] = useState([]);
@@ -38,20 +40,49 @@ export default function AdminOportunidades() {
   const [success, setSuccess] = useState('');
   const [errors, setErrors] = useState({});
 
-  // Carregar categorias e organizações
+  // Carregar categorias, organizações e oportunidade (se editando)
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoadingData(true);
+        
+        // Carregar categorias e organizações
         const [categoriasResponse, organizacoesResponse] = await Promise.all([
           getCategorias(),
           getOrganizacoes()
         ]);
-        // A API retorna { success, data }, então pegamos o .data
         setCategorias(categoriasResponse?.data || []);
         setOrganizacoes(organizacoesResponse?.data || []);
+        
+        // Se estiver em modo de edição, carregar dados da oportunidade
+        if (isEditMode) {
+          const oportunidadeResponse = await getOportunidadeById(id);
+          const oportunidade = oportunidadeResponse?.data;
+          
+          if (oportunidade) {
+            // Preencher formulário com dados existentes
+            setFormData({
+              titulo: oportunidade.titulo || '',
+              descricao: oportunidade.descricao || '',
+              requisitos: oportunidade.requisitos || '',
+              beneficios: oportunidade.beneficios || '',
+              categoria_id: oportunidade.categoria_id || '',
+              organizacao_id: oportunidade.organizacao_id || '',
+              localizacao: oportunidade.localizacao || '',
+              tipo: oportunidade.tipo || 'emprego',
+              formato: oportunidade.formato || 'presencial',
+              salario_min: oportunidade.salario_min || '',
+              salario_max: oportunidade.salario_max || '',
+              vagas: '',
+              data_inicio: oportunidade.data_inicio ? oportunidade.data_inicio.split('T')[0] : '',
+              data_fim: oportunidade.data_fim ? oportunidade.data_fim.split('T')[0] : '',
+              link_inscricao: oportunidade.link_inscricao || '',
+              status: oportunidade.status || 'ativa',
+            });
+          }
+        }
       } catch (err) {
-        setError('Erro ao carregar dados. Tente novamente.');
+        setError(isEditMode ? 'Erro ao carregar oportunidade.' : 'Erro ao carregar dados.');
         console.error(err);
       } finally {
         setLoadingData(false);
@@ -59,7 +90,7 @@ export default function AdminOportunidades() {
     };
 
     fetchData();
-  }, []);
+  }, [id, isEditMode]);
 
   // Atualizar campo do formulário
   const handleChange = (e) => {
@@ -162,9 +193,14 @@ export default function AdminOportunidades() {
         salario_max: formData.salario_max ? parseFloat(formData.salario_max) : null,
       };
 
-      await createOportunidade(dataToSend);
-      
-      setSuccess('Oportunidade criada com sucesso! Redirecionando...');
+      // Criar ou atualizar baseado no modo
+      if (isEditMode) {
+        await updateOportunidade(id, dataToSend);
+        setSuccess('Oportunidade atualizada com sucesso! Redirecionando...');
+      } else {
+        await createOportunidade(dataToSend);
+        setSuccess('Oportunidade criada com sucesso! Redirecionando...');
+      }
       
       // Redirecionar após 2 segundos
       setTimeout(() => {
@@ -172,7 +208,7 @@ export default function AdminOportunidades() {
       }, 2000);
 
     } catch (err) {
-      console.error('Erro ao criar oportunidade:', err);
+      console.error(isEditMode ? 'Erro ao atualizar oportunidade:' : 'Erro ao criar oportunidade:', err);
       
       // Verificar se há erros de validação específicos da API
       if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
@@ -197,10 +233,10 @@ export default function AdminOportunidades() {
             }
           }, 100);
         } else {
-          setError('Erro ao criar oportunidade. Verifique os dados e tente novamente.');
+          setError(isEditMode ? 'Erro ao atualizar oportunidade. Verifique os dados e tente novamente.' : 'Erro ao criar oportunidade. Verifique os dados e tente novamente.');
         }
       } else {
-        setError(err.response?.data?.message || 'Erro ao criar oportunidade. Tente novamente.');
+        setError(err.response?.data?.message || (isEditMode ? 'Erro ao atualizar oportunidade. Tente novamente.' : 'Erro ao criar oportunidade. Tente novamente.'));
       }
     } finally {
       setLoading(false);
@@ -255,9 +291,9 @@ export default function AdminOportunidades() {
           {/* Header */}
           <div className="page-header">
             <div>
-              <h1 className="page-title">📋 Cadastrar Oportunidade</h1>
+              <h1 className="page-title">{isEditMode ? '✏️ Editar Oportunidade' : '📋 Cadastrar Oportunidade'}</h1>
               <p className="page-subtitle">
-                Preencha os campos abaixo para criar uma nova oportunidade
+                {isEditMode ? 'Atualize as informações da oportunidade' : 'Preencha os campos abaixo para criar uma nova oportunidade'}
               </p>
             </div>
             <button 
@@ -623,7 +659,10 @@ export default function AdminOportunidades() {
                 className="btn btn-primary"
                 disabled={loading}
               >
-                {loading ? '⏳ Criando...' : '✓ Criar Oportunidade'}
+                {loading 
+                  ? (isEditMode ? '⏳ Atualizando...' : '⏳ Criando...') 
+                  : (isEditMode ? '✓ Salvar Alterações' : '✓ Criar Oportunidade')
+                }
               </button>
             </div>
           </form>

@@ -34,6 +34,14 @@ function App() {
               </PrivateRoute>
             } 
           />
+          <Route 
+            path="/admin/oportunidades/:id/editar" 
+            element={
+              <PrivateRoute>
+                <AdminOportunidades />
+              </PrivateRoute>
+            } 
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
