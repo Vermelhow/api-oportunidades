@@ -8,6 +8,7 @@ import Oportunidades from "./pages/Oportunidades";
 import OportunidadeDetalhe from "./pages/OportunidadeDetalhe";
 import Dashboard from "./pages/Dashboard";
 import AdminOportunidades from "./pages/AdminOportunidades";
+import AdminOportunidadesLista from "./pages/AdminOportunidadesLista";
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
           />
           <Route 
             path="/admin/oportunidades" 
+            element={
+              <PrivateRoute>
+                <AdminOportunidadesLista />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/admin/oportunidades/nova" 
             element={
               <PrivateRoute>
                 <AdminOportunidades />

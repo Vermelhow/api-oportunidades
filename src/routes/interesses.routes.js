@@ -10,14 +10,14 @@ import {
 const router = Router();
 
 // Rotas públicas
-router.get('/', interessesController.listar);
-router.get('/:id', validateId, interessesController.buscarPorId);
-router.get('/pessoa/:pessoa_id', validateId, interessesController.listarPorPessoa);
-router.get('/oportunidade/:oportunidade_id', validateId, interessesController.listarPorOportunidade);
+router.get('/', interessesController.listar.bind(interessesController));
+router.get('/:id', validateId, interessesController.buscarPorId.bind(interessesController));
+router.get('/pessoa/:pessoa_id', validateId, interessesController.listarPorPessoa.bind(interessesController));
+router.get('/oportunidade/:oportunidade_id', validateId, interessesController.listarPorOportunidade.bind(interessesController));
 
 // Rotas protegidas (requerem autenticação)
-router.post('/', validateInteresseCriar, authMiddleware, interessesController.criar);
-router.put('/:id', validateId, validateInteresseAtualizar, authMiddleware, interessesController.atualizar);
-router.delete('/:id', validateId, authMiddleware, interessesController.excluir);
+router.post('/', validateInteresseCriar, authMiddleware, interessesController.criar.bind(interessesController));
+router.put('/:id', validateId, validateInteresseAtualizar, authMiddleware, interessesController.atualizar.bind(interessesController));
+router.delete('/:id', validateId, authMiddleware, interessesController.excluir.bind(interessesController));
 
 export default router;

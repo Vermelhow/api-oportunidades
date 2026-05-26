@@ -124,6 +124,8 @@ export async function deleteOportunidade(id) {
     },
   });
   if (!response.ok) throw new Error('Erro ao deletar oportunidade');
+  // Status 204 não tem conteúdo, retorna null
+  if (response.status === 204) return null;
   return response.json();
 }
 

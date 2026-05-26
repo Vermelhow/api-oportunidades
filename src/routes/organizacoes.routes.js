@@ -8,10 +8,10 @@ import {
 
 const router = Router();
 
-router.get('/', organizacoesController.listar);
-router.get('/:id', validateId, organizacoesController.buscarPorId);
-router.post('/', validateOrganizacaoCriar, organizacoesController.criar);
-router.put('/:id', validateId, validateOrganizacaoAtualizar, organizacoesController.atualizar);
-router.delete('/:id', validateId, organizacoesController.excluir);
+router.get('/', organizacoesController.listar.bind(organizacoesController));
+router.get('/:id', validateId, organizacoesController.buscarPorId.bind(organizacoesController));
+router.post('/', validateOrganizacaoCriar, organizacoesController.criar.bind(organizacoesController));
+router.put('/:id', validateId, validateOrganizacaoAtualizar, organizacoesController.atualizar.bind(organizacoesController));
+router.delete('/:id', validateId, organizacoesController.excluir.bind(organizacoesController));
 
 export default router;

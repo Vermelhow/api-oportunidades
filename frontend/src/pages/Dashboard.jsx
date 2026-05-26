@@ -14,7 +14,7 @@ export default function Dashboard() {
   ];
 
   const quickActions = [
-    { icon: '➕', label: 'Nova Oportunidade', path: '/admin/oportunidades', color: '#3b82f6' },
+    { icon: '➕', label: 'Nova Oportunidade', path: '/admin/oportunidades/nova', color: '#3b82f6' },
     { icon: '🏢', label: 'Nova Organização', path: '/admin/organizacoes', color: '#10b981' },
     { icon: '🏷️', label: 'Nova Categoria', path: '/admin/categorias', color: '#f59e0b' },
     { icon: '👤', label: 'Novo Usuário', path: '/admin/pessoas', color: '#8b5cf6' },

@@ -27,7 +27,7 @@ export default function Sidebar() {
     {
       section: 'Gerenciamento',
       items: [
-        { path: '/admin/oportunidades', icon: '📋', label: 'Oportunidades', description: 'Cadastrar e editar' },
+        { path: '/admin/oportunidades', icon: '📋', label: 'Oportunidades', description: 'Listar e gerenciar' },
         { path: '/admin/organizacoes', icon: '🏢', label: 'Organizações', description: 'Gerenciar organizações' },
         { path: '/admin/categorias', icon: '🏷️', label: 'Categorias', description: 'Gerenciar categorias' },
         { path: '/admin/pessoas', icon: '👥', label: 'Pessoas', description: 'Gerenciar usuários' },
