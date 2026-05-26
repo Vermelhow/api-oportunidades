@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import ConfirmModal from '../components/ConfirmModal';
-import Toast from '../components/Toast';
+import { Sidebar, ConfirmModal, Loading, ErrorMessage, EmptyState, ButtonLoading } from '../components';
 import { getOportunidades } from '../services/api';
 import { useDeleteOportunidade } from '../hooks/useDeleteOportunidade';
+import { useNotification } from '../context/NotificationContext';
 import '../styles/AdminOportunidadesLista.css';
 
 export default function AdminOportunidadesLista() {
   const navigate = useNavigate();
   const [oportunidades, setOportunidades] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('todas');
-  const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
+  
+  const { showSuccess, showError } = useNotification();
 
   // Hook customizado para gerenciar exclusão
   const { 
@@ -30,22 +31,16 @@ export default function AdminOportunidadesLista() {
   const carregarOportunidades = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await getOportunidades();
       setOportunidades(response?.data || []);
     } catch (err) {
-      showToast('Erro ao carregar oportunidades.', 'error');
-      console.error(err);
+      console.error('Erro ao carregar oportunidades:', err);
+      setError(err);
+      showError(err.message || 'Erro ao carregar oportunidades');
     } finally {
       setLoading(false);
     }
-  };
-
-  const showToast = (message, type = 'info') => {
-    setToast({ show: true, message, type });
-  };
-
-  const closeToast = () => {
-    setToast({ show: false, message: '', type: 'info' });
   };
 
   const handleDeleteClick = (id, titulo) => {
@@ -59,11 +54,11 @@ export default function AdminOportunidadesLista() {
       (deletedId) => {
         // Remove da lista local sem precisar recarregar
         setOportunidades(prev => prev.filter(op => op.id !== deletedId));
-        showToast('Oportunidade excluída com sucesso!', 'success');
+        showSuccess('Oportunidade excluída com sucesso!');
       },
       // onError
       (errorMessage) => {
-        showToast(errorMessage, 'error');
+        showError(errorMessage);
       }
     );
   };
@@ -96,15 +91,34 @@ export default function AdminOportunidadesLista() {
     return badges[tipo] || badges.emprego;
   };
 
+  // Estado de loading
   if (loading) {
     return (
       <div className="admin-layout">
         <Sidebar />
         <main className="admin-content">
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p>Carregando oportunidades...</p>
-          </div>
+          <Loading 
+            fullscreen={false} 
+            text="Carregando oportunidades..." 
+            size="lg"
+          />
+        </main>
+      </div>
+    );
+  }
+
+  // Estado de erro
+  if (error) {
+    return (
+      <div className="admin-layout">
+        <Sidebar />
+        <main className="admin-content">
+          <ErrorMessage
+            title="Erro ao Carregar Oportunidades"
+            message={error.message || 'Não foi possível carregar as oportunidades'}
+            onRetry={carregarOportunidades}
+            showRetry={true}
+          />
         </main>
       </div>
     );
@@ -246,15 +260,6 @@ export default function AdminOportunidadesLista() {
         cancelText="Cancelar"
         type="danger"
         loading={isDeleting}
-      />
-
-      {/* Toast de Feedback */}
-      <Toast
-        message={toast.message}
-        type={toast.type}
-        isVisible={toast.show}
-        onClose={closeToast}
-        duration={3000}
       />
     </div>
   );

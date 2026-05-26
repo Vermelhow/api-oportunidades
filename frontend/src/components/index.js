@@ -8,3 +8,8 @@ export { default as ConfirmModal } from './ConfirmModal';
 export { default as Toast } from './Toast';
 export { default as SearchBar } from './SearchBar';
 export { default as FilterBar } from './FilterBar';
+
+// Novos componentes de feedback e loading
+export { default as Loading, ButtonLoading, SkeletonCard, SkeletonList } from './Loading';
+export { default as ErrorBoundary, ErrorMessage, EmptyState } from './ErrorBoundary';
+

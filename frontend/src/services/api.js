@@ -2,17 +2,66 @@
  * Configuração base da API
  * 
  * Este arquivo contém a configuração central para comunicação com o backend.
- * Utilize este serviço para fazer requisições HTTP à API de Oportunidades.
+ * Inclui tratamento de erros amigável e timeout de requisições.
  */
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const API_BASE_URL = `${API_URL}/api`;
+const REQUEST_TIMEOUT = 30000; // 30 segundos
+
+/**
+ * Classe customizada de erro para API
+ */
+export class ApiError extends Error {
+  constructor(message, status, data) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.data = data;
+    this.isApiError = true;
+  }
+}
+
+/**
+ * Traduz erros HTTP para mensagens amigáveis
+ */
+function getErrorMessage(status, responseData) {
+  const serverMessage = responseData?.message || responseData?.erro;
+
+  const statusMessages = {
+    400: serverMessage || 'Dados inválidos. Verifique as informações e tente novamente.',
+    401: 'Sessão expirada. Faça login novamente.',
+    403: 'Você não tem permissão para realizar esta ação.',
+    404: 'Recurso não encontrado.',
+    409: serverMessage || 'Conflito de dados. Este recurso já existe.',
+    422: serverMessage || 'Dados inválidos. Verifique os campos obrigatórios.',
+    429: 'Muitas requisições. Aguarde um momento e tente novamente.',
+    500: 'Erro no servidor. Tente novamente mais tarde.',
+    502: 'Serviço temporariamente indisponível. Tente novamente.',
+    503: 'Serviço em manutenção. Tente novamente em alguns instantes.',
+  };
+
+  return statusMessages[status] || serverMessage || 'Ocorreu um erro inesperado. Tente novamente.';
+}
+
+/**
+ * Adiciona timeout às requisições
+ */
+function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT) {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Timeout: A requisição demorou muito.')), timeout)
+    ),
+  ]);
+}
 
 export const api = {
   baseURL: API_BASE_URL,
   
   /**
    * Método auxiliar para realizar requisições HTTP
+   * Com tratamento de erros amigável e timeout
    */
   async request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
@@ -30,16 +79,60 @@ export const api = {
     };
 
     try {
-      const response = await fetch(url, config);
+      const response = await fetchWithTimeout(url, config);
       
-      if (!response.ok) {
-        throw new Error(`Erro HTTP: ${response.status}`);
+      // Status 204 (No Content) - Sucesso sem resposta
+      if (response.status === 204) {
+        return null;
       }
       
-      return await response.json();
+      // Tentar parsear resposta JSON
+      let data = null;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      }
+      
+      // Verificar se houve erro HTTP
+      if (!response.ok) {
+        const message = getErrorMessage(response.status, data);
+        throw new ApiError(message, response.status, data);
+      }
+      
+      return data;
+      
     } catch (error) {
+      // Erro de rede/conexão
+      if (error.message === 'Failed to fetch' || error.message.includes('NetworkError')) {
+        throw new ApiError(
+          'Erro de conexão. Verifique sua internet e tente novamente.',
+          0,
+          null
+        );
+      }
+      
+      // Erro de timeout
+      if (error.message.includes('Timeout')) {
+        throw new ApiError(
+          'A requisição demorou muito. Verifique sua conexão e tente novamente.',
+          0,
+          null
+        );
+      }
+      
+      // Se já é ApiError, propagar
+      if (error.isApiError) {
+        throw error;
+      }
+      
+      // Erro desconhecido
       console.error('Erro na requisição:', error);
-      throw error;
+      throw new ApiError(
+        'Ocorreu um erro inesperado. Tente novamente.',
+        0,
+        null
+      );
     }
   },
 
@@ -66,6 +159,14 @@ export const api = {
   delete(endpoint, options = {}) {
     return this.request(endpoint, { ...options, method: 'DELETE' });
   },
+
+  patch(endpoint, data, options = {}) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
 };
 
 // ============================================
@@ -76,95 +177,105 @@ export const api = {
  * OPORTUNIDADES
  */
 export async function getOportunidades() {
-  const response = await fetch(`${API_URL}/api/oportunidades`);
-  if (!response.ok) throw new Error('Erro ao buscar oportunidades');
-  return response.json();
+  try {
+    return await api.get('/oportunidades');
+  } catch (error) {
+    console.error('Erro ao buscar oportunidades:', error);
+    throw error;
+  }
 }
 
 export async function getOportunidadeById(id) {
-  const response = await fetch(`${API_URL}/api/oportunidades/${id}`);
-  if (!response.ok) throw new Error('Erro ao buscar oportunidade');
-  return response.json();
+  try {
+    return await api.get(`/oportunidades/${id}`);
+  } catch (error) {
+    console.error(`Erro ao buscar oportunidade ${id}:`, error);
+    throw error;
+  }
 }
 
 export async function createOportunidade(data) {
-  const token = localStorage.getItem('@api-oportunidades:token');
-  const response = await fetch(`${API_URL}/api/oportunidades`, {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` })
-    },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error('Erro ao criar oportunidade');
-  return response.json();
+  try {
+    return await api.post('/oportunidades', data);
+  } catch (error) {
+    console.error('Erro ao criar oportunidade:', error);
+    throw error;
+  }
 }
 
 export async function updateOportunidade(id, data) {
-  const token = localStorage.getItem('@api-oportunidades:token');
-  const response = await fetch(`${API_URL}/api/oportunidades/${id}`, {
-    method: 'PUT',
-    headers: { 
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` })
-    },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error('Erro ao atualizar oportunidade');
-  return response.json();
+  try {
+    return await api.put(`/oportunidades/${id}`, data);
+  } catch (error) {
+    console.error(`Erro ao atualizar oportunidade ${id}:`, error);
+    throw error;
+  }
 }
 
 export async function deleteOportunidade(id) {
-  const token = localStorage.getItem('@api-oportunidades:token');
-  const response = await fetch(`${API_URL}/api/oportunidades/${id}`, {
-    method: 'DELETE',
-    headers: {
-      ...(token && { 'Authorization': `Bearer ${token}` })
-    },
-  });
-  if (!response.ok) throw new Error('Erro ao deletar oportunidade');
-  // Status 204 não tem conteúdo, retorna null
-  if (response.status === 204) return null;
-  return response.json();
+  try {
+    return await api.delete(`/oportunidades/${id}`);
+  } catch (error) {
+    console.error(`Erro ao deletar oportunidade ${id}:`, error);
+    throw error;
+  }
 }
 
 /**
  * ORGANIZAÇÕES
  */
 export async function getOrganizacoes() {
-  const response = await fetch(`${API_URL}/api/organizacoes`);
-  if (!response.ok) throw new Error('Erro ao buscar organizações');
-  return response.json();
+  try {
+    return await api.get('/organizacoes');
+  } catch (error) {
+    console.error('Erro ao buscar organizações:', error);
+    throw error;
+  }
 }
 
 /**
  * PESSOAS
  */
 export async function getPessoas() {
-  const response = await fetch(`${API_URL}/api/pessoas`);
-  if (!response.ok) throw new Error('Erro ao buscar pessoas');
-  return response.json();
+  try {
+    return await api.get('/pessoas');
+  } catch (error) {
+    console.error('Erro ao buscar pessoas:', error);
+    throw error;
+  }
 }
 
 /**
  * CATEGORIAS
  */
 export async function getCategorias() {
-  const response = await fetch(`${API_URL}/api/categorias`);
-  if (!response.ok) throw new Error('Erro ao buscar categorias');
-  return response.json();
+  try {
+    return await api.get('/categorias');
+  } catch (error) {
+    console.error('Erro ao buscar categorias:', error);
+    throw error;
+  }
 }
 
 /**
  * AUTENTICAÇÃO
  */
 export async function loginUser(credentials) {
-  return api.post('/pessoas/login', credentials);
+  try {
+    return await api.post('/pessoas/login', credentials);
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+    throw error;
+  }
 }
 
 export async function registerUser(userData) {
-  return api.post('/pessoas', userData);
+  try {
+    return await api.post('/pessoas', userData);
+  } catch (error) {
+    console.error('Erro ao registrar usuário:', error);
+    throw error;
+  }
 }
 
 export default api;

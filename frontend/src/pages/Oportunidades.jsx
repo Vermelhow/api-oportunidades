@@ -4,7 +4,9 @@ import Layout from '../components/Layout';
 import OpportunityCard from '../components/OpportunityCard';
 import SearchBar from '../components/SearchBar';
 import FilterBar from '../components/FilterBar';
+import { Loading, ErrorMessage, EmptyState, SkeletonCard } from '../components';
 import { useOportunidadesFilter } from '../hooks/useOportunidadesFilter';
+import { useNotification } from '../context/NotificationContext';
 import '../styles/Oportunidades.css';
 
 export default function Oportunidades() {
@@ -12,6 +14,8 @@ export default function Oportunidades() {
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const { showError } = useNotification();
 
   // Hook de filtros
   const {
@@ -40,28 +44,57 @@ export default function Oportunidades() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message);
+        console.error('Erro ao carregar dados:', err);
+        setError(err);
         setLoading(false);
+        showError(err.message || 'Erro ao carregar oportunidades');
       });
-  }, []);
+  }, [showError]);
 
-  if (loading) return (
-    <Layout>
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <h2>Carregando oportunidades...</h2>
-      </div>
-    </Layout>
-  );
+  // Loading com skeleton
+  if (loading) {
+    return (
+      <Layout>
+        <div className="oportunidades-page">
+          <div className="page-header">
+            <div className="header-content">
+              <h1 className="page-title">Oportunidades de Voluntariado</h1>
+              <p className="page-subtitle">
+                Encontre a causa perfeita para você e faça a diferença na sua comunidade
+              </p>
+            </div>
+          </div>
+
+          <div className="filters-section">
+            <div className="skeleton" style={{ height: '48px', borderRadius: '12px' }}></div>
+            <div className="skeleton" style={{ height: '120px', borderRadius: '12px', marginTop: '1rem' }}></div>
+          </div>
+
+          <div className="opportunities-grid">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))}
+          </div>
+        </div>
+      </Layout>
+    );
+  }
   
-  if (error) return (
-    <Layout>
-      <div className="error-container">
-        <h2>❌ Erro ao carregar oportunidades</h2>
-        <p>{error}</p>
-      </div>
-    </Layout>
-  );
+  // Erro com opção de retry
+  if (error) {
+    return (
+      <Layout>
+        <div className="oportunidades-page">
+          <ErrorMessage
+            title="Erro ao Carregar Oportunidades"
+            message={error.message || 'Não foi possível carregar as oportunidades. Por favor, tente novamente.'}
+            onRetry={() => window.location.reload()}
+            showRetry={true}
+          />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -99,24 +132,21 @@ export default function Oportunidades() {
 
         {/* Resultados */}
         {filteredOportunidades.length === 0 ? (
-          <div className="empty-state">
-            {hasActiveFilters ? (
-              <>
-                <div className="empty-state-icon">🔍</div>
-                <h2>Nenhum resultado encontrado</h2>
-                <p>Tente ajustar seus filtros para ver mais oportunidades</p>
-                <button onClick={clearFilters} className="btn btn-primary">
-                  Limpar Filtros
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="empty-state-icon">📋</div>
-                <h2>Nenhuma oportunidade disponível</h2>
-                <p>No momento não há oportunidades cadastradas. Volte em breve!</p>
-              </>
-            )}
-          </div>
+          hasActiveFilters ? (
+            <EmptyState
+              icon="🔍"
+              title="Nenhum resultado encontrado"
+              message="Tente ajustar seus filtros para ver mais oportunidades"
+              action={clearFilters}
+              actionLabel="Limpar Filtros"
+            />
+          ) : (
+            <EmptyState
+              icon="📋"
+              title="Nenhuma oportunidade disponível"
+              message="No momento não há oportunidades cadastradas. Volte em breve!"
+            />
+          )
         ) : (
           <div className="opportunities-grid">
             {filteredOportunidades.map((oportunidade) => (
