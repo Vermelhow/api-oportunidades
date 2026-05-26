@@ -1,16 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { getOportunidades, deleteOportunidade } from '../services/api';
+import ConfirmModal from '../components/ConfirmModal';
+import Toast from '../components/Toast';
+import { getOportunidades } from '../services/api';
+import { useDeleteOportunidade } from '../hooks/useDeleteOportunidade';
 import '../styles/AdminOportunidadesLista.css';
 
 export default function AdminOportunidadesLista() {
   const navigate = useNavigate();
   const [oportunidades, setOportunidades] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [filter, setFilter] = useState('todas');
+  const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
+
+  // Hook customizado para gerenciar exclusão
+  const { 
+    deleteItem, 
+    isDeleting, 
+    confirmDelete, 
+    openDeleteConfirm, 
+    closeDeleteConfirm 
+  } = useDeleteOportunidade();
 
   useEffect(() => {
     carregarOportunidades();
@@ -22,26 +33,39 @@ export default function AdminOportunidadesLista() {
       const response = await getOportunidades();
       setOportunidades(response?.data || []);
     } catch (err) {
-      setError('Erro ao carregar oportunidades.');
+      showToast('Erro ao carregar oportunidades.', 'error');
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id, titulo) => {
-    if (window.confirm(`Deseja realmente excluir a oportunidade "${titulo}"?`)) {
-      try {
-        await deleteOportunidade(id);
-        setSuccess('Oportunidade excluída com sucesso!');
-        setTimeout(() => setSuccess(''), 3000);
-        carregarOportunidades();
-      } catch (err) {
-        setError('Erro ao excluir oportunidade.');
-        setTimeout(() => setError(''), 3000);
-        console.error(err);
+  const showToast = (message, type = 'info') => {
+    setToast({ show: true, message, type });
+  };
+
+  const closeToast = () => {
+    setToast({ show: false, message: '', type: 'info' });
+  };
+
+  const handleDeleteClick = (id, titulo) => {
+    openDeleteConfirm(id, titulo);
+  };
+
+  const handleDeleteConfirm = async () => {
+    await deleteItem(
+      confirmDelete.id,
+      // onSuccess
+      (deletedId) => {
+        // Remove da lista local sem precisar recarregar
+        setOportunidades(prev => prev.filter(op => op.id !== deletedId));
+        showToast('Oportunidade excluída com sucesso!', 'success');
+      },
+      // onError
+      (errorMessage) => {
+        showToast(errorMessage, 'error');
       }
-    }
+    );
   };
 
   const handleEdit = (id) => {
@@ -101,18 +125,6 @@ export default function AdminOportunidadesLista() {
             ➕ Nova Oportunidade
           </Link>
         </div>
-
-        {/* Alerts */}
-        {success && (
-          <div className="alert alert-success">
-            ✓ {success}
-          </div>
-        )}
-        {error && (
-          <div className="alert alert-error">
-            ⚠️ {error}
-          </div>
-        )}
 
         {/* Filters */}
         <div className="filters-bar">
@@ -207,9 +219,10 @@ export default function AdminOportunidadesLista() {
                         ✏️ Editar
                       </button>
                       <button
-                        onClick={() => handleDelete(oportunidade.id, oportunidade.titulo)}
+                        onClick={() => handleDeleteClick(oportunidade.id, oportunidade.titulo)}
                         className="btn-action btn-delete"
                         title="Excluir"
+                        disabled={isDeleting}
                       >
                         🗑️ Excluir
                       </button>
@@ -221,6 +234,28 @@ export default function AdminOportunidadesLista() {
           )}
         </div>
       </main>
+
+      {/* Modal de Confirmação */}
+      <ConfirmModal
+        isOpen={confirmDelete.isOpen}
+        onClose={closeDeleteConfirm}
+        onConfirm={handleDeleteConfirm}
+        title="Excluir Oportunidade"
+        message={`Tem certeza que deseja excluir a oportunidade "${confirmDelete.titulo}"? Esta ação não pode ser desfeita.`}
+        confirmText="Sim, Excluir"
+        cancelText="Cancelar"
+        type="danger"
+        loading={isDeleting}
+      />
+
+      {/* Toast de Feedback */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.show}
+        onClose={closeToast}
+        duration={3000}
+      />
     </div>
   );
 }
