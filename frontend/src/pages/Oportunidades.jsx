@@ -1,18 +1,42 @@
 import { useEffect, useState } from "react";
-import { getOportunidades } from "../services/api";
+import { getOportunidades, getCategorias } from "../services/api";
 import Layout from '../components/Layout';
 import OpportunityCard from '../components/OpportunityCard';
+import SearchBar from '../components/SearchBar';
+import FilterBar from '../components/FilterBar';
+import { useOportunidadesFilter } from '../hooks/useOportunidadesFilter';
 import '../styles/Oportunidades.css';
 
 export default function Oportunidades() {
   const [dados, setDados] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Hook de filtros
+  const {
+    filteredOportunidades,
+    filters,
+    setSearchTerm,
+    setCategoria,
+    setStatus,
+    setTipo,
+    setFormato,
+    clearFilters,
+    hasActiveFilters,
+    totalResults,
+    totalAvailable
+  } = useOportunidadesFilter(dados);
+
   useEffect(() => {
-    getOportunidades()
-      .then((response) => {
-        setDados(response.data || response);
+    // Carrega oportunidades e categorias em paralelo
+    Promise.all([
+      getOportunidades(),
+      getCategorias()
+    ])
+      .then(([oportResponse, catResponse]) => {
+        setDados(oportResponse.data || oportResponse);
+        setCategorias(catResponse.data || catResponse);
         setLoading(false);
       })
       .catch((err) => {
@@ -49,22 +73,53 @@ export default function Oportunidades() {
               Encontre a causa perfeita para você e faça a diferença na sua comunidade
             </p>
           </div>
-          <div className="page-stats">
-            <div className="stat-item">
-              <span className="stat-number">{dados.length}</span>
-              <span className="stat-label">Oportunidades disponíveis</span>
-            </div>
-          </div>
         </div>
 
-        {dados.length === 0 ? (
+        {/* Busca e Filtros */}
+        <div className="filters-section">
+          <SearchBar
+            value={filters.searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Buscar por título, descrição, organização..."
+          />
+
+          <FilterBar
+            filters={filters}
+            categorias={categorias}
+            onCategoriaChange={setCategoria}
+            onStatusChange={setStatus}
+            onTipoChange={setTipo}
+            onFormatoChange={setFormato}
+            onClearFilters={clearFilters}
+            hasActiveFilters={hasActiveFilters}
+            totalResults={totalResults}
+            totalAvailable={totalAvailable}
+          />
+        </div>
+
+        {/* Resultados */}
+        {filteredOportunidades.length === 0 ? (
           <div className="empty-state">
-            <h2>📋 Nenhuma oportunidade disponível</h2>
-            <p>No momento não há oportunidades cadastradas. Volte em breve!</p>
+            {hasActiveFilters ? (
+              <>
+                <div className="empty-state-icon">🔍</div>
+                <h2>Nenhum resultado encontrado</h2>
+                <p>Tente ajustar seus filtros para ver mais oportunidades</p>
+                <button onClick={clearFilters} className="btn btn-primary">
+                  Limpar Filtros
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="empty-state-icon">📋</div>
+                <h2>Nenhuma oportunidade disponível</h2>
+                <p>No momento não há oportunidades cadastradas. Volte em breve!</p>
+              </>
+            )}
           </div>
         ) : (
           <div className="opportunities-grid">
-            {dados.map((oportunidade) => (
+            {filteredOportunidades.map((oportunidade) => (
               <OpportunityCard 
                 key={oportunidade.id} 
                 oportunidade={oportunidade} 
