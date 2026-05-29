@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Sidebar.css';
@@ -5,10 +6,28 @@ import '../styles/Sidebar.css';
 export default function Sidebar() {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
   };
+
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
+  // Sync collapsed state with body class for layout adjustments
+  useEffect(() => {
+    if (isCollapsed) {
+      document.body.classList.add('sidebar-collapsed');
+    } else {
+      document.body.classList.remove('sidebar-collapsed');
+    }
+    
+    return () => {
+      document.body.classList.remove('sidebar-collapsed');
+    };
+  }, [isCollapsed]);
 
   const handleLogout = () => {
     if (window.confirm('Deseja realmente sair?')) {
@@ -43,35 +62,52 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+      {/* Toggle Button */}
+      <button 
+        className="sidebar-toggle" 
+        onClick={toggleSidebar}
+        aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+        title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+      >
+        <span className="toggle-icon">{isCollapsed ? '▶' : '◀'}</span>
+      </button>
+
       {/* User Info */}
       <div className="sidebar-header">
         <div className="user-avatar">
           <span className="avatar-icon">👤</span>
         </div>
-        <div className="user-details">
-          <h3 className="user-name">{user?.nome || 'Usuário'}</h3>
-          <p className="user-role">Administrador</p>
-        </div>
+        {!isCollapsed && (
+          <div className="user-details">
+            <h3 className="user-name">{user?.nome || 'Usuário'}</h3>
+            <p className="user-role">Administrador</p>
+          </div>
+        )}
       </div>
 
       {/* Navigation Menu */}
       <nav className="sidebar-nav">
         {menuItems.map((section, idx) => (
           <div key={idx} className="nav-section">
-            <h4 className="nav-section-title">{section.section}</h4>
+            {!isCollapsed && (
+              <h4 className="nav-section-title">{section.section}</h4>
+            )}
             <ul className="nav-list">
               {section.items.map((item, itemIdx) => (
                 <li key={itemIdx} className="nav-item">
                   <Link 
                     to={item.path} 
                     className={`nav-link ${isActive(item.path)}`}
+                    title={isCollapsed ? item.label : ''}
                   >
                     <span className="nav-icon">{item.icon}</span>
-                    <div className="nav-content">
-                      <span className="nav-label">{item.label}</span>
-                      <span className="nav-description">{item.description}</span>
-                    </div>
+                    {!isCollapsed && (
+                      <div className="nav-content">
+                        <span className="nav-label">{item.label}</span>
+                        <span className="nav-description">{item.description}</span>
+                      </div>
+                    )}
                   </Link>
                 </li>
               ))}
@@ -82,9 +118,9 @@ export default function Sidebar() {
 
       {/* Logout Button */}
       <div className="sidebar-footer">
-        <button onClick={handleLogout} className="btn-logout">
+        <button onClick={handleLogout} className="btn-logout" title={isCollapsed ? 'Sair' : ''}>
           <span className="logout-icon">🚪</span>
-          <span>Sair</span>
+          {!isCollapsed && <span>Sair</span>}
         </button>
       </div>
     </aside>
