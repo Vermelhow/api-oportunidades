@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getOportunidadeById } from '../services/api';
+import { useNotification } from '../context/NotificationContext';
 import Layout from '../components/Layout';
+import { Loading, ErrorMessage } from '../components';
 import '../styles/OportunidadeDetalhe.css';
 
 export default function OportunidadeDetalhe() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { showError } = useNotification();
   const [oportunidade, setOportunidade] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,10 +21,12 @@ export default function OportunidadeDetalhe() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message);
+        const errorMsg = err.message || 'Erro ao carregar oportunidade';
+        setError(err);
+        showError(errorMsg);
         setLoading(false);
       });
-  }, [id]);
+  }, [id, showError]);
 
   // Formata datas
   const formatDate = (dateString) => {
@@ -80,10 +85,11 @@ export default function OportunidadeDetalhe() {
   if (loading) {
     return (
       <Layout>
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <h2>Carregando detalhes...</h2>
-        </div>
+        <Loading 
+          fullscreen={false} 
+          text="Carregando detalhes da oportunidade..." 
+          size="lg"
+        />
       </Layout>
     );
   }
@@ -91,11 +97,15 @@ export default function OportunidadeDetalhe() {
   if (error) {
     return (
       <Layout>
-        <div className="error-container">
-          <h2>❌ Erro ao carregar oportunidade</h2>
-          <p>{error}</p>
-          <button onClick={() => navigate('/oportunidades')} className="btn btn-primary">
-            Voltar para Oportunidades
+        <ErrorMessage
+          title="Erro ao Carregar Oportunidade"
+          message={error.message || 'Não foi possível carregar os detalhes desta oportunidade'}
+          onRetry={() => window.location.reload()}
+          showRetry={true}
+        />
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <button onClick={() => navigate('/oportunidades')} className="btn btn-outline">
+            ← Voltar para Oportunidades
           </button>
         </div>
       </Layout>

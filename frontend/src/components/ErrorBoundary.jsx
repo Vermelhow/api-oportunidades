@@ -139,11 +139,12 @@ export function ErrorMessage({
   title = 'Erro',
   message = 'Ocorreu um erro inesperado',
   onRetry,
-  showRetry = true
+  showRetry = true,
+  icon = '❌'
 }) {
   return (
     <div className="error-message-component">
-      <div className="error-icon">❌</div>
+      <div className="error-icon">{icon}</div>
       <h3 className="error-title">{title}</h3>
       <p className="error-text">{message}</p>
       {showRetry && onRetry && (
@@ -156,24 +157,38 @@ export function ErrorMessage({
 }
 
 /**
- * Componente para quando não há dados
+ * Componente para estados vazios (empty states)
+ * Exibido quando não há dados para mostrar
  */
 export function EmptyState({ 
   icon = '📭',
-  title = 'Nenhum dado encontrado',
-  message = 'Não há informações para exibir no momento',
-  action,
-  actionLabel = 'Adicionar'
+  title = 'Nenhum item encontrado',
+  message = 'Não há dados para exibir no momento.',
+  actionText,
+  onAction,
+  illustration
 }) {
   return (
     <div className="empty-state-component">
-      <div className="empty-icon">{icon}</div>
-      <h3 className="empty-title">{title}</h3>
-      <p className="empty-text">{message}</p>
-      {action && (
-        <button onClick={action} className="btn btn-primary">
-          {actionLabel}
-        </button>
+      <div className="empty-state-visual">
+        {illustration ? (
+          <div className="empty-state-illustration">{illustration}</div>
+        ) : (
+          <div className="empty-state-icon">{icon}</div>
+        )}
+      </div>
+      
+      <div className="empty-state-content">
+        <h3 className="empty-state-title">{title}</h3>
+        <p className="empty-state-message">{message}</p>
+      </div>
+      
+      {actionText && onAction && (
+        <div className="empty-state-action">
+          <button onClick={onAction} className="btn btn-primary">
+            {actionText}
+          </button>
+        </div>
       )}
     </div>
   );

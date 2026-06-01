@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo - Sistema de Loading e Feedback</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+    }
+
+    .demo-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .demo-section h2 {
+      color: #1e293b;
+      margin-bottom: 24px;
+      font-size: 1.8rem;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .demo-item {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .demo-item h3 {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #e0e7ff;
+      border-top-color: #4f46e5;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Loading Dots */
+    .loading-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loading-dots .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #4f46e5;
+      animation: bounce 1.4s ease-in-out infinite;
+    }
+
+    .loading-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Loading Pulse */
+    .loading-pulse {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      margin: 0 auto;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid #4f46e5;
+      animation: pulse 1.5s ease-out infinite;
+    }
+
+    .pulse-ring:nth-child(2) { animation-delay: 0.5s; }
+    .pulse-ring:nth-child(3) { animation-delay: 1s; }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    /* Button Loading */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .button-loading {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Toast Notifications */
+    .toast {
+      min-width: 320px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      animation: slideInRight 0.3s ease;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .toast-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+    }
+
+    .toast-error {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+    }
+
+    .toast-warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+    }
+
+    .toast-info {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+    }
+
+    .toast-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* Empty State */
+    .empty-state {
+      padding: 64px 32px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      border: 2px dashed #cbd5e1;
+      text-align: center;
+    }
+
+    .empty-state-icon {
+      font-size: 80px;
+      margin-bottom: 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .empty-state-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .empty-state-message {
+      font-size: 16px;
+      color: #64748b;
+    }
+
+    /* Error Message */
+    .error-message {
+      padding: 32px;
+      background: rgba(254, 226, 226, 0.9);
+      border-radius: 16px;
+      border-left: 5px solid #ef4444;
+      text-align: center;
+    }
+
+    .error-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .error-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #991b1b;
+      margin-bottom: 12px;
+    }
+
+    .error-text {
+      font-size: 14px;
+      color: #7f1d1d;
+      margin-bottom: 24px;
+    }
+
+    /* Skeleton Loader */
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        #f0f0f0 0%,
+        #e0e0e0 50%,
+        #f0f0f0 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .skeleton-card {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .skeleton-header {
+      height: 120px;
+      border-radius: 12px;
+    }
+
+    .skeleton-text {
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .skeleton-text.short {
+      width: 60%;
+    }
+
+    .skeleton-footer {
+      height: 40px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Sistema de Loading e Feedback Visual</h1>
+
+    <!-- Loading States -->
+    <div class="demo-section">
+      <h2>1. Loading States</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h3>Spinner (Padrão)</h3>
+          <div class="loading-spinner"></div>
+        </div>
+        <div class="demo-item">
+          <h3>Dots Animation</h3>
+          <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="demo-item">
+          <h3>Pulse Animation</h3>
+          <div class="loading-pulse">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button Loading -->
+    <div class="demo-section">
+      <h2>2. Button Loading</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h3>Loading Button</h3>
+          <button class="btn" disabled>
+            <div class="button-loading"></div>
+            Salvando...
+          </button>
+        </div>
+        <div class="demo-item">
+          <h3>Normal Button</h3>
+          <button class="btn">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="demo-section">
+      <h2>3. Toast Notifications</h2>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <h3>Success</h3>
+          <div class="toast toast-success">
+            <div class="toast-icon">✓</div>
+            <div>Operação realizada com sucesso!</div>
+          </div>
+        </div>
+        <div class="demo-item">
+          <h3>Error</h3>
+          <div class="toast toast-error">
+            <div class="toast-icon">✕</div>
+            <div>Erro ao realizar operação</div>
+          </div>
+        </div>
+        <div class="demo-item">
+          <h3>Warning</h3>
+          <div class="toast toast-warning">
+            <div class="toast-icon">⚠</div>
+            <div>Atenção: dados pendentes</div>
+          </div>
+        </div>
+        <div class="demo-item">
+          <h3>Info</h3>
+          <div class="toast toast-info">
+            <div class="toast-icon">ℹ</div>
+            <div>Nova atualização disponível</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="demo-section">
+      <h2>4. Empty State</h2>
+      <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <div class="empty-state-title">Nenhum resultado encontrado</div>
+        <div class="empty-state-message">Não há dados para exibir no momento</div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="demo-section">
+      <h2>5. Error Message</h2>
+      <div class="error-message">
+        <div class="error-icon">❌</div>
+        <div class="error-title">Erro ao Carregar Dados</div>
+        <div class="error-text">Não foi possível carregar os dados. Por favor, tente novamente.</div>
+        <button class="btn">🔄 Tentar Novamente</button>
+      </div>
+    </div>
+
+    <!-- Skeleton Loader -->
+    <div class="demo-section">
+      <h2>6. Skeleton Loader</h2>
+      <div class="demo-grid">
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-header"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-footer"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-header"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-footer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

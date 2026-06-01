@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import Layout from '../components/Layout';
+import { ButtonLoading } from '../components';
 import '../styles/Login.css';
 
 export default function Login() {
@@ -12,6 +14,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { login, signed } = useAuth();
+  const { showSuccess, showError: showErrorNotification } = useNotification();
   const navigate = useNavigate();
 
   // Redireciona para dashboard se já estiver autenticado
@@ -43,13 +46,20 @@ export default function Login() {
       const result = await login(email, senha);
 
       if (result.success) {
-        // Redireciona para o dashboard após login bem-sucedido
-        navigate('/dashboard');
+        showSuccess('Login realizado com sucesso!');
+        // Pequeno delay para mostrar a notificação
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 500);
       } else {
-        setError(result.error || 'Erro ao fazer login');
+        const errorMsg = result.error || 'Erro ao fazer login';
+        setError(errorMsg);
+        showErrorNotification(errorMsg);
       }
     } catch (err) {
-      setError('Erro ao conectar com o servidor');
+      const errorMsg = 'Erro ao conectar com o servidor';
+      setError(errorMsg);
+      showErrorNotification(errorMsg);
       console.error(err);
     } finally {
       setLoading(false);
@@ -127,7 +137,7 @@ export default function Login() {
                 className="btn btn-primary btn-block"
                 disabled={loading}
               >
-                {loading ? 'Entrando...' : 'Entrar'}
+                {loading ? <><ButtonLoading /> Entrando...</> : 'Entrar'}
               </button>
             </form>
 

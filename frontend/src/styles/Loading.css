@@ -1,82 +1,124 @@
-/* ========================================
-   LOADING OVERLAY
-   ======================================== */
+/**
+ * ==============================================
+ * LOADING COMPONENTS - Modern Styles
+ * ==============================================
+ * Estilos para componentes de loading com design moderno
+ * Inclui: Spinners, Dots, Pulse, Skeleton loaders
+ */
+
+/* ============================================== */
+/* BASE LOADING STYLES */
+/* ============================================== */
 
 .loading-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.95);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--z-modal);
-  animation: fadeIn 0.3s ease;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 16px;
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 20px;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .loading-inline {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 2rem;
+  gap: 12px;
+  padding: 24px;
 }
 
 .loading-text {
-  color: var(--text-medium);
-  font-size: 1rem;
-  font-weight: 600;
   margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
   text-align: center;
-  animation: pulse 2s infinite;
 }
 
-/* ========================================
-   SPINNER LOADER
-   ======================================== */
+/* ============================================== */
+/* SPINNER LOADER */
+/* ============================================== */
 
 .loading-spinner {
   position: relative;
+  display: inline-block;
 }
 
 .spinner-circle {
-  width: 100%;
-  height: 100%;
-  border: 3px solid transparent;
-  border-top-color: currentColor;
   border-radius: 50%;
+  border-style: solid;
   animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* Tamanhos do Spinner */
+.loading-spinner.loading-sm .spinner-circle {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
 }
 
-/* ========================================
-   DOTS LOADER
-   ======================================== */
+.loading-spinner.loading-md .spinner-circle {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+
+.loading-spinner.loading-lg .spinner-circle {
+  width: 60px;
+  height: 60px;
+  border-width: 5px;
+}
+
+/* Cores do Spinner */
+.loading-spinner.loading-primary .spinner-circle {
+  border-color: #e0e7ff;
+  border-top-color: #4f46e5;
+}
+
+.loading-spinner.loading-white .spinner-circle {
+  border-color: rgba(255, 255, 255, 0.2);
+  border-top-color: #ffffff;
+}
+
+.loading-spinner.loading-dark .spinner-circle {
+  border-color: #e5e7eb;
+  border-top-color: #1f2937;
+}
+
+/* ============================================== */
+/* DOTS LOADER */
+/* ============================================== */
 
 .loading-dots {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .loading-dots .dot {
-  width: 12px;
-  height: 12px;
   border-radius: 50%;
-  background: currentColor;
-  animation: dotBounce 1.4s infinite ease-in-out both;
+  animation: bounce 1.4s ease-in-out infinite;
 }
 
 .loading-dots .dot:nth-child(1) {
@@ -87,32 +129,49 @@
   animation-delay: -0.16s;
 }
 
-@keyframes dotBounce {
-  0%, 80%, 100% {
-    transform: scale(0);
-    opacity: 0.5;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 1;
-  }
+/* Tamanhos dos Dots */
+.loading-dots.loading-sm .dot {
+  width: 8px;
+  height: 8px;
 }
 
-/* ========================================
-   PULSE LOADER
-   ======================================== */
+.loading-dots.loading-md .dot {
+  width: 12px;
+  height: 12px;
+}
+
+.loading-dots.loading-lg .dot {
+  width: 16px;
+  height: 16px;
+}
+
+/* Cores dos Dots */
+.loading-dots.loading-primary .dot {
+  background-color: #4f46e5;
+}
+
+.loading-dots.loading-white .dot {
+  background-color: #ffffff;
+}
+
+.loading-dots.loading-dark .dot {
+  background-color: #1f2937;
+}
+
+/* ============================================== */
+/* PULSE LOADER */
+/* ============================================== */
 
 .loading-pulse {
   position: relative;
-  width: 60px;
-  height: 60px;
+  display: inline-block;
 }
 
 .pulse-ring {
   position: absolute;
-  border: 3px solid currentColor;
   border-radius: 50%;
-  animation: pulseRing 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  border: 2px solid;
+  animation: pulse 1.5s ease-out infinite;
 }
 
 .pulse-ring:nth-child(1) {
@@ -127,66 +186,38 @@
   animation-delay: 1s;
 }
 
-@keyframes pulseRing {
-  0% {
-    inset: 50%;
-    opacity: 1;
-  }
-  100% {
-    inset: 0;
-    opacity: 0;
-  }
+/* Tamanhos do Pulse */
+.loading-pulse.loading-sm .pulse-ring {
+  width: 30px;
+  height: 30px;
 }
 
-/* ========================================
-   TAMANHOS
-   ======================================== */
-
-.loading-sm {
-  width: 24px;
-  height: 24px;
+.loading-pulse.loading-md .pulse-ring {
+  width: 50px;
+  height: 50px;
 }
 
-.loading-md {
-  width: 48px;
-  height: 48px;
+.loading-pulse.loading-lg .pulse-ring {
+  width: 70px;
+  height: 70px;
 }
 
-.loading-lg {
-  width: 72px;
-  height: 72px;
+/* Cores do Pulse */
+.loading-pulse.loading-primary .pulse-ring {
+  border-color: #4f46e5;
 }
 
-/* Dots sizes */
-.loading-dots.loading-sm .dot {
-  width: 8px;
-  height: 8px;
+.loading-pulse.loading-white .pulse-ring {
+  border-color: #ffffff;
 }
 
-.loading-dots.loading-lg .dot {
-  width: 16px;
-  height: 16px;
+.loading-pulse.loading-dark .pulse-ring {
+  border-color: #1f2937;
 }
 
-/* ========================================
-   CORES
-   ======================================== */
-
-.loading-primary {
-  color: var(--primary-blue);
-}
-
-.loading-white {
-  color: white;
-}
-
-.loading-dark {
-  color: var(--text-dark);
-}
-
-/* ========================================
-   BUTTON LOADING
-   ======================================== */
+/* ============================================== */
+/* BUTTON LOADING */
+/* ============================================== */
 
 .button-loading {
   display: inline-flex;
@@ -195,12 +226,13 @@
 }
 
 .button-loading .spinner-circle {
-  border-width: 2px;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
 }
 
-/* ========================================
-   SKELETON LOADERS
-   ======================================== */
+/* ============================================== */
+/* SKELETON LOADERS */
+/* ============================================== */
 
 .skeleton {
   background: linear-gradient(
@@ -210,70 +242,63 @@
     #f0f0f0 100%
   );
   background-size: 200% 100%;
-  animation: skeleton 1.5s ease-in-out infinite;
+  animation: shimmer 1.5s ease-in-out infinite;
   border-radius: 8px;
-}
-
-@keyframes skeleton {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
 }
 
 /* Skeleton Card */
 .skeleton-card {
-  background: white;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
   border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 12px;
 }
 
 .skeleton-header {
-  height: 24px;
-  width: 60%;
+  height: 120px;
+  border-radius: 12px;
 }
 
 .skeleton-text {
   height: 16px;
-  width: 100%;
+  border-radius: 4px;
 }
 
 .skeleton-text.short {
-  width: 70%;
+  width: 60%;
 }
 
 .skeleton-footer {
   height: 40px;
-  width: 100%;
-  margin-top: 0.5rem;
+  border-radius: 8px;
+  margin-top: 8px;
 }
 
 /* Skeleton List */
 .skeleton-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .skeleton-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: white;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .skeleton-circle {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -282,37 +307,104 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .skeleton-title {
   height: 18px;
-  width: 60%;
+  width: 70%;
+  border-radius: 4px;
 }
 
 .skeleton-subtitle {
   height: 14px;
-  width: 40%;
+  width: 50%;
+  border-radius: 4px;
 }
 
-/* ========================================
-   RESPONSIVE
-   ======================================== */
+/* ============================================== */
+/* ANIMATIONS */
+/* ============================================== */
 
-@media (max-width: 767px) {
-  .loading-container {
-    gap: 1rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
 
-  .loading-text {
-    font-size: 0.875rem;
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ============================================== */
+/* RESPONSIVE */
+/* ============================================== */
+
+@media (max-width: 768px) {
+  .loading-container {
+    padding: 24px;
   }
 
   .skeleton-card {
-    padding: 1rem;
+    padding: 16px;
   }
 
   .skeleton-item {
-    padding: 0.75rem;
+    padding: 12px;
+  }
+
+  .skeleton-circle {
+    width: 40px;
+    height: 40px;
   }
 }
