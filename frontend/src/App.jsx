@@ -13,6 +13,7 @@ import AdminOportunidades from "./pages/AdminOportunidades";
 import AdminOportunidadesLista from "./pages/AdminOportunidadesLista";
 import AdminOrganizacoes from "./pages/AdminOrganizacoes";
 import AdminOrganizacoesLista from "./pages/AdminOrganizacoesLista";
+import Perfil from "./pages/Perfil";
 
 function App() {
   return (
@@ -24,6 +25,14 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/oportunidades" element={<Oportunidades />} />
+              <Route 
+                path="/perfil" 
+                element={
+                  <PrivateRoute>
+                    <Perfil />
+                  </PrivateRoute>
+                } 
+              />
               <Route path="/oportunidades/:id" element={<OportunidadeDetalhe />} />
               <Route 
                 path="/dashboard" 

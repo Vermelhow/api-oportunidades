@@ -43,10 +43,10 @@ export default function Header() {
         <div className="header-actions desktop-actions">
           {signed ? (
             <>
-              <div className="user-info">
+              <Link to="/perfil" className="user-info">
                 <span className="user-avatar">👤</span>
                 <span className="user-name">Olá, {user?.nome?.split(' ')[0]}</span>
-              </div>
+              </Link>
               <button onClick={handleLogout} className="btn btn-outline">
                 Sair
               </button>
@@ -100,10 +100,16 @@ export default function Header() {
             Oportunidades
           </Link>
           {signed && (
-            <Link to="/dashboard" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <span className="mobile-link-icon">📊</span>
-              Dashboard
-            </Link>
+            <>
+              <Link to="/perfil" className="mobile-nav-link" onClick={closeMobileMenu}>
+                <span className="mobile-link-icon">👤</span>
+                Meu Perfil
+              </Link>
+              <Link to="/dashboard" className="mobile-nav-link" onClick={closeMobileMenu}>
+                <span className="mobile-link-icon">📊</span>
+                Dashboard
+              </Link>
+            </>
           )}
         </div>
 
