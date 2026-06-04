@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import { isValidEmail, validatePassword } from '../utils/auth';
 import Layout from '../components/Layout';
 import { ButtonLoading } from '../components';
 import '../styles/Login.css';
@@ -10,57 +11,75 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({ email: '', senha: '', general: '' });
   const [showPassword, setShowPassword] = useState(false);
 
   const { login, signed } = useAuth();
   const { showSuccess, showError: showErrorNotification } = useNotification();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Redireciona para dashboard se já estiver autenticado
+  // Pega a rota de origem (de onde foi redirecionado)
+  const from = location.state?.from || '/dashboard';
+
+  // Redireciona para a rota de origem se já estiver autenticado
   useEffect(() => {
     if (signed) {
-      navigate('/dashboard');
+      navigate(from, { replace: true });
     }
-  }, [signed, navigate]);
+  }, [signed, navigate, from]);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError('');
+    setErrors({ email: '', senha: '', general: '' });
     setLoading(true);
 
-    // Validações básicas
-    if (!email || !senha) {
-      setError('Por favor, preencha todos os campos');
+    // Validação de email
+    if (!email.trim()) {
+      setErrors(prev => ({ ...prev, email: 'Email é obrigatório' }));
       setLoading(false);
       return;
     }
 
-    if (!email.includes('@')) {
-      setError('Por favor, insira um email válido');
+    if (!isValidEmail(email)) {
+      setErrors(prev => ({ ...prev, email: 'Email inválido' }));
+      setLoading(false);
+      return;
+    }
+
+    // Validação de senha
+    if (!senha.trim()) {
+      setErrors(prev => ({ ...prev, senha: 'Senha é obrigatória' }));
+      setLoading(false);
+      return;
+    }
+
+    const passwordValidation = validatePassword(senha);
+    if (!passwordValidation.isValid) {
+      setErrors(prev => ({ ...prev, senha: passwordValidation.message }));
       setLoading(false);
       return;
     }
 
     try {
-      const result = await login(email, senha);
+      const result = await login(email.trim(), senha);
 
       if (result.success) {
         showSuccess('Login realizado com sucesso!');
-        // Pequeno delay para mostrar a notificação
+        // Redireciona para a rota de origem após pequeno delay
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate(from, { replace: true });
         }, 500);
       } else {
         const errorMsg = result.error || 'Erro ao fazer login';
-        setError(errorMsg);
+        setErrors(prev => ({ ...prev, general: errorMsg }));
         showErrorNotification(errorMsg);
       }
     } catch (err) {
-      const errorMsg = 'Erro ao conectar com o servidor';
-      setError(errorMsg);
+      const errorMsg = 'Erro ao conectar com o servidor. Tente novamente.';
+      setErrors(prev => ({ ...prev, general: errorMsg }));
       showErrorNotification(errorMsg);
-      console.error(err);
+      console.error('Erro no login:', err);
     } finally {
       setLoading(false);
     }
@@ -78,10 +97,10 @@ export default function Login() {
               </p>
             </div>
 
-            {error && (
+            {errors.general && (
               <div className="alert alert-error">
                 <span className="alert-icon">⚠️</span>
-                <span>{error}</span>
+                <span>{errors.general}</span>
               </div>
             )}
 
@@ -95,14 +114,20 @@ export default function Login() {
                   <input
                     id="email"
                     type="email"
-                    className="form-input"
+                    className={`form-input ${errors.email ? 'error' : ''}`}
                     placeholder="seu@email.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
+                    }}
                     disabled={loading}
                     autoComplete="email"
                   />
                 </div>
+                {errors.email && (
+                  <span className="error-message">{errors.email}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -114,10 +139,13 @@ export default function Login() {
                   <input
                     id="senha"
                     type={showPassword ? 'text' : 'password'}
-                    className="form-input"
+                    className={`form-input ${errors.senha ? 'error' : ''}`}
                     placeholder="••••••••"
                     value={senha}
-                    onChange={(e) => setSenha(e.target.value)}
+                    onChange={(e) => {
+                      setSenha(e.target.value);
+                      if (errors.senha) setErrors(prev => ({ ...prev, senha: '' }));
+                    }}
                     disabled={loading}
                     autoComplete="current-password"
                   />
@@ -126,10 +154,14 @@ export default function Login() {
                     className="toggle-password"
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={loading}
+                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   >
                     {showPassword ? '👁️' : '👁️‍🗨️'}
                   </button>
                 </div>
+                {errors.senha && (
+                  <span className="error-message">{errors.senha}</span>
+                )}
               </div>
 
               <button

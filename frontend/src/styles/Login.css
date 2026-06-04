@@ -290,6 +290,33 @@
   }
 }
 
+/* Error States */
+.form-input.error {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.form-input.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.error-message::before {
+  content: '⚠️';
+  font-size: 0.875rem;
+}
+
+/* Responsiveness */
 @media (max-width: 768px) {
   .login-page {
     padding: var(--spacing-md);

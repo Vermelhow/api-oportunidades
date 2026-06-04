@@ -9,6 +9,17 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const API_BASE_URL = `${API_URL}/api`;
 const REQUEST_TIMEOUT = 30000; // 30 segundos
 
+// Callback para logout em caso de 401 (será configurado pelo AuthContext)
+let onUnauthorizedCallback = null;
+
+/**
+ * Configura callback para ser chamado em caso de erro 401
+ * @param {Function} callback - Função a ser executada em caso de 401
+ */
+export function setUnauthorizedCallback(callback) {
+  onUnauthorizedCallback = callback;
+}
+
 /**
  * Classe customizada de erro para API
  */
@@ -97,6 +108,13 @@ export const api = {
       // Verificar se houve erro HTTP
       if (!response.ok) {
         const message = getErrorMessage(response.status, data);
+        
+        // Se for 401, chama o callback de logout (se configurado)
+        if (response.status === 401 && onUnauthorizedCallback) {
+          // Executa de forma assíncrona para não bloquear a resposta
+          setTimeout(() => onUnauthorizedCallback(), 0);
+        }
+        
         throw new ApiError(message, response.status, data);
       }
       

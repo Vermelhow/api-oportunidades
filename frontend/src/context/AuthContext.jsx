@@ -1,5 +1,12 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { loginUser, registerUser } from '../services/api';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { loginUser, registerUser, setUnauthorizedCallback } from '../services/api';
+import {
+  isTokenExpired,
+  isValidTokenFormat,
+  clearAuthStorage,
+  saveAuthStorage,
+  getAuthStorage,
+} from '../utils/auth';
 
 const AuthContext = createContext({});
 
@@ -8,18 +15,56 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Carrega os dados do localStorage ao iniciar
-  useEffect(() => {
-    const storedToken = localStorage.getItem('@api-oportunidades:token');
-    const storedUser = localStorage.getItem('@api-oportunidades:user');
+  /**
+   * Função para fazer logout (pode ser chamada de qualquer lugar)
+   */
+  const handleLogout = useCallback(() => {
+    clearAuthStorage();
+    setToken(null);
+    setUser(null);
+  }, []);
 
+  /**
+   * Configura callback de logout automático em caso de 401
+   */
+  useEffect(() => {
+    setUnauthorizedCallback(() => {
+      console.warn('Sessão expirada ou não autorizada. Fazendo logout automático...');
+      handleLogout();
+    });
+  }, [handleLogout]);
+
+  /**
+   * Valida e carrega dados do localStorage ao iniciar
+   */
+  useEffect(() => {
+    const { token: storedToken, user: storedUser } = getAuthStorage();
+
+    // Verifica se existe token e usuário
     if (storedToken && storedUser) {
+      // Valida formato do token
+      if (!isValidTokenFormat(storedToken)) {
+        console.warn('Token com formato inválido. Fazendo logout...');
+        handleLogout();
+        setLoading(false);
+        return;
+      }
+
+      // Verifica se o token está expirado
+      if (isTokenExpired(storedToken)) {
+        console.warn('Token expirado. Fazendo logout...');
+        handleLogout();
+        setLoading(false);
+        return;
+      }
+
+      // Token válido, carrega os dados
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      setUser(storedUser);
     }
 
     setLoading(false);
-  }, []);
+  }, [handleLogout]);
 
   /**
    * Realiza o login do usuário
@@ -30,9 +75,13 @@ export function AuthProvider({ children }) {
       
       const { user: userData, token: userToken } = response.data;
 
+      // Valida o token recebido
+      if (!isValidTokenFormat(userToken)) {
+        throw new Error('Token recebido é inválido');
+      }
+
       // Salva no localStorage
-      localStorage.setItem('@api-oportunidades:token', userToken);
-      localStorage.setItem('@api-oportunidades:user', JSON.stringify(userData));
+      saveAuthStorage(userToken, userData);
 
       // Atualiza o estado
       setToken(userToken);
@@ -41,9 +90,19 @@ export function AuthProvider({ children }) {
       return { success: true, user: userData };
     } catch (error) {
       console.error('Erro no login:', error);
+      
+      // Trata erros da API (ApiError)
+      if (error.isApiError) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+
+      // Outros erros
       return {
         success: false,
-        error: error.response?.data?.message || 'Erro ao fazer login'
+        error: error.message || 'Erro ao fazer login. Tente novamente.'
       };
     }
   }
@@ -57,9 +116,13 @@ export function AuthProvider({ children }) {
       
       const { user: userData, token: userToken } = response.data;
 
+      // Valida o token recebido
+      if (!isValidTokenFormat(userToken)) {
+        throw new Error('Token recebido é inválido');
+      }
+
       // Salva no localStorage
-      localStorage.setItem('@api-oportunidades:token', userToken);
-      localStorage.setItem('@api-oportunidades:user', JSON.stringify(userData));
+      saveAuthStorage(userToken, userData);
 
       // Atualiza o estado
       setToken(userToken);
@@ -68,9 +131,19 @@ export function AuthProvider({ children }) {
       return { success: true, user: userData };
     } catch (error) {
       console.error('Erro no cadastro:', error);
+      
+      // Trata erros da API (ApiError)
+      if (error.isApiError) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+
+      // Outros erros
       return {
         success: false,
-        error: error.response?.data?.message || 'Erro ao fazer cadastro'
+        error: error.message || 'Erro ao fazer cadastro. Tente novamente.'
       };
     }
   }
@@ -79,13 +152,16 @@ export function AuthProvider({ children }) {
    * Realiza o logout do usuário
    */
   function logout() {
-    // Remove do localStorage
-    localStorage.removeItem('@api-oportunidades:token');
-    localStorage.removeItem('@api-oportunidades:user');
+    handleLogout();
+  }
 
-    // Limpa o estado
-    setToken(null);
-    setUser(null);
+  /**
+   * Atualiza os dados do usuário (útil após editar perfil)
+   */
+  function updateUser(updatedUserData) {
+    const newUserData = { ...user, ...updatedUserData };
+    setUser(newUserData);
+    saveAuthStorage(token, newUserData);
   }
 
   /**
@@ -111,6 +187,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
+        updateUser,
         isAuthenticated,
         getToken,
         signed: isAuthenticated(),
