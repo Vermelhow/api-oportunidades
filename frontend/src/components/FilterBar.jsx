@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import '../styles/FilterBar.css';
 
 /**
@@ -26,6 +27,8 @@ export default function FilterBar({
   totalResults = 0,
   totalAvailable = 0
 }) {
+  const [isExpanded, setIsExpanded] = useState(true);
+
   const statusOptions = [
     { value: '', label: 'Todos os Status' },
     { value: 'ativa', label: '🟢 Ativas' },
@@ -48,10 +51,18 @@ export default function FilterBar({
     { value: 'hibrido', label: '🔄 Híbrido' }
   ];
 
+  // Conta quantos filtros estão ativos
+  const activeFilterCount = [
+    filters.categoria,
+    filters.status,
+    filters.tipo,
+    filters.formato
+  ].filter(Boolean).length;
+
   return (
     <div className="filter-bar">
       <div className="filter-bar-header">
-        <div className="filter-results">
+        <div className="filter-results-info">
           <span className="filter-results-count">
             {totalResults === totalAvailable ? (
               <>
@@ -63,89 +74,177 @@ export default function FilterBar({
               </>
             )}
           </span>
+          {activeFilterCount > 0 && (
+            <span className="filter-badge">{activeFilterCount} filtro{activeFilterCount !== 1 ? 's' : ''} ativo{activeFilterCount !== 1 ? 's' : ''}</span>
+          )}
         </div>
 
-        {hasActiveFilters && (
+        <div className="filter-bar-actions">
+          {hasActiveFilters && (
+            <button
+              onClick={onClearFilters}
+              className="btn-clear-filters"
+              type="button"
+              title="Limpar todos os filtros"
+            >
+              ✕ Limpar Filtros
+            </button>
+          )}
+          
           <button
-            onClick={onClearFilters}
-            className="btn-clear-filters"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="btn-toggle-filters"
             type="button"
+            aria-label={isExpanded ? 'Ocultar filtros' : 'Mostrar filtros'}
+            aria-expanded={isExpanded}
           >
-            ✕ Limpar Filtros
+            {isExpanded ? '▲' : '▼'} Filtros
           </button>
-        )}
+        </div>
       </div>
 
-      <div className="filter-bar-controls">
-        {/* Filtro por Categoria */}
-        <div className="filter-group">
-          <label htmlFor="filter-categoria" className="filter-label">
-            🏷️ Categoria
-          </label>
-          <select
-            id="filter-categoria"
-            className="filter-select"
-            value={filters.categoria || ''}
-            onChange={(e) => onCategoriaChange && onCategoriaChange(e.target.value)}
-          >
-            <option value="">Todas as Categorias</option>
-            {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.nome}
-              </option>
-            ))}
-          </select>
-        </div>
+      {isExpanded && (
+        <div className="filter-bar-controls">
+          {/* Filtro por Categoria */}
+          <div className="filter-group">
+            <label htmlFor="filter-categoria" className="filter-label">
+              <span className="filter-label-icon">🏷️</span>
+              <span>Categoria</span>
+            </label>
+            <select
+              id="filter-categoria"
+              className="filter-select"
+              value={filters.categoria || ''}
+              onChange={(e) => onCategoriaChange && onCategoriaChange(e.target.value)}
+            >
+              <option value="">Todas as Categorias</option>
+              {categorias.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.nome}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Filtro por Status */}
-        <div className="filter-group">
-          <label htmlFor="filter-status" className="filter-label">
-            📊 Status
-          </label>
-          <select
-            id="filter-status"
-            className="filter-select"
-            value={filters.status || ''}
-            onChange={(e) => onStatusChange && onStatusChange(e.target.value)}
-          >
-            {statusOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Filtro por Status */}
+          <div className="filter-group">
+            <label htmlFor="filter-status" className="filter-label">
+              <span className="filter-label-icon">📊</span>
+              <span>Status</span>
+            </label>
+            <select
+              id="filter-status"
+              className="filter-select"
+              value={filters.status || ''}
+              onChange={(e) => onStatusChange && onStatusChange(e.target.value)}
+            >
+              {statusOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Filtro por Tipo */}
-        <div className="filter-group">
-          <label htmlFor="filter-tipo" className="filter-label">
-            💡 Tipo
-          </label>
-          <select
-            id="filter-tipo"
-            className="filter-select"
-            value={filters.tipo || ''}
-            onChange={(e) => onTipoChange && onTipoChange(e.target.value)}
-          >
-            {tipoOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Filtro por Tipo */}
+          <div className="filter-group">
+            <label htmlFor="filter-tipo" className="filter-label">
+              <span className="filter-label-icon">💡</span>
+              <span>Tipo</span>
+            </label>
+            <select
+              id="filter-tipo"
+              className="filter-select"
+              value={filters.tipo || ''}
+              onChange={(e) => onTipoChange && onTipoChange(e.target.value)}
+            >
+              {tipoOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Filtro por Formato */}
-        <div className="filter-group">
-          <label htmlFor="filter-formato" className="filter-label">
-            📍 Formato
-          </label>
-          <select
-            id="filter-formato"
-            className="filter-select"
-            value={filters.formato || ''}
-            onChange={(e) => onFormatoChange && onFormatoChange(e.target.value)}
-          >
+          {/* Filtro por Formato */}
+          <div className="filter-group">
+            <label htmlFor="filter-formato" className="filter-label">
+              <span className="filter-label-icon">📍</span>
+              <span>Formato</span>
+            </label>
+            <select
+              id="filter-formato"
+              className="filter-select"
+              value={filters.formato || ''}
+              onChange={(e) => onFormatoChange && onFormatoChange(e.target.value)}
+            >
+              {formatoOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* Tags de filtros ativos */}
+      {hasActiveFilters && isExpanded && (
+        <div className="filter-tags">
+          <span className="filter-tags-label">Filtros ativos:</span>
+          
+          {filters.categoria && (
+            <button
+              onClick={() => onCategoriaChange && onCategoriaChange('')}
+              className="filter-tag"
+              type="button"
+              title="Remover filtro de categoria"
+            >
+              <span>🏷️ {categorias.find(c => c.id === parseInt(filters.categoria))?.nome || 'Categoria'}</span>
+              <span className="filter-tag-remove">✕</span>
+            </button>
+          )}
+          
+          {filters.status && (
+            <button
+              onClick={() => onStatusChange && onStatusChange('')}
+              className="filter-tag"
+              type="button"
+              title="Remover filtro de status"
+            >
+              <span>{statusOptions.find(o => o.value === filters.status)?.label || filters.status}</span>
+              <span className="filter-tag-remove">✕</span>
+            </button>
+          )}
+          
+          {filters.tipo && (
+            <button
+              onClick={() => onTipoChange && onTipoChange('')}
+              className="filter-tag"
+              type="button"
+              title="Remover filtro de tipo"
+            >
+              <span>{tipoOptions.find(o => o.value === filters.tipo)?.label || filters.tipo}</span>
+              <span className="filter-tag-remove">✕</span>
+            </button>
+          )}
+          
+          {filters.formato && (
+            <button
+              onClick={() => onFormatoChange && onFormatoChange('')}
+              className="filter-tag"
+              type="button"
+              title="Remover filtro de formato"
+            >
+              <span>{formatoOptions.find(o => o.value === filters.formato)?.label || filters.formato}</span>
+              <span className="filter-tag-remove">✕</span>
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
             {formatoOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}

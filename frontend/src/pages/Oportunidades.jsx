@@ -114,6 +114,7 @@ export default function Oportunidades() {
             value={filters.searchTerm}
             onChange={setSearchTerm}
             placeholder="Buscar por título, descrição, organização..."
+            resultCount={filters.searchTerm ? totalResults : null}
           />
 
           <FilterBar
