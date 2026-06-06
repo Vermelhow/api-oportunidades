@@ -338,18 +338,3 @@
     font-size: 0.8125rem;
   }
 }
-  }
-
-  .filter-bar-controls {
-    grid-template-columns: 1fr;
-  }
-
-  .filter-tags {
-    flex-direction: column;
-  }
-
-  .filter-tag {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
