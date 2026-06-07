@@ -7,24 +7,155 @@ export default function Dashboard() {
   const { user } = useAuth();
 
   const stats = [
-    { icon: '📋', label: 'Oportunidades', value: '12', color: '#3b82f6' },
-    { icon: '🏢', label: 'Organizações', value: '8', color: '#10b981' },
-    { icon: '👥', label: 'Pessoas', value: '45', color: '#f59e0b' },
-    { icon: '❤️', label: 'Interesses', value: '23', color: '#ef4444' },
+    { 
+      icon: '📋', 
+      label: 'Oportunidades', 
+      value: '24', 
+      change: '+12%',
+      trend: 'up',
+      color: '#3b82f6',
+      description: 'Total de vagas ativas' 
+    },
+    { 
+      icon: '🏢', 
+      label: 'Organizações', 
+      value: '15', 
+      change: '+5',
+      trend: 'up',
+      color: '#10b981',
+      description: 'Parceiros cadastrados' 
+    },
+    { 
+      icon: '👥', 
+      label: 'Candidatos', 
+      value: '87', 
+      change: '+23%',
+      trend: 'up',
+      color: '#f59e0b',
+      description: 'Usuários registrados' 
+    },
+    { 
+      icon: '❤️', 
+      label: 'Interesses', 
+      value: '156', 
+      change: '+18%',
+      trend: 'up',
+      color: '#ef4444',
+      description: 'Candidaturas realizadas' 
+    },
+  ];
+
+  const insights = [
+    { 
+      icon: '📈', 
+      title: 'Taxa de Conversão', 
+      value: '34%', 
+      description: 'Candidatos que se inscreveram',
+      color: '#3b82f6',
+      trend: 'positive'
+    },
+    { 
+      icon: '⚡', 
+      title: 'Tempo Médio', 
+      value: '2.5 dias', 
+      description: 'Para preencher uma vaga',
+      color: '#10b981',
+      trend: 'positive'
+    },
+    { 
+      icon: '🎯', 
+      title: 'Match Rate', 
+      value: '78%', 
+      description: 'Compatibilidade média',
+      color: '#8b5cf6',
+      trend: 'positive'
+    },
   ];
 
   const quickActions = [
-    { icon: '➕', label: 'Nova Oportunidade', path: '/admin/oportunidades/nova', color: '#3b82f6' },
-    { icon: '🏢', label: 'Nova Organização', path: '/admin/organizacoes', color: '#10b981' },
-    { icon: '🏷️', label: 'Nova Categoria', path: '/admin/categorias', color: '#f59e0b' },
-    { icon: '👤', label: 'Novo Usuário', path: '/admin/pessoas', color: '#8b5cf6' },
+    { 
+      icon: '➕', 
+      label: 'Nova Oportunidade', 
+      path: '/admin/oportunidades/nova', 
+      color: '#3b82f6',
+      description: 'Cadastrar nova vaga' 
+    },
+    { 
+      icon: '🏢', 
+      label: 'Nova Organização', 
+      path: '/admin/organizacoes', 
+      color: '#10b981',
+      description: 'Adicionar parceiro' 
+    },
+    { 
+      icon: '📊', 
+      label: 'Ver Relatórios', 
+      path: '/admin/oportunidades', 
+      color: '#8b5cf6',
+      description: 'Analytics e métricas' 
+    },
+    { 
+      icon: '⚙️', 
+      label: 'Configurações', 
+      path: '/admin/categorias', 
+      color: '#f59e0b',
+      description: 'Sistema e categorias' 
+    },
+  ];
+
+  const alerts = [
+    { 
+      icon: '🔔', 
+      text: '5 novas candidaturas pendentes de análise', 
+      type: 'info',
+      action: 'Ver todas',
+      link: '/admin/oportunidades'
+    },
+    { 
+      icon: '⚠️', 
+      text: '3 oportunidades próximas do prazo de encerramento', 
+      type: 'warning',
+      action: 'Revisar',
+      link: '/admin/oportunidades'
+    },
   ];
 
   const recentActivities = [
-    { icon: '📋', text: 'Oportunidade "Voluntário em ONG" criada', time: 'Há 2 horas', color: '#3b82f6' },
-    { icon: '🏢', text: 'Organização "Instituto ABC" atualizada', time: 'Há 5 horas', color: '#10b981' },
-    { icon: '❤️', text: 'Novo interesse em "Projeto Social"', time: 'Há 1 dia', color: '#ef4444' },
-    { icon: '👥', text: 'Usuário "João Silva" cadastrado', time: 'Há 2 dias', color: '#f59e0b' },
+    { 
+      icon: '📋', 
+      text: 'Oportunidade "Voluntário em Educação" publicada', 
+      time: 'Há 1 hora', 
+      color: '#3b82f6',
+      user: 'Sistema'
+    },
+    { 
+      icon: '❤️', 
+      text: 'Nova candidatura para "Projeto Social Comunitário"', 
+      time: 'Há 2 horas', 
+      color: '#ef4444',
+      user: 'Maria Silva'
+    },
+    { 
+      icon: '🏢', 
+      text: 'Organização "Instituto Crescer" atualizada', 
+      time: 'Há 5 horas', 
+      color: '#10b981',
+      user: 'Admin'
+    },
+    { 
+      icon: '👥', 
+      text: 'Novo usuário "João Santos" cadastrado', 
+      time: 'Há 1 dia', 
+      color: '#f59e0b',
+      user: 'Sistema'
+    },
+    { 
+      icon: '✅', 
+      text: 'Candidatura aprovada para "Apoio a Idosos"', 
+      time: 'Há 1 dia', 
+      color: '#10b981',
+      user: 'Coordenador'
+    },
   ];
 
   return (
@@ -54,11 +185,57 @@ export default function Dashboard() {
               <div className="stat-icon">{stat.icon}</div>
               <div className="stat-info">
                 <p className="stat-label">{stat.label}</p>
-                <h3 className="stat-value">{stat.value}</h3>
+                <div className="stat-row">
+                  <h3 className="stat-value">{stat.value}</h3>
+                  <span className={`stat-badge ${stat.trend}`}>
+                    {stat.trend === 'up' ? '↗' : '↘'} {stat.change}
+                  </span>
+                </div>
+                <p className="stat-description">{stat.description}</p>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Insights Section */}
+        <div className="section insights-section">
+          <h2 className="section-title">💡 Insights e Métricas</h2>
+          <div className="insights-grid">
+            {insights.map((insight, idx) => (
+              <div key={idx} className="insight-card" style={{ '--insight-color': insight.color }}>
+                <div className="insight-header">
+                  <span className="insight-icon">{insight.icon}</span>
+                  <span className="insight-trend">{insight.trend === 'positive' ? '📈' : '📉'}</span>
+                </div>
+                <h3 className="insight-title">{insight.title}</h3>
+                <div className="insight-value">{insight.value}</div>
+                <p className="insight-description">{insight.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Alerts Section */}
+        {alerts.length > 0 && (
+          <div className="section alerts-section">
+            <h2 className="section-title">🔔 Alertas e Notificações</h2>
+            <div className="alerts-container">
+              {alerts.map((alert, idx) => (
+                <div key={idx} className={`alert-card alert-${alert.type}`}>
+                  <span className="alert-icon">{alert.icon}</span>
+                  <div className="alert-content">
+                    <p className="alert-text">{alert.text}</p>
+                    {alert.action && (
+                      <Link to={alert.link} className="alert-action">
+                        {alert.action} →
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Quick Actions */}
         <div className="section">
@@ -72,7 +249,10 @@ export default function Dashboard() {
                 style={{ '--action-color': action.color }}
               >
                 <div className="action-icon">{action.icon}</div>
-                <span className="action-label">{action.label}</span>
+                <div className="action-content">
+                  <span className="action-label">{action.label}</span>
+                  <span className="action-description">{action.description}</span>
+                </div>
               </Link>
             ))}
           </div>
@@ -80,7 +260,12 @@ export default function Dashboard() {
 
         {/* Recent Activity */}
         <div className="section">
-          <h2 className="section-title">🕒 Atividades Recentes</h2>
+          <div className="section-header">
+            <h2 className="section-title">🕒 Atividades Recentes</h2>
+            <Link to="/admin/oportunidades" className="section-link">
+              Ver todas →
+            </Link>
+          </div>
           <div className="activity-list">
             {recentActivities.map((activity, idx) => (
               <div key={idx} className="activity-item">
@@ -92,7 +277,11 @@ export default function Dashboard() {
                 </div>
                 <div className="activity-content">
                   <p className="activity-text">{activity.text}</p>
-                  <span className="activity-time">{activity.time}</span>
+                  <div className="activity-meta">
+                    <span className="activity-time">{activity.time}</span>
+                    <span className="activity-separator">•</span>
+                    <span className="activity-user">{activity.user}</span>
+                  </div>
                 </div>
               </div>
             ))}
