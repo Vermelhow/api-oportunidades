@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getOrganizacoes, deleteOrganizacao } from '../services/api';
 import { useNotification } from '../context/NotificationContext';
-import { Sidebar, Loading, ConfirmModal } from '../components';
+import { Sidebar, Loading, ConfirmModal, EmptyState, ErrorMessage, SkeletonList, ButtonLoading } from '../components';
 import '../styles/AdminOrganizacoesLista.css';
 
 function AdminOrganizacoesLista() {
@@ -12,6 +12,7 @@ function AdminOrganizacoesLista() {
   const [organizacoes, setOrganizacoes] = useState([]);
   const [filteredOrganizacoes, setFilteredOrganizacoes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   
   // Modal de confirmação
@@ -41,12 +42,14 @@ function AdminOrganizacoesLista() {
   async function loadOrganizacoes() {
     try {
       setLoading(true);
+      setError(null);
       const response = await getOrganizacoes();
       const data = response?.data || response || [];
       setOrganizacoes(data);
       setFilteredOrganizacoes(data);
     } catch (error) {
       console.error('Erro ao carregar organizações:', error);
+      setError(error);
       showError(error?.message || 'Erro ao carregar organizações');
     } finally {
       setLoading(false);
@@ -97,12 +100,42 @@ function AdminOrganizacoesLista() {
     }
   }
 
+  // Renderização condicional de loading
   if (loading) {
     return (
       <div className="admin-layout">
         <Sidebar />
         <div className="admin-content">
-          <Loading fullscreen={false} text="Carregando organizações..." size="lg" />
+          <div className="admin-header">
+            <div>
+              <h1>🏢 Gerenciar Organizações</h1>
+              <p>Carregando organizações parceiras...</p>
+            </div>
+          </div>
+          <SkeletonList count={4} />
+        </div>
+      </div>
+    );
+  }
+
+  // Renderização condicional de erro
+  if (error) {
+    return (
+      <div className="admin-layout">
+        <Sidebar />
+        <div className="admin-content">
+          <div className="admin-header">
+            <div>
+              <h1>🏢 Gerenciar Organizações</h1>
+              <p>Erro ao carregar dados</p>
+            </div>
+          </div>
+          <ErrorMessage
+            title="Erro ao Carregar Organizações"
+            message={error?.message || 'Não foi possível carregar a lista de organizações. Tente novamente.'}
+            onRetry={loadOrganizacoes}
+            icon="⚠️"
+          />
         </div>
       </div>
     );
@@ -161,16 +194,16 @@ function AdminOrganizacoesLista() {
 
         {/* Lista de Organizações */}
         {filteredOrganizacoes.length === 0 ? (
-          <div className="empty-state">
-            <p className="empty-icon">🏢</p>
-            <h3>{searchTerm ? 'Nenhuma organização encontrada' : 'Nenhuma organização cadastrada'}</h3>
-            <p>{searchTerm ? 'Tente ajustar os termos de busca' : 'Comece cadastrando uma nova organização'}</p>
-            {!searchTerm && (
-              <button className="btn btn-primary" onClick={handleNova}>
-                ➕ Cadastrar Primeira Organização
-              </button>
-            )}
-          </div>
+          <EmptyState
+            icon="🏢"
+            title={searchTerm ? 'Nenhuma organização encontrada' : 'Nenhuma organização cadastrada'}
+            message={searchTerm 
+              ? 'Tente ajustar os termos de busca ou limpar o filtro.' 
+              : 'Comece cadastrando uma nova organização parceira no sistema.'
+            }
+            actionText={!searchTerm ? '➕ Cadastrar Primeira Organização' : undefined}
+            onAction={!searchTerm ? handleNova : undefined}
+          />
         ) : (
           <div className="organizacoes-grid">
             {filteredOrganizacoes.map((org) => (
@@ -264,10 +297,10 @@ function AdminOrganizacoesLista() {
           onConfirm={confirmDelete}
           title="Excluir Organização"
           message={`Tem certeza que deseja excluir "${organizacaoToDelete?.nome}"?`}
-          confirmText={deleting ? 'Excluindo...' : 'Sim, Excluir'}
+          confirmText="Sim, Excluir"
           cancelText="Cancelar"
           type="danger"
-          isLoading={deleting}
+          loading={deleting}
         />
       )}
     </div>

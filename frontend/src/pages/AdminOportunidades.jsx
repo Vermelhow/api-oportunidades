@@ -47,52 +47,71 @@ export default function AdminOportunidades() {
     const fetchData = async () => {
       try {
         setLoadingData(true);
+        setError('');
         
         // Carregar categorias e organizações
         const [categoriasResponse, organizacoesResponse] = await Promise.all([
           getCategorias(),
           getOrganizacoes()
         ]);
-        setCategorias(categoriasResponse?.data || []);
-        setOrganizacoes(organizacoesResponse?.data || []);
+        
+        const categoriasData = categoriasResponse?.data || [];
+        const organizacoesData = organizacoesResponse?.data || [];
+        
+        setCategorias(categoriasData);
+        setOrganizacoes(organizacoesData);
+        
+        // Validar se há dados disponíveis
+        if (categoriasData.length === 0) {
+          setError('⚠️ Nenhuma categoria cadastrada. Cadastre categorias antes de criar oportunidades.');
+        }
+        if (organizacoesData.length === 0) {
+          setError('⚠️ Nenhuma organização cadastrada. Cadastre organizações antes de criar oportunidades.');
+        }
         
         // Se estiver em modo de edição, carregar dados da oportunidade
         if (isEditMode) {
           const oportunidadeResponse = await getOportunidadeById(id);
           const oportunidade = oportunidadeResponse?.data;
           
-          if (oportunidade) {
-            // Preencher formulário com dados existentes
-            setFormData({
-              titulo: oportunidade.titulo || '',
-              descricao: oportunidade.descricao || '',
-              requisitos: oportunidade.requisitos || '',
-              beneficios: oportunidade.beneficios || '',
-              categoria_id: oportunidade.categoria_id || '',
-              organizacao_id: oportunidade.organizacao_id || '',
-              localizacao: oportunidade.localizacao || '',
-              tipo: oportunidade.tipo || 'emprego',
-              formato: oportunidade.formato || 'presencial',
-              salario_min: oportunidade.salario_min || '',
-              salario_max: oportunidade.salario_max || '',
-              vagas: '',
-              data_inicio: oportunidade.data_inicio ? oportunidade.data_inicio.split('T')[0] : '',
-              data_fim: oportunidade.data_fim ? oportunidade.data_fim.split('T')[0] : '',
-              link_inscricao: oportunidade.link_inscricao || '',
-              status: oportunidade.status || 'ativa',
-            });
+          if (!oportunidade) {
+            throw new Error('Oportunidade não encontrada.');
           }
+          
+          // Preencher formulário com dados existentes
+          setFormData({
+            titulo: oportunidade.titulo || '',
+            descricao: oportunidade.descricao || '',
+            requisitos: oportunidade.requisitos || '',
+            beneficios: oportunidade.beneficios || '',
+            categoria_id: oportunidade.categoria_id || '',
+            organizacao_id: oportunidade.organizacao_id || '',
+            localizacao: oportunidade.localizacao || '',
+            tipo: oportunidade.tipo || 'emprego',
+            formato: oportunidade.formato || 'presencial',
+            salario_min: oportunidade.salario_min || '',
+            salario_max: oportunidade.salario_max || '',
+            vagas: '',
+            data_inicio: oportunidade.data_inicio ? oportunidade.data_inicio.split('T')[0] : '',
+            data_fim: oportunidade.data_fim ? oportunidade.data_fim.split('T')[0] : '',
+            link_inscricao: oportunidade.link_inscricao || '',
+            status: oportunidade.status || 'ativa',
+          });
         }
       } catch (err) {
-        setError(isEditMode ? 'Erro ao carregar oportunidade.' : 'Erro ao carregar dados.');
-        console.error(err);
+        console.error('Erro ao carregar dados:', err);
+        const errorMsg = err.message || (isEditMode 
+          ? 'Erro ao carregar dados da oportunidade. Tente novamente.' 
+          : 'Erro ao carregar dados necessários. Verifique sua conexão.');
+        setError(errorMsg);
+        showError(errorMsg);
       } finally {
         setLoadingData(false);
       }
     };
 
     fetchData();
-  }, [id, isEditMode]);
+  }, [id, isEditMode, showError]);
 
   // Atualizar campo do formulário
   const handleChange = (e) => {
@@ -114,30 +133,42 @@ export default function AdminOportunidades() {
   const validateForm = () => {
     const newErrors = {};
 
+    // Título
     if (!formData.titulo.trim()) {
       newErrors.titulo = 'Título é obrigatório';
     } else if (formData.titulo.trim().length < 5) {
       newErrors.titulo = 'Título deve ter no mínimo 5 caracteres';
+    } else if (formData.titulo.trim().length > 200) {
+      newErrors.titulo = 'Título deve ter no máximo 200 caracteres';
     }
 
+    // Descrição
     if (!formData.descricao.trim()) {
       newErrors.descricao = 'Descrição é obrigatória';
     } else if (formData.descricao.trim().length < 20) {
       newErrors.descricao = 'Descrição deve ter no mínimo 20 caracteres';
+    } else if (formData.descricao.trim().length > 5000) {
+      newErrors.descricao = 'Descrição deve ter no máximo 5000 caracteres';
     }
 
+    // Categoria
     if (!formData.categoria_id) {
       newErrors.categoria_id = 'Categoria é obrigatória';
     }
 
+    // Organização
     if (!formData.organizacao_id) {
       newErrors.organizacao_id = 'Organização é obrigatória';
     }
 
+    // Localização
     if (!formData.localizacao.trim()) {
       newErrors.localizacao = 'Localização é obrigatória';
+    } else if (formData.localizacao.trim().length < 3) {
+      newErrors.localizacao = 'Localização deve ter no mínimo 3 caracteres';
     }
 
+    // Datas
     if (!formData.data_inicio) {
       newErrors.data_inicio = 'Data de início é obrigatória';
     }
@@ -146,12 +177,20 @@ export default function AdminOportunidades() {
       newErrors.data_fim = 'Data de término é obrigatória';
     }
 
-    // Validar datas
+    // Validar intervalo de datas
     if (formData.data_inicio && formData.data_fim) {
       const inicio = new Date(formData.data_inicio);
       const fim = new Date(formData.data_fim);
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      
       if (fim <= inicio) {
         newErrors.data_fim = 'Data de término deve ser posterior à data de início';
+      }
+      
+      // Avisar se a data de início já passou (apenas para novas oportunidades)
+      if (!isEditMode && inicio < hoje) {
+        newErrors.data_inicio = 'Data de início já passou. Use uma data futura.';
       }
     }
 
@@ -159,20 +198,38 @@ export default function AdminOportunidades() {
     if (formData.salario_min && formData.salario_max) {
       const min = parseFloat(formData.salario_min);
       const max = parseFloat(formData.salario_max);
-      if (max < min) {
-        newErrors.salario_max = 'Salário máximo deve ser maior que o mínimo';
+      
+      if (isNaN(min) || min < 0) {
+        newErrors.salario_min = 'Salário mínimo inválido';
+      }
+      
+      if (isNaN(max) || max < 0) {
+        newErrors.salario_max = 'Salário máximo inválido';
+      }
+      
+      if (!isNaN(min) && !isNaN(max) && max < min) {
+        newErrors.salario_max = 'Salário máximo deve ser maior ou igual ao mínimo';
       }
     }
 
     // Validar vagas
-    if (formData.vagas && parseInt(formData.vagas) < 1) {
-      newErrors.vagas = 'Número de vagas deve ser maior que 0';
+    if (formData.vagas) {
+      const vagas = parseInt(formData.vagas);
+      if (isNaN(vagas) || vagas < 1) {
+        newErrors.vagas = 'Número de vagas deve ser maior que 0';
+      } else if (vagas > 1000) {
+        newErrors.vagas = 'Número de vagas parece muito alto. Verifique o valor.';
+      }
     }
 
     // Validar URL
     if (formData.link_inscricao && formData.link_inscricao.trim()) {
       try {
-        new URL(formData.link_inscricao);
+        const url = new URL(formData.link_inscricao);
+        // Verificar se o protocolo é http ou https
+        if (!['http:', 'https:'].includes(url.protocol)) {
+          newErrors.link_inscricao = 'URL deve começar com http:// ou https://';
+        }
       } catch {
         newErrors.link_inscricao = 'URL inválida. Use o formato: https://exemplo.com';
       }
@@ -190,7 +247,19 @@ export default function AdminOportunidades() {
     setSuccess('');
 
     if (!validateForm()) {
-      setError('Por favor, corrija os erros no formulário.');
+      const errorMsg = 'Por favor, corrija os erros no formulário antes de continuar.';
+      setError(errorMsg);
+      showError(errorMsg);
+      
+      // Scroll até o primeiro campo com erro
+      setTimeout(() => {
+        const firstErrorField = Object.keys(errors)[0];
+        const element = document.getElementById(firstErrorField);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.focus();
+        }
+      }, 100);
       return;
     }
 
@@ -209,26 +278,33 @@ export default function AdminOportunidades() {
       };
 
       // Criar ou atualizar baseado no modo
+      let response;
       if (isEditMode) {
-        await updateOportunidade(id, dataToSend);
-        showSuccess('Oportunidade atualizada com sucesso!');
+        response = await updateOportunidade(id, dataToSend);
+        showSuccess('✓ Oportunidade atualizada com sucesso!');
       } else {
-        await createOportunidade(dataToSend);
-        showSuccess('Oportunidade criada com sucesso!');
+        response = await createOportunidade(dataToSend);
+        showSuccess('✓ Oportunidade criada com sucesso!');
       }
       
-      // Redirecionar após breve delay
+      // Redirecionar imediatamente para a listagem
       setTimeout(() => {
-        navigate('/admin/oportunidades/lista');
-      }, 1000);
+        navigate('/admin/oportunidades/lista', { 
+          replace: true,
+          state: { refresh: true } // Sinaliza que deve recarregar a lista
+        });
+      }, 800);
 
     } catch (err) {
       console.error(isEditMode ? 'Erro ao atualizar oportunidade:' : 'Erro ao criar oportunidade:', err);
       
+      // Tratamento melhorado de erros da API
+      let errorMsg = '';
+      
       // Verificar se há erros de validação específicos da API
-      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+      if (err.data?.errors && Array.isArray(err.data.errors)) {
         const apiErrors = {};
-        err.response.data.errors.forEach(error => {
+        err.data.errors.forEach(error => {
           if (error.field) {
             apiErrors[error.field] = error.message;
           }
@@ -236,9 +312,7 @@ export default function AdminOportunidades() {
         
         if (Object.keys(apiErrors).length > 0) {
           setErrors(apiErrors);
-          const errorMsg = 'Por favor, corrija os erros indicados nos campos abaixo.';
-          setError(errorMsg);
-          showError(errorMsg);
+          errorMsg = 'Corrija os erros indicados nos campos destacados.';
           
           // Scroll suave até o primeiro campo com erro
           setTimeout(() => {
@@ -249,16 +323,26 @@ export default function AdminOportunidades() {
               element.focus();
             }
           }, 100);
-        } else {
-          const errorMsg = isEditMode ? 'Erro ao atualizar oportunidade. Verifique os dados e tente novamente.' : 'Erro ao criar oportunidade. Verifique os dados e tente novamente.';
-          setError(errorMsg);
-          showError(errorMsg);
         }
-      } else {
-        const errorMsg = err.response?.data?.message || (isEditMode ? 'Erro ao atualizar oportunidade. Tente novamente.' : 'Erro ao criar oportunidade. Tente novamente.');
-        setError(errorMsg);
-        showError(errorMsg);
       }
+      
+      // Se não há erros de campo específicos, usar mensagem geral
+      if (!errorMsg) {
+        // Usar mensagem personalizada do erro da API se disponível
+        if (err.message) {
+          errorMsg = err.message;
+        } else {
+          errorMsg = isEditMode 
+            ? 'Não foi possível atualizar a oportunidade. Verifique os dados e tente novamente.' 
+            : 'Não foi possível criar a oportunidade. Verifique os dados e tente novamente.';
+        }
+      }
+      
+      setError(errorMsg);
+      showError(errorMsg);
+      
+      // Scroll para o topo para visualizar a mensagem de erro
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setLoading(false);
     }

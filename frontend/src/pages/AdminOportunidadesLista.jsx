@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Sidebar, ConfirmModal, Loading, ErrorMessage, EmptyState, ButtonLoading } from '../components';
 import { getOportunidades } from '../services/api';
 import { useDeleteOportunidade } from '../hooks/useDeleteOportunidade';
@@ -8,6 +8,7 @@ import '../styles/AdminOportunidadesLista.css';
 
 export default function AdminOportunidadesLista() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [oportunidades, setOportunidades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,16 +29,34 @@ export default function AdminOportunidadesLista() {
     carregarOportunidades();
   }, []);
 
+  // Recarregar quando voltar de criar/editar com sinal de refresh
+  useEffect(() => {
+    if (location.state?.refresh) {
+      carregarOportunidades();
+      // Limpar o estado para não recarregar novamente
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, location.pathname, navigate]);
+
   const carregarOportunidades = async () => {
     try {
       setLoading(true);
       setError(null);
       const response = await getOportunidades();
-      setOportunidades(response?.data || []);
+      const data = response?.data || [];
+      setOportunidades(data);
+      
+      // Se veio de uma criação/edição bem-sucedida, mostrar notificação
+      if (location.state?.created) {
+        showSuccess('✓ Oportunidade criada com sucesso!');
+      } else if (location.state?.updated) {
+        showSuccess('✓ Oportunidade atualizada com sucesso!');
+      }
     } catch (err) {
       console.error('Erro ao carregar oportunidades:', err);
       setError(err);
-      showError(err.message || 'Erro ao carregar oportunidades');
+      const errorMsg = err.message || 'Não foi possível carregar as oportunidades. Tente novamente.';
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -54,11 +73,11 @@ export default function AdminOportunidadesLista() {
       (deletedId) => {
         // Remove da lista local sem precisar recarregar
         setOportunidades(prev => prev.filter(op => op.id !== deletedId));
-        showSuccess('Oportunidade excluída com sucesso!');
+        showSuccess('✓ Oportunidade excluída com sucesso!');
       },
       // onError
       (errorMessage) => {
-        showError(errorMessage);
+        showError(`Erro ao excluir: ${errorMessage}`);
       }
     );
   };

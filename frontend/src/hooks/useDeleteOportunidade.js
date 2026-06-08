@@ -84,15 +84,29 @@ export function useDeleteOportunidade() {
         onSuccess(id);
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Erro ao excluir oportunidade';
+      console.error('Erro ao excluir oportunidade:', err);
+      
+      // Tentar extrair mensagem de erro amigável
+      let errorMessage = 'Não foi possível excluir a oportunidade.';
+      
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.data?.message) {
+        errorMessage = err.data.message;
+      } else if (err.status === 404) {
+        errorMessage = 'Oportunidade não encontrada.';
+      } else if (err.status === 403) {
+        errorMessage = 'Você não tem permissão para excluir esta oportunidade.';
+      }
+      
       setDeleteError(errorMessage);
 
       // Chama callback de erro se fornecido
       if (onError) {
         onError(errorMessage);
       }
-
-      console.error('Erro ao excluir oportunidade:', err);
+      
+      // Não fecha o modal em caso de erro, permite retry
     } finally {
       setIsDeleting(false);
     }
