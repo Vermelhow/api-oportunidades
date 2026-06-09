@@ -129,6 +129,22 @@ export default function AdminOportunidades() {
     }
   };
 
+  // Verificar se os campos obrigatórios estão preenchidos
+  const isFormValid = () => {
+    return (
+      formData.titulo.trim() !== '' &&
+      formData.descricao.trim() !== '' &&
+      formData.categoria_id !== '' &&
+      formData.organizacao_id !== '' &&
+      formData.localizacao.trim() !== '' &&
+      formData.data_inicio !== '' &&
+      formData.data_fim !== '' &&
+      categorias.length > 0 &&
+      organizacoes.length > 0 &&
+      !loading
+    );
+  };
+
   // Validar formulário
   const validateForm = () => {
     const newErrors = {};
@@ -763,7 +779,8 @@ export default function AdminOportunidades() {
               <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={loading}
+                disabled={loading || !isFormValid()}
+                title={!isFormValid() && !loading ? 'Preencha todos os campos obrigatórios' : ''}
               >
                 {loading 
                   ? (isEditMode ? '⏳ Atualizando...' : '⏳ Criando...') 
@@ -771,6 +788,12 @@ export default function AdminOportunidades() {
                 }
               </button>
             </div>
+            
+            {!isFormValid() && !loading && !loadingData && (
+              <div className="form-validation-hint">
+                💡 Preencha todos os campos obrigatórios (marcados com *) para {isEditMode ? 'salvar' : 'criar'} a oportunidade
+              </div>
+            )}
           </form>
         </div>
       </main>

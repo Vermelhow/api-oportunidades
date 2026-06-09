@@ -12,6 +12,7 @@ export default function Login() {
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ email: '', senha: '', general: '' });
+  const [touched, setTouched] = useState({ email: false, senha: false });
   const [showPassword, setShowPassword] = useState(false);
 
   const { login, signed } = useAuth();
@@ -28,6 +29,67 @@ export default function Login() {
       navigate(from, { replace: true });
     }
   }, [signed, navigate, from]);
+
+  // Validar email em tempo real (quando campo perde foco)
+  const validateEmailField = () => {
+    if (!touched.email) return;
+    
+    if (!email.trim()) {
+      setErrors(prev => ({ ...prev, email: 'Email é obrigatório' }));
+      return false;
+    }
+    
+    if (!isValidEmail(email)) {
+      setErrors(prev => ({ ...prev, email: 'Email inválido' }));
+      return false;
+    }
+    
+    setErrors(prev => ({ ...prev, email: '' }));
+    return true;
+  };
+
+  // Validar senha em tempo real (quando campo perde foco)
+  const validateSenhaField = () => {
+    if (!touched.senha) return;
+    
+    if (!senha.trim()) {
+      setErrors(prev => ({ ...prev, senha: 'Senha é obrigatória' }));
+      return false;
+    }
+    
+    const passwordValidation = validatePassword(senha);
+    if (!passwordValidation.isValid) {
+      setErrors(prev => ({ ...prev, senha: passwordValidation.message }));
+      return false;
+    }
+    
+    setErrors(prev => ({ ...prev, senha: '' }));
+    return true;
+  };
+
+  // Executar validação quando os campos mudarem
+  useEffect(() => {
+    if (touched.email) {
+      validateEmailField();
+    }
+  }, [email, touched.email]);
+
+  useEffect(() => {
+    if (touched.senha) {
+      validateSenhaField();
+    }
+  }, [senha, touched.senha]);
+
+  // Verificar se o formulário é válido
+  const isFormValid = () => {
+    return (
+      email.trim() !== '' &&
+      isValidEmail(email) &&
+      senha.trim() !== '' &&
+      validatePassword(senha).isValid &&
+      !loading
+    );
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -114,19 +176,25 @@ export default function Login() {
                   <input
                     id="email"
                     type="email"
-                    className={`form-input ${errors.email ? 'error' : ''}`}
+                    className={`form-input ${errors.email && touched.email ? 'error' : ''} ${!errors.email && touched.email && email ? 'success' : ''}`}
                     placeholder="seu@email.com"
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
+                    }}
+                    onBlur={() => {
+                      setTouched(prev => ({ ...prev, email: true }));
                     }}
                     disabled={loading}
                     autoComplete="email"
+                    required
                   />
+                  {!errors.email && touched.email && email && (
+                    <span className="input-success-icon">✓</span>
+                  )}
                 </div>
-                {errors.email && (
-                  <span className="error-message">{errors.email}</span>
+                {errors.email && touched.email && (
+                  <span className="error-message">⚠️ {errors.email}</span>
                 )}
               </div>
 
@@ -139,16 +207,22 @@ export default function Login() {
                   <input
                     id="senha"
                     type={showPassword ? 'text' : 'password'}
-                    className={`form-input ${errors.senha ? 'error' : ''}`}
+                    className={`form-input ${errors.senha && touched.senha ? 'error' : ''} ${!errors.senha && touched.senha && senha ? 'success' : ''}`}
                     placeholder="••••••••"
                     value={senha}
                     onChange={(e) => {
                       setSenha(e.target.value);
-                      if (errors.senha) setErrors(prev => ({ ...prev, senha: '' }));
+                    }}
+                    onBlur={() => {
+                      setTouched(prev => ({ ...prev, senha: true }));
                     }}
                     disabled={loading}
                     autoComplete="current-password"
+                    required
                   />
+                  {!errors.senha && touched.senha && senha && (
+                    <span className="input-success-icon">✓</span>
+                  )}
                   <button
                     type="button"
                     className="toggle-password"
@@ -159,18 +233,25 @@ export default function Login() {
                     {showPassword ? '👁️' : '👁️‍🗨️'}
                   </button>
                 </div>
-                {errors.senha && (
-                  <span className="error-message">{errors.senha}</span>
+                {errors.senha && touched.senha && (
+                  <span className="error-message">⚠️ {errors.senha}</span>
                 )}
               </div>
 
               <button
                 type="submit"
                 className="btn btn-primary btn-block"
-                disabled={loading}
+                disabled={loading || !isFormValid()}
+                title={!isFormValid() && !loading ? 'Preencha todos os campos corretamente' : ''}
               >
                 {loading ? <><ButtonLoading /> Entrando...</> : 'Entrar'}
               </button>
+              
+              {!isFormValid() && (touched.email || touched.senha) && !loading && (
+                <div className="form-hint">
+                  💡 Preencha todos os campos corretamente para fazer login
+                </div>
+              )}
             </form>
 
             <div className="login-footer">
