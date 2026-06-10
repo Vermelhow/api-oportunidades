@@ -383,20 +383,40 @@
 }
 
 /* Responsive Design */
+/* Tablet (1024px) */
 @media (max-width: 1024px) {
+  .admin-page {
+    max-width: 100%;
+    padding: 0 var(--spacing-lg);
+  }
+
   .form-card {
     padding: var(--spacing-2xl);
+  }
+
+  .form-section-title {
+    font-size: 1.375rem;
   }
 
   .form-group.third {
     flex: 1 1 calc(50% - var(--spacing-lg) / 2);
   }
+
+  .form-row {
+    gap: var(--spacing-md);
+  }
 }
 
+/* Mobile Large (768px) */
 @media (max-width: 768px) {
+  .admin-page {
+    padding: 0 var(--spacing-md);
+  }
+
   .page-header {
     flex-direction: column;
     align-items: stretch;
+    gap: var(--spacing-md);
   }
 
   .page-title {
@@ -409,6 +429,7 @@
 
   .form-card {
     padding: var(--spacing-xl);
+    border-radius: var(--radius-md);
   }
 
   .form-section {
@@ -417,7 +438,7 @@
   }
 
   .form-section-title {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
   }
 
   .form-group.half,
@@ -430,17 +451,36 @@
     gap: 0;
   }
 
+  .form-group {
+    margin-bottom: var(--spacing-lg);
+  }
+
   .form-actions {
-    flex-direction: column;
+    flex-direction: column-reverse;
+    gap: var(--spacing-md);
   }
 
   .btn {
     width: 100%;
     justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+
+  .alert {
+    padding: var(--spacing-md) var(--spacing-lg);
   }
 }
 
+/* Mobile Small (480px) */
 @media (max-width: 480px) {
+  .admin-page {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .page-header {
+    margin-bottom: var(--spacing-2xl);
+  }
+
   .page-title {
     font-size: 1.75rem;
   }
@@ -449,14 +489,44 @@
     padding: var(--spacing-lg);
   }
 
+  .form-section {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+  }
+
+  .form-section-title {
+    font-size: 1.125rem;
+  }
+
   .form-input,
   .form-select,
   .form-textarea {
-    font-size: 0.95rem;
+    font-size: 1rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .form-hint {
+    font-size: 0.8rem;
   }
 
   .alert {
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-md);
     font-size: 0.9rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+
+  .form-validation-hint {
+    font-size: 0.85rem;
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 }

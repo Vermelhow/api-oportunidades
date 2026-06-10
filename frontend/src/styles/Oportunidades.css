@@ -223,22 +223,39 @@
 /* Responsive Design */
 
 /* Tablets */
+/* Tablet (1024px) */
 @media (max-width: 1024px) {
+  .oportunidades-page {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+
   .opportunities-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: var(--spacing-xl);
   }
 
+  .page-header {
+    padding: var(--spacing-xl);
+  }
+
   .page-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 
   .page-subtitle {
-    font-size: 1rem;
+    font-size: 1.05rem;
+  }
+
+  .page-stats {
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    min-width: 140px;
   }
 }
 
-/* Mobile Large */
+/* Mobile Large (768px) */
 @media (max-width: 768px) {
   .oportunidades-page {
     padding: var(--spacing-xl) var(--spacing-md);
@@ -248,32 +265,36 @@
     flex-direction: column;
     align-items: flex-start;
     padding: var(--spacing-lg);
+    gap: var(--spacing-lg);
   }
 
   .page-title {
-    font-size: 1.75rem;
+    font-size: 1.875rem;
   }
 
   .page-subtitle {
-    font-size: 0.95rem;
+    font-size: 1rem;
+    max-width: 100%;
   }
 
   .page-stats {
     width: 100%;
-    justify-content: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
   }
 
   .stat-item {
     flex: 1;
-    min-width: 120px;
+    min-width: 110px;
+    padding: var(--spacing-md) var(--spacing-lg);
   }
 
   .stat-number {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 
   .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 
   .opportunities-grid {
@@ -282,7 +303,7 @@
   }
 }
 
-/* Mobile Small */
+/* Mobile Small (480px) */
 @media (max-width: 480px) {
   .oportunidades-page {
     padding: var(--spacing-lg) var(--spacing-sm);
@@ -291,24 +312,36 @@
   .page-header {
     padding: var(--spacing-md);
     gap: var(--spacing-md);
+    border-radius: var(--radius-lg);
   }
 
   .page-title {
-    font-size: 1.5rem;
+    font-size: 1.625rem;
   }
 
   .page-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 
   .page-stats {
     flex-direction: column;
     width: 100%;
+    gap: var(--spacing-sm);
   }
 
   .stat-item {
     width: 100%;
     min-width: unset;
+    padding: var(--spacing-md);
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 0.825rem;
   }
 
   .empty-state,
@@ -320,6 +353,11 @@
   .empty-state h2,
   .error-container h2 {
     font-size: 1.5rem;
+  }
+
+  .empty-state p,
+  .error-container p {
+    font-size: 0.95rem;
   }
 }
 
