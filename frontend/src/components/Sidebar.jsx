@@ -7,6 +7,7 @@ export default function Sidebar() {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
@@ -14,6 +15,14 @@ export default function Sidebar() {
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   // Sync collapsed state with body class for layout adjustments
@@ -28,6 +37,24 @@ export default function Sidebar() {
       document.body.classList.remove('sidebar-collapsed');
     };
   }, [isCollapsed]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    closeMobileMenu();
+  }, [location.pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const handleLogout = () => {
     if (window.confirm('Deseja realmente sair?')) {
@@ -62,7 +89,25 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+    <>
+      {/* Mobile Menu Button */}
+      <button 
+        className="mobile-menu-button" 
+        onClick={toggleMobileMenu}
+        aria-label="Abrir menu"
+        title="Abrir menu"
+      >
+        <span className="menu-icon">☰</span>
+      </button>
+
+      {/* Mobile Overlay */}
+      <div 
+        className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+        onClick={closeMobileMenu}
+        aria-hidden="true"
+      />
+
+      <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
       {/* Toggle Button */}
       <button 
         className="sidebar-toggle" 
@@ -124,5 +169,6 @@ export default function Sidebar() {
         </button>
       </div>
     </aside>
+    </>
   );
 }
