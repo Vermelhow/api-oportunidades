@@ -325,12 +325,12 @@
     gap: var(--spacing-lg);
   }
 
-  .sidebar {
+  .content-grid .sidebar {
     position: static;
     order: 2;
   }
 
-  .main-content {
+  .content-grid .main-content {
     order: 1;
   }
 

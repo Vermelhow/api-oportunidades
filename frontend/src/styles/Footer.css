@@ -3,6 +3,7 @@
   background: linear-gradient(135deg, var(--primary-dark) 0%, #002847 100%);
   color: white;
   margin-top: auto;
+  flex-shrink: 0;
   position: relative;
   overflow: hidden;
 }
