@@ -100,10 +100,11 @@
 
 /* Form Card */
 .form-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   padding: var(--spacing-3xl);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  border: 2px solid #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 /* Form Sections */

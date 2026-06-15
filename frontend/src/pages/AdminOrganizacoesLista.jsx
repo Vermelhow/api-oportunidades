@@ -186,8 +186,8 @@ function AdminOrganizacoesLista() {
         <div className="list-counter">
           <span>
             {filteredOrganizacoes.length === organizacoes.length 
-              ? `${organizacoes.length} organização${organizacoes.length !== 1 ? 'ões' : ''} cadastrada${organizacoes.length !== 1 ? 's' : ''}`
-              : `${filteredOrganizacoes.length} de ${organizacoes.length} organização${organizacoes.length !== 1 ? 'ões' : ''}`
+              ? `${organizacoes.length} ${organizacoes.length === 1 ? 'organização cadastrada' : 'organizações cadastradas'}`
+              : `${filteredOrganizacoes.length} de ${organizacoes.length} ${organizacoes.length === 1 ? 'organização' : 'organizações'}`
             }
           </span>
         </div>

@@ -6,6 +6,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Cadastro from "./pages/Cadastro";
 import Oportunidades from "./pages/Oportunidades";
 import OportunidadeDetalhe from "./pages/OportunidadeDetalhe";
 import Dashboard from "./pages/Dashboard";
@@ -13,6 +14,8 @@ import AdminOportunidades from "./pages/AdminOportunidades";
 import AdminOportunidadesLista from "./pages/AdminOportunidadesLista";
 import AdminOrganizacoes from "./pages/AdminOrganizacoes";
 import AdminOrganizacoesLista from "./pages/AdminOrganizacoesLista";
+import AdminCategorias from "./pages/AdminCategorias";
+import AdminPessoas from "./pages/AdminPessoas";
 import Perfil from "./pages/Perfil";
 
 function App() {
@@ -24,6 +27,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/cadastro" element={<Cadastro />} />
               <Route path="/oportunidades" element={<Oportunidades />} />
               <Route 
                 path="/perfil" 
@@ -95,6 +99,22 @@ function App() {
                 element={
                   <PrivateRoute>
                     <AdminOrganizacoesLista />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/admin/categorias" 
+                element={
+                  <PrivateRoute>
+                    <AdminCategorias />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/admin/pessoas" 
+                element={
+                  <PrivateRoute>
+                    <AdminPessoas />
                   </PrivateRoute>
                 } 
               />

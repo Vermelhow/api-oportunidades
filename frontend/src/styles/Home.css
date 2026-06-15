@@ -94,6 +94,9 @@
 
 .badge-icon {
   font-size: 1.125rem;
+  background: transparent;
+  display: inline-block;
+  line-height: 1;
 }
 
 .badge-text {
@@ -178,6 +181,9 @@
 
 .stat-icon {
   font-size: 2rem;
+  background: transparent;
+  display: inline-block;
+  line-height: 1;
 }
 
 .stat-info {

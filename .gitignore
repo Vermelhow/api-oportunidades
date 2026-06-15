@@ -38,3 +38,6 @@ Thumbs.db
 dist/
 build/
 .vscode/
+
+# Documentação
+docs/

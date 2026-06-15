@@ -7,6 +7,7 @@ export default function Header() {
   const { user, signed, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   function handleLogout() {
     logout();
@@ -20,6 +21,20 @@ export default function Header() {
 
   function closeMobileMenu() {
     setMobileMenuOpen(false);
+  }
+
+  function toggleUserMenu() {
+    setUserMenuOpen(!userMenuOpen);
+  }
+
+  function closeUserMenu() {
+    setUserMenuOpen(false);
+  }
+
+  function handleLogoutDesktop() {
+    logout();
+    navigate('/');
+    closeUserMenu();
   }
 
   return (
@@ -42,15 +57,33 @@ export default function Header() {
         {/* Desktop Actions */}
         <div className="header-actions desktop-actions">
           {signed ? (
-            <>
-              <Link to="/perfil" className="user-info">
+            <div className="user-menu-wrapper">
+              <button onClick={toggleUserMenu} className="user-menu-trigger">
                 <span className="user-avatar">👤</span>
                 <span className="user-name">Olá, {user?.nome?.split(' ')[0]}</span>
-              </Link>
-              <button onClick={handleLogout} className="btn btn-outline">
-                Sair
+                <span className="dropdown-arrow">{userMenuOpen ? '▲' : '▼'}</span>
               </button>
-            </>
+              {userMenuOpen && (
+                <>
+                  <div className="user-menu-overlay" onClick={closeUserMenu}></div>
+                  <div className="user-menu-dropdown">
+                    <Link to="/perfil" className="dropdown-item" onClick={closeUserMenu}>
+                      <span className="dropdown-icon">👤</span>
+                      Meu Perfil
+                    </Link>
+                    <Link to="/dashboard" className="dropdown-item" onClick={closeUserMenu}>
+                      <span className="dropdown-icon">📊</span>
+                      Dashboard
+                    </Link>
+                    <div className="dropdown-divider"></div>
+                    <button onClick={handleLogoutDesktop} className="dropdown-item dropdown-logout">
+                      <span className="dropdown-icon">🚪</span>
+                      Sair
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           ) : (
             <>
               <Link to="/login" className="btn btn-outline">Login</Link>

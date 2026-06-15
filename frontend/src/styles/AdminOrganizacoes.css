@@ -23,18 +23,18 @@
 
 /* Melhorias visuais específicas para organizações */
 .form-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 2px solid #f1f5f9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border: 2px solid #d1d5db;
   transition: all 0.3s ease;
 }
 
 .form-section:hover {
-  border-color: #e2e8f0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+  border-color: #9ca3af;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .form-section h2 {

@@ -4,9 +4,9 @@
   background: white;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(0, 102, 161, 0.1);
+  border: 2px solid #d1d5db;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;

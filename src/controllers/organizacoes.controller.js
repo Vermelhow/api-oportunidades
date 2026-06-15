@@ -64,15 +64,15 @@ class OrganizacoesController {
             }
 
             // Insere a organização
-            const result = await runQuery(
+            const result = runQuery(
                 `INSERT INTO organizacoes (nome, descricao, email, telefone, website, endereco)
                 VALUES (?, ?, ?, ?, ?, ?)`,
                 [nome, descricao, email, telefone, website, endereco]
             );
 
-            const organizacao = await getOne(
+            const organizacao = getOne(
                 'SELECT id, nome, descricao, email, telefone, website, endereco, created_at, updated_at FROM organizacoes WHERE id = ?',
-                [result.lastID]
+                [result.lastInsertRowid]
             );
 
             return createdResponse(res, organizacao, 'Organização criada com sucesso');

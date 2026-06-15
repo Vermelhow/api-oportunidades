@@ -84,7 +84,7 @@ class InteressesController {
                 [pessoa_id, oportunidade_id, mensagem]
             );
 
-            const interesse = await getOne(`
+            const interesse = getOne(`
                 SELECT 
                     i.*,
                     p.nome as pessoa_nome,
@@ -94,7 +94,7 @@ class InteressesController {
                 JOIN pessoas p ON i.pessoa_id = p.id
                 JOIN oportunidades o ON i.oportunidade_id = o.id
                 WHERE i.id = ?
-            `, [result.lastID]);
+            `, [result.lastInsertRowid]);
 
             return createdResponse(res, interesse, 'Interesse criado com sucesso');
         } catch (error) {

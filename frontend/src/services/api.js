@@ -324,12 +324,12 @@ export async function loginUser(credentials) {
 }
 
 export async function registerUser(userData) {
-  try {
-    return await api.post('/pessoas', userData);
-  } catch (error) {
-    console.error('Erro ao registrar usuário:', error);
-    throw error;
-  }
+  console.log('api.registerUser - Enviando dados:', userData);
+  const response = await api.post('/pessoas', userData);
+  console.log('api.registerUser - Resposta completa recebida:', response);
+  console.log('api.registerUser - Tipo da resposta:', typeof response);
+  console.log('api.registerUser - Keys da resposta:', Object.keys(response || {}));
+  return response;
 }
 
 export default api;

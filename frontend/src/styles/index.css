@@ -144,7 +144,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   color: var(--text-dark);
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, #d0d4d9 0%, #bec3c9 100%);
   font-size: var(--text-base);
 }
 
@@ -506,5 +506,57 @@ a:hover {
   .btn {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 0.9rem;
+  }
+}
+
+/* ========================================
+   FIX PARA EMOJIS - REMOVER FUNDO
+   ======================================== */
+
+/* Remove o quadrado de fundo dos emojis em todos os navegadores */
+span[class*="-icon"],
+span[class*="icon-"],
+.logo-icon,
+.badge-icon,
+.stat-icon,
+.user-avatar,
+.mobile-user-avatar,
+.avatar-icon,
+.nav-icon,
+.logout-icon,
+.search-icon,
+.insight-icon,
+.alert-icon,
+.action-icon,
+.activity-icon,
+.about-icon,
+.step-icon,
+.benefit-icon,
+.toggle-icon,
+.mobile-link-icon {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  text-shadow: none !important;
+}
+
+/* Fix específico para webkit (Safari/Chrome) */
+@supports (-webkit-appearance: none) {
+  span[class*="-icon"],
+  span[class*="icon-"],
+  .logo-icon,
+  .badge-icon,
+  .stat-icon {
+    -webkit-text-fill-color: currentColor;
+    -webkit-background-clip: initial;
+    background-clip: initial;
   }
 }

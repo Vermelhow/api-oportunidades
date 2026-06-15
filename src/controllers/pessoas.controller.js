@@ -73,20 +73,30 @@ export class PessoasController {
             // Hash da senha
             const senhaHash = await bcrypt.hash(senha, 10);
 
-            const result = await runQuery(
+            const result = runQuery(
                 `INSERT INTO pessoas (nome, email, senha, bio, linkedin_url, github_url, portfolio_url)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
                 [nome, email, senhaHash, bio, linkedin_url, github_url, portfolio_url]
             );
 
-            const pessoa = await getOne(
+            const pessoa = getOne(
                 `SELECT id, nome, email, bio, linkedin_url, github_url, portfolio_url, created_at, updated_at
                 FROM pessoas
                 WHERE id = ?`,
-                [result.lastID]
+                [result.lastInsertRowid]
             );
 
-            return createdResponse(res, pessoa, 'Pessoa criada com sucesso');
+            // Gera token JWT para login automático após cadastro
+            const token = generateToken({ id: pessoa.id, email: pessoa.email });
+
+            return res.status(201).json({
+                success: true,
+                message: 'Cadastro realizado com sucesso',
+                data: {
+                    user: pessoa,
+                    token: token
+                }
+            });
         } catch (error) {
             next(error);
         }

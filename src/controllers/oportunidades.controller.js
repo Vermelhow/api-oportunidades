@@ -89,7 +89,7 @@ class OportunidadesController {
                 ]
             );
 
-            const oportunidade = await getOne(`
+            const oportunidade = getOne(`
                 SELECT 
                     o.*,
                     c.nome as categoria_nome,
@@ -99,7 +99,7 @@ class OportunidadesController {
                 JOIN categorias c ON o.categoria_id = c.id
                 JOIN organizacoes org ON o.organizacao_id = org.id
                 WHERE o.id = ?
-            `, [result.lastID]);
+            `, [result.lastInsertRowid]);
 
             return createdResponse(res, oportunidade, 'Oportunidade criada com sucesso');
         } catch (error) {

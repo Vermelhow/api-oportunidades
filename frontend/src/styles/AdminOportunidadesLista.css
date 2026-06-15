@@ -2,7 +2,7 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #f8f9fa;
+  background: linear-gradient(180deg, #d0d4d9 0%, #bec3c9 100%);
 }
 
 .admin-content {
@@ -59,11 +59,12 @@
 
 /* Filters */
 .filters-bar {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   padding: 1rem;
   border-radius: 12px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .filter-tabs {
@@ -74,7 +75,7 @@
 
 .filter-tab {
   padding: 0.625rem 1.25rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid #9ca3af;
   background: white;
   border-radius: 8px;
   font-size: 0.875rem;
@@ -82,6 +83,7 @@
   color: #6b7280;
   cursor: pointer;
   transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .filter-tab:hover {
@@ -98,10 +100,9 @@
 
 /* Table Container */
 .opportunities-table-container {
-  background: white;
+  background: transparent;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  padding: 1rem;
 }
 
 .opportunities-table {
@@ -115,16 +116,23 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid #f3f4f6;
-  transition: background 0.2s;
+  margin-bottom: 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 .opportunity-row:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .opportunity-row:hover {
-  background: #f9fafb;
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 .opportunity-main {
