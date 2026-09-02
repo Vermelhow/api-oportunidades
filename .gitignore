@@ -35,6 +35,7 @@ ARQUIVOS/
 # Sistema / Editor
 .DS_Store
 Thumbs.db
+._*
 dist/
 build/
 .vscode/
