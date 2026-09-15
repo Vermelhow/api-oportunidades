@@ -14,9 +14,12 @@ import AdminOportunidades from "./pages/AdminOportunidades";
 import AdminOportunidadesLista from "./pages/AdminOportunidadesLista";
 import AdminOrganizacoes from "./pages/AdminOrganizacoes";
 import AdminOrganizacoesLista from "./pages/AdminOrganizacoesLista";
+import OrganizacaoDetalhe from "./pages/OrganizacaoDetalhe";
 import AdminCategorias from "./pages/AdminCategorias";
 import AdminPessoas from "./pages/AdminPessoas";
 import Perfil from "./pages/Perfil";
+import MeusInteresses from "./pages/MeusInteresses";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -34,6 +37,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <Perfil />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/meus-interesses" 
+                element={
+                  <PrivateRoute>
+                    <MeusInteresses />
                   </PrivateRoute>
                 } 
               />
@@ -98,7 +109,7 @@ function App() {
                 path="/admin/organizacoes/:id/detalhes" 
                 element={
                   <PrivateRoute>
-                    <AdminOrganizacoesLista />
+                    <OrganizacaoDetalhe />
                   </PrivateRoute>
                 } 
               />
@@ -118,6 +129,7 @@ function App() {
                   </PrivateRoute>
                 } 
               />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>

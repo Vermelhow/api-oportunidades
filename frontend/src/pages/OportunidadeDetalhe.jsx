@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getOportunidadeById } from '../services/api';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { getOportunidadeById, getInteressesByPessoa, createInteresse } from '../services/api';
 import { useNotification } from '../context/NotificationContext';
+import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
-import { Loading, ErrorMessage } from '../components';
+import { Loading, ErrorMessage, ButtonLoading } from '../components';
 import '../styles/OportunidadeDetalhe.css';
 
 export default function OportunidadeDetalhe() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { showError } = useNotification();
+  const location = useLocation();
+  const { showError, showSuccess } = useNotification();
+  const { signed, user } = useAuth();
   const [oportunidade, setOportunidade] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [jaInteressado, setJaInteressado] = useState(false);
+  const [enviandoInteresse, setEnviandoInteresse] = useState(false);
 
   useEffect(() => {
     getOportunidadeById(id)
@@ -27,6 +32,39 @@ export default function OportunidadeDetalhe() {
         setLoading(false);
       });
   }, [id, showError]);
+
+  // Verifica se o usuário logado já demonstrou interesse nesta oportunidade
+  useEffect(() => {
+    if (!signed || !user?.id) return;
+
+    getInteressesByPessoa(user.id)
+      .then((response) => {
+        const interesses = response?.data || response || [];
+        const existente = interesses.some((i) => String(i.oportunidade_id) === String(id));
+        setJaInteressado(existente);
+      })
+      .catch(() => {
+        // Falha silenciosa: não bloqueia a exibição da página
+      });
+  }, [signed, user?.id, id]);
+
+  async function handleDemonstrarInteresse() {
+    if (!signed) {
+      navigate('/login', { state: { from: location.pathname } });
+      return;
+    }
+
+    setEnviandoInteresse(true);
+    try {
+      await createInteresse({ pessoa_id: user.id, oportunidade_id: Number(id) });
+      setJaInteressado(true);
+      showSuccess('Interesse registrado com sucesso! A organização entrará em contato.');
+    } catch (err) {
+      showError(err.message || 'Erro ao registrar interesse');
+    } finally {
+      setEnviandoInteresse(false);
+    }
+  }
 
   // Formata datas
   const formatDate = (dateString) => {
@@ -203,7 +241,7 @@ export default function OportunidadeDetalhe() {
           </main>
 
           {/* Sidebar */}
-          <aside className="sidebar">
+          <aside className="oportunidade-sidebar">
             {/* Organização */}
             {oportunidade.organizacao_nome && (
               <div className="info-card">
@@ -266,8 +304,18 @@ export default function OportunidadeDetalhe() {
 
             {/* Ações */}
             <div className="actions-card">
-              <button className="btn btn-primary btn-block">
-                {oportunidade.link_inscricao ? 'Candidatar-se' : 'Demonstrar Interesse'}
+              <button
+                className="btn btn-primary btn-block"
+                onClick={handleDemonstrarInteresse}
+                disabled={enviandoInteresse || jaInteressado}
+              >
+                {enviandoInteresse ? (
+                  <><ButtonLoading /> Enviando...</>
+                ) : jaInteressado ? (
+                  '✓ Interesse já registrado'
+                ) : (
+                  oportunidade.link_inscricao ? 'Candidatar-se' : 'Demonstrar Interesse'
+                )}
               </button>
               {oportunidade.link_inscricao && (
                 <a 

@@ -127,7 +127,7 @@
 }
 
 /* Sidebar */
-.sidebar {
+.oportunidade-sidebar {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
@@ -325,7 +325,7 @@
     gap: var(--spacing-lg);
   }
 
-  .content-grid .sidebar {
+  .content-grid .oportunidade-sidebar {
     position: static;
     order: 2;
   }

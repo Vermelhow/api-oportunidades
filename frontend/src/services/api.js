@@ -287,6 +287,15 @@ export async function deleteOrganizacao(id) {
   }
 }
 
+export async function getOportunidadesByOrganizacao(organizacaoId) {
+  try {
+    return await api.get(`/oportunidades/organizacao/${organizacaoId}`);
+  } catch (error) {
+    console.error(`Erro ao buscar oportunidades da organização ${organizacaoId}:`, error);
+    throw error;
+  }
+}
+
 /**
  * PESSOAS
  */
@@ -324,12 +333,124 @@ export async function loginUser(credentials) {
 }
 
 export async function registerUser(userData) {
-  console.log('api.registerUser - Enviando dados:', userData);
-  const response = await api.post('/pessoas', userData);
-  console.log('api.registerUser - Resposta completa recebida:', response);
-  console.log('api.registerUser - Tipo da resposta:', typeof response);
-  console.log('api.registerUser - Keys da resposta:', Object.keys(response || {}));
-  return response;
+  return await api.post('/pessoas', userData);
+}
+
+/**
+ * CATEGORIAS (criação/edição/exclusão)
+ */
+export async function createCategoria(data) {
+  try {
+    return await api.post('/categorias', data);
+  } catch (error) {
+    console.error('Erro ao criar categoria:', error);
+    throw error;
+  }
+}
+
+export async function updateCategoria(id, data) {
+  try {
+    return await api.put(`/categorias/${id}`, data);
+  } catch (error) {
+    console.error(`Erro ao atualizar categoria ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function deleteCategoria(id) {
+  try {
+    return await api.delete(`/categorias/${id}`);
+  } catch (error) {
+    console.error(`Erro ao deletar categoria ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * PESSOAS (consulta/edição/exclusão)
+ */
+export async function getPessoaById(id) {
+  try {
+    return await api.get(`/pessoas/${id}`);
+  } catch (error) {
+    console.error(`Erro ao buscar pessoa ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function updatePessoa(id, data) {
+  try {
+    return await api.put(`/pessoas/${id}`, data);
+  } catch (error) {
+    console.error(`Erro ao atualizar pessoa ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function deletePessoa(id) {
+  try {
+    return await api.delete(`/pessoas/${id}`);
+  } catch (error) {
+    console.error(`Erro ao deletar pessoa ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * INTERESSES
+ */
+export async function getInteresses() {
+  try {
+    return await api.get('/interesses');
+  } catch (error) {
+    console.error('Erro ao buscar interesses:', error);
+    throw error;
+  }
+}
+
+export async function getInteressesByPessoa(pessoaId) {
+  try {
+    return await api.get(`/interesses/pessoa/${pessoaId}`);
+  } catch (error) {
+    console.error(`Erro ao buscar interesses da pessoa ${pessoaId}:`, error);
+    throw error;
+  }
+}
+
+export async function getInteressesByOportunidade(oportunidadeId) {
+  try {
+    return await api.get(`/interesses/oportunidade/${oportunidadeId}`);
+  } catch (error) {
+    console.error(`Erro ao buscar interesses da oportunidade ${oportunidadeId}:`, error);
+    throw error;
+  }
+}
+
+export async function createInteresse(data) {
+  try {
+    return await api.post('/interesses', data);
+  } catch (error) {
+    console.error('Erro ao registrar interesse:', error);
+    throw error;
+  }
+}
+
+export async function updateInteresse(id, data) {
+  try {
+    return await api.put(`/interesses/${id}`, data);
+  } catch (error) {
+    console.error(`Erro ao atualizar interesse ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function deleteInteresse(id) {
+  try {
+    return await api.delete(`/interesses/${id}`);
+  } catch (error) {
+    console.error(`Erro ao deletar interesse ${id}:`, error);
+    throw error;
+  }
 }
 
 export default api;

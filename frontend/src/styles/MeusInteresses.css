@@ -1,0 +1,115 @@
+/* =================================================================
+   MEUS INTERESSES - Estilos
+   ================================================================= */
+
+.meus-interesses-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 120px);
+}
+
+.meus-interesses-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.meus-interesses-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.meus-interesses-subtitle {
+  color: var(--text-medium);
+  font-size: 1rem;
+}
+
+.interesses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.interesse-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.interesse-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 220px;
+}
+
+.interesse-titulo {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.interesse-titulo:hover {
+  color: var(--primary-blue);
+}
+
+.interesse-status {
+  align-self: flex-start;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-pendente {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-aceito {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-rejeitado {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.interesse-data {
+  font-size: 0.85rem;
+  color: var(--text-medium);
+}
+
+.interesse-mensagem {
+  font-style: italic;
+  color: var(--text-medium);
+  margin-top: 0.25rem;
+}
+
+.interesse-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .interesse-card {
+    flex-direction: column;
+  }
+
+  .interesse-card-actions {
+    width: 100%;
+  }
+
+  .interesse-card-actions .btn {
+    flex: 1;
+  }
+}

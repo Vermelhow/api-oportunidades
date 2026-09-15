@@ -232,17 +232,16 @@
     height: 40px;
     font-size: 1.5rem;
   }
-}
-  
+
   .footer-content {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .footer-section {
     text-align: center;
   }
-  
+
   .social-links {
     justify-content: center;
   }

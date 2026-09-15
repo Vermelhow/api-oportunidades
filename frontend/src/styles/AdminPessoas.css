@@ -1,0 +1,88 @@
+.pessoas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.pessoa-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pessoa-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pessoa-card-header h3 {
+  font-size: 1.05rem;
+}
+
+.pessoa-badge {
+  background: var(--primary-blue);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+}
+
+.pessoa-email {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+}
+
+.pessoa-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.pessoa-readonly-hint {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  align-self: center;
+}
+
+.pessoa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal, 1050);
+  padding: 1rem;
+}
+
+.pessoa-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pessoa-modal-email {
+  color: var(--text-medium);
+}
+
+.pessoa-modal-bio {
+  color: var(--text-dark);
+}
+
+.pessoa-modal-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}

@@ -419,6 +419,8 @@
     font-size: 0.8125rem;
   }
 }
+
+.card-organization {
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
   background: var(--bg-gray);

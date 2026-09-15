@@ -33,6 +33,14 @@ export const validateId = [
     handleValidationErrors
 ];
 
+// Valida um parâmetro de rota com nome diferente de "id" (ex: :pessoa_id, :categoria_id)
+export const validateParamId = (paramName) => [
+    param(paramName)
+        .isInt({ min: 1 })
+        .withMessage(`${paramName} deve ser um número inteiro positivo`),
+    handleValidationErrors
+];
+
 export const validateEmail = body('email')
     .trim()
     .isEmail()

@@ -112,17 +112,13 @@ export function AuthProvider({ children }) {
    */
   async function register(nome, email, senha) {
     try {
-      console.log('AuthContext.register - Chamando API...', { nome, email });
       const response = await registerUser({ nome, email, senha });
-      console.log('AuthContext.register - Resposta da API:', response);
-      
+
       // A função registerUser já retorna os dados parseados diretamente
       // Verifica se a resposta tem o formato esperado: { data: { user, token } }
       const responseData = response?.data || response;
       const userData = responseData.user;
       const userToken = responseData.token;
-
-      console.log('AuthContext.register - Dados extraídos:', { userData, userToken });
 
       // Valida se os dados necessários foram recebidos
       if (!userData || !userToken) {
@@ -148,13 +144,9 @@ export function AuthProvider({ children }) {
       setToken(userToken);
       setUser(userData);
 
-      console.log('AuthContext.register - Cadastro concluído com sucesso');
       return { success: true, user: userData };
     } catch (error) {
       console.error('AuthContext.register - Erro no cadastro:', error);
-      console.error('AuthContext.register - Tipo do erro:', typeof error);
-      console.error('AuthContext.register - isApiError:', error.isApiError);
-      console.error('AuthContext.register - Mensagem:', error.message);
       
       // Trata erros da API (ApiError)
       if (error.isApiError) {

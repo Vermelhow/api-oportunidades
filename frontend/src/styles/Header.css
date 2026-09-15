@@ -439,7 +439,11 @@
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  justify-conscale(0.97);
+  justify-content: center;
+}
+
+.btn:active {
+  transform: scale(0.97);
 }
 
 .btn-primary {

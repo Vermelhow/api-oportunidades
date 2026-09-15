@@ -81,9 +81,7 @@ export default function Cadastro() {
     setLoading(true);
 
     try {
-      console.log('Iniciando cadastro...', { nome: formData.nome, email: formData.email });
       const result = await register(formData.nome, formData.email, formData.senha);
-      console.log('Resultado do cadastro:', result);
 
       if (result && result.success) {
         showSuccess('✅ Conta criada com sucesso! Redirecionando...');

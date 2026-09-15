@@ -466,8 +466,6 @@ body.sidebar-collapsed .dashboard-content {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
   border-left-width: 6px;
 }
-  border-left-width: 6px;
-}
 
 .insight-card:hover::before {
   transform: translate(30%, -30%) scale(1.3);
@@ -807,11 +805,6 @@ body.sidebar-collapsed .dashboard-content {
   line-height: 1.4;
   opacity: 0.9;
 }
-  inset: 0;
-  background: linear-gradient(135deg, var(--action-color)08, var(--action-color)02);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
 
 .quick-action-card:hover::before {
   opacity: 1;
@@ -851,6 +844,15 @@ body.sidebar-collapsed .dashboard-content {
 }
 
 /* Modern Activity List with Glassmorphism */
+.activity-empty {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  border: 2px solid #d1d5db;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-medium);
+}
+
 .activity-list {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px) saturate(180%);

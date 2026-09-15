@@ -146,8 +146,18 @@
 .perfil-actions {
   display: flex;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
   padding-top: 1.5rem;
   border-top: 1px solid var(--color-border, #e0e0e0);
+}
+
+.perfil-edit-form {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border, #e0e0e0);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .btn-logout {
@@ -170,38 +180,6 @@
   background: #b91c1c;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-}
-
-/* Card de Sugestões */
-.perfil-suggestions {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-}
-
-.perfil-suggestions h3 {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
-.perfil-suggestions ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.perfil-suggestions li {
-  padding: 0.5rem 0;
-  font-size: 0.95rem;
-  opacity: 0.95;
-  transition: opacity 0.2s ease;
-}
-
-.perfil-suggestions li:hover {
-  opacity: 1;
 }
 
 /* Estados de Loading e Erro */
