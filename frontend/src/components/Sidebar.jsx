@@ -145,6 +145,7 @@ export default function Sidebar() {
                     to={item.path} 
                     className={`nav-link ${isActive(item.path)}`}
                     title={isCollapsed ? item.label : ''}
+                    aria-current={location.pathname === item.path ? 'page' : undefined}
                   >
                     <span className="nav-icon">{item.icon}</span>
                     {!isCollapsed && (

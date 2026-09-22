@@ -115,7 +115,7 @@ export default function AdminOportunidadesLista() {
     return (
       <div className="admin-layout">
         <Sidebar />
-        <main className="admin-content">
+        <main className="admin-content" id="main-content">
           <Loading 
             fullscreen={false} 
             text="Carregando oportunidades..." 
@@ -131,7 +131,7 @@ export default function AdminOportunidadesLista() {
     return (
       <div className="admin-layout">
         <Sidebar />
-        <main className="admin-content">
+        <main className="admin-content" id="main-content">
           <ErrorMessage
             title="Erro ao Carregar Oportunidades"
             message={error.message || 'Não foi possível carregar as oportunidades'}
@@ -147,7 +147,7 @@ export default function AdminOportunidadesLista() {
     <div className="admin-layout">
       <Sidebar />
       
-      <main className="admin-content">
+      <main className="admin-content" id="main-content">
         {/* Header */}
         <div className="admin-header">
           <div>

@@ -186,7 +186,7 @@ function AdminOrganizacoes() {
     return (
       <div className="admin-layout">
         <Sidebar />
-        <div className="admin-content">
+        <div className="admin-content" id="main-content">
           <Loading 
             fullscreen={false} 
             text="Carregando organização..." 
@@ -201,7 +201,7 @@ function AdminOrganizacoes() {
     <div className="admin-layout">
       <Sidebar />
       
-      <div className="admin-content">
+      <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
             <h1>{isEditMode ? '✏️ Editar Organização' : '➕ Nova Organização'}</h1>

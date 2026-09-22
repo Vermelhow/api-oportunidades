@@ -105,7 +105,7 @@ function AdminOrganizacoesLista() {
     return (
       <div className="admin-layout">
         <Sidebar />
-        <div className="admin-content">
+        <div className="admin-content" id="main-content">
           <div className="admin-header">
             <div>
               <h1>🏢 Gerenciar Organizações</h1>
@@ -123,7 +123,7 @@ function AdminOrganizacoesLista() {
     return (
       <div className="admin-layout">
         <Sidebar />
-        <div className="admin-content">
+        <div className="admin-content" id="main-content">
           <div className="admin-header">
             <div>
               <h1>🏢 Gerenciar Organizações</h1>
@@ -145,7 +145,7 @@ function AdminOrganizacoesLista() {
     <div className="admin-layout">
       <Sidebar />
       
-      <div className="admin-content">
+      <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
             <h1>🏢 Gerenciar Organizações</h1>

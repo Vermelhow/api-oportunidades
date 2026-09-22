@@ -1,13 +1,18 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Header.css';
 
 export default function Header() {
   const { user, signed, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  function currentPage(path) {
+    return location.pathname === path ? 'page' : undefined;
+  }
 
   function handleLogout() {
     logout();
@@ -47,10 +52,10 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="nav desktop-nav">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/oportunidades" className="nav-link">Oportunidades</Link>
+          <Link to="/" className="nav-link" aria-current={currentPage('/')}>Home</Link>
+          <Link to="/oportunidades" className="nav-link" aria-current={currentPage('/oportunidades')}>Oportunidades</Link>
           {signed && (
-            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+            <Link to="/dashboard" className="nav-link" aria-current={currentPage('/dashboard')}>Dashboard</Link>
           )}
         </nav>
 
@@ -67,11 +72,11 @@ export default function Header() {
                 <>
                   <div className="user-menu-overlay" onClick={closeUserMenu}></div>
                   <div className="user-menu-dropdown">
-                    <Link to="/perfil" className="dropdown-item" onClick={closeUserMenu}>
+                    <Link to="/perfil" className="dropdown-item" onClick={closeUserMenu} aria-current={currentPage('/perfil')}>
                       <span className="dropdown-icon">👤</span>
                       Meu Perfil
                     </Link>
-                    <Link to="/dashboard" className="dropdown-item" onClick={closeUserMenu}>
+                    <Link to="/dashboard" className="dropdown-item" onClick={closeUserMenu} aria-current={currentPage('/dashboard')}>
                       <span className="dropdown-icon">📊</span>
                       Dashboard
                     </Link>
@@ -124,21 +129,21 @@ export default function Header() {
         </div>
 
         <div className="mobile-menu-links">
-          <Link to="/" className="mobile-nav-link" onClick={closeMobileMenu}>
+          <Link to="/" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/')}>
             <span className="mobile-link-icon">🏠</span>
             Home
           </Link>
-          <Link to="/oportunidades" className="mobile-nav-link" onClick={closeMobileMenu}>
+          <Link to="/oportunidades" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/oportunidades')}>
             <span className="mobile-link-icon">📋</span>
             Oportunidades
           </Link>
           {signed && (
             <>
-              <Link to="/perfil" className="mobile-nav-link" onClick={closeMobileMenu}>
+              <Link to="/perfil" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/perfil')}>
                 <span className="mobile-link-icon">👤</span>
                 Meu Perfil
               </Link>
-              <Link to="/dashboard" className="mobile-nav-link" onClick={closeMobileMenu}>
+              <Link to="/dashboard" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/dashboard')}>
                 <span className="mobile-link-icon">📊</span>
                 Dashboard
               </Link>

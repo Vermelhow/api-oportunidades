@@ -173,7 +173,7 @@ export default function OportunidadeDetalhe() {
           <span className="separator">›</span>
           <Link to="/oportunidades">Oportunidades</Link>
           <span className="separator">›</span>
-          <span className="current">{oportunidade.titulo}</span>
+          <span className="current" aria-current="page">{oportunidade.titulo}</span>
         </nav>
 
         {/* Header da Oportunidade */}
@@ -204,7 +204,7 @@ export default function OportunidadeDetalhe() {
         {/* Grid de Conteúdo */}
         <div className="content-grid">
           {/* Coluna Principal */}
-          <main className="main-content">
+          <div className="main-content">
             {/* Descrição */}
             <section className="content-section">
               <h2 className="section-title">📋 Sobre a Oportunidade</h2>
@@ -238,7 +238,7 @@ export default function OportunidadeDetalhe() {
                 </p>
               </section>
             )}
-          </main>
+          </div>
 
           {/* Sidebar */}
           <aside className="oportunidade-sidebar">

@@ -23,10 +23,14 @@ import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-    <ErrorBoundary>
-      <NotificationProvider>
-        <AuthProvider>
-          <BrowserRouter>
+    <>
+      <a href="#main-content" className="skip-link">
+        Pular para o conteúdo principal
+      </a>
+      <ErrorBoundary>
+        <NotificationProvider>
+          <AuthProvider>
+            <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -135,6 +139,7 @@ function App() {
         </AuthProvider>
       </NotificationProvider>
     </ErrorBoundary>
+    </>
   );
 }
 

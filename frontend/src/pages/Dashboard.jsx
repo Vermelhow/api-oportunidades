@@ -259,7 +259,7 @@ export default function Dashboard() {
     return (
       <div className="dashboard-layout">
         <Sidebar />
-        <main className="dashboard-content">
+        <main className="dashboard-content" id="main-content">
           <Loading fullscreen={false} text="Carregando dashboard..." size="lg" />
         </main>
       </div>
@@ -270,7 +270,7 @@ export default function Dashboard() {
     return (
       <div className="dashboard-layout">
         <Sidebar />
-        <main className="dashboard-content">
+        <main className="dashboard-content" id="main-content">
           <ErrorMessage
             title="Erro ao Carregar Dashboard"
             message={error.message || 'Não foi possível carregar os dados do dashboard.'}
@@ -286,7 +286,7 @@ export default function Dashboard() {
     <div className="dashboard-layout">
       <Sidebar />
       
-      <main className="dashboard-content">
+      <main className="dashboard-content" id="main-content">
         {/* Header */}
         <div className="dashboard-header">
           <div>

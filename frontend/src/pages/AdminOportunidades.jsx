@@ -393,7 +393,7 @@ export default function AdminOportunidades() {
     return (
       <div className="dashboard-layout">
         <Sidebar />
-        <main className="dashboard-content">
+        <main className="dashboard-content" id="main-content">
           <Loading 
             fullscreen={false}
             text={isEditMode ? 'Carregando oportunidade...' : 'Carregando dados...'}
@@ -408,7 +408,7 @@ export default function AdminOportunidades() {
     <div className="dashboard-layout">
       <Sidebar />
       
-      <main className="dashboard-content">
+      <main className="dashboard-content" id="main-content">
         <div className="admin-page">
           {/* Header */}
           <div className="page-header">

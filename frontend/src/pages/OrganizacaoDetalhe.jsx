@@ -46,7 +46,7 @@ export default function OrganizacaoDetalhe() {
     return (
       <div className="admin-layout">
         <Sidebar />
-        <div className="admin-content">
+        <div className="admin-content" id="main-content">
           <Loading fullscreen={false} text="Carregando organização..." size="lg" />
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function OrganizacaoDetalhe() {
     return (
       <div className="admin-layout">
         <Sidebar />
-        <div className="admin-content">
+        <div className="admin-content" id="main-content">
           <ErrorMessage
             title="Erro ao Carregar Organização"
             message={error?.message || 'Organização não encontrada.'}
@@ -75,7 +75,7 @@ export default function OrganizacaoDetalhe() {
   return (
     <div className="admin-layout">
       <Sidebar />
-      <div className="admin-content">
+      <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
             <h1>🏢 {organizacao.nome}</h1>
