@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import useFocusTrap from '../hooks/useFocusTrap';
 import '../styles/Header.css';
 
 export default function Header() {
@@ -9,6 +10,13 @@ export default function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuId = useId();
+  const mobileMenuId = useId();
+
+  // Enquanto abertos: move o foco para dentro, prende Tab/Shift+Tab,
+  // fecha com Escape e devolve o foco ao botão que abriu o menu
+  const userMenuRef = useFocusTrap(userMenuOpen, closeUserMenu);
+  const mobileMenuRef = useFocusTrap(mobileMenuOpen, closeMobileMenu);
 
   function currentPage(path) {
     return location.pathname === path ? 'page' : undefined;
@@ -63,15 +71,20 @@ export default function Header() {
         <div className="header-actions desktop-actions">
           {signed ? (
             <div className="user-menu-wrapper">
-              <button onClick={toggleUserMenu} className="user-menu-trigger">
+              <button
+                onClick={toggleUserMenu}
+                className="user-menu-trigger"
+                aria-expanded={userMenuOpen}
+                aria-controls={userMenuId}
+              >
                 <span className="user-avatar">👤</span>
                 <span className="user-name">Olá, {user?.nome?.split(' ')[0]}</span>
-                <span className="dropdown-arrow">{userMenuOpen ? '▲' : '▼'}</span>
+                <span className="dropdown-arrow" aria-hidden="true">{userMenuOpen ? '▲' : '▼'}</span>
               </button>
               {userMenuOpen && (
                 <>
                   <div className="user-menu-overlay" onClick={closeUserMenu}></div>
-                  <div className="user-menu-dropdown">
+                  <div className="user-menu-dropdown" id={userMenuId} ref={userMenuRef}>
                     <Link to="/perfil" className="dropdown-item" onClick={closeUserMenu} aria-current={currentPage('/perfil')}>
                       <span className="dropdown-icon">👤</span>
                       Meu Perfil
@@ -102,6 +115,8 @@ export default function Header() {
           className={`mobile-menu-button ${mobileMenuOpen ? 'active' : ''}`}
           onClick={toggleMobileMenu}
           aria-label="Menu"
+          aria-expanded={mobileMenuOpen}
+          aria-controls={mobileMenuId}
         >
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
@@ -115,7 +130,12 @@ export default function Header() {
       )}
 
       {/* Mobile Menu */}
-      <nav className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+      <nav
+        id={mobileMenuId}
+        className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}
+        ref={mobileMenuRef}
+        aria-hidden={!mobileMenuOpen}
+      >
         <div className="mobile-menu-header">
           {signed && user && (
             <div className="mobile-user-info">

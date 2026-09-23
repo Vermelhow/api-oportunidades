@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getPessoas, deletePessoa } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import useFocusTrap from '../hooks/useFocusTrap';
 import {
   Sidebar,
   Loading,
@@ -25,6 +26,16 @@ function AdminPessoas() {
   const [pessoaSelecionada, setPessoaSelecionada] = useState(null);
   const [pessoaParaExcluir, setPessoaParaExcluir] = useState(null);
   const [excluindo, setExcluindo] = useState(false);
+
+  const pessoaModalTitleId = useId();
+
+  function fecharDetalhes() {
+    setPessoaSelecionada(null);
+  }
+
+  // Ao abrir: move o foco para dentro do modal e prende Tab/Shift+Tab.
+  // Escape fecha e devolve o foco para o botão "Ver detalhes" que abriu o modal.
+  const pessoaModalRef = useFocusTrap(Boolean(pessoaSelecionada), fecharDetalhes);
 
   useEffect(() => {
     carregarPessoas();
@@ -159,9 +170,17 @@ function AdminPessoas() {
 
       {/* Modal de Detalhes */}
       {pessoaSelecionada && (
-        <div className="pessoa-modal-overlay" onClick={() => setPessoaSelecionada(null)}>
-          <div className="pessoa-modal" onClick={(e) => e.stopPropagation()}>
-            <h2>{pessoaSelecionada.nome}</h2>
+        <div className="pessoa-modal-overlay" onClick={fecharDetalhes}>
+          <div
+            className="pessoa-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={pessoaModalTitleId}
+            ref={pessoaModalRef}
+            tabIndex={-1}
+          >
+            <h2 id={pessoaModalTitleId}>{pessoaSelecionada.nome}</h2>
             <p className="pessoa-modal-email">{pessoaSelecionada.email}</p>
             {pessoaSelecionada.bio && <p className="pessoa-modal-bio">{pessoaSelecionada.bio}</p>}
             <div className="pessoa-modal-links">
@@ -175,7 +194,7 @@ function AdminPessoas() {
                 <a href={pessoaSelecionada.portfolio_url} target="_blank" rel="noopener noreferrer">Portfólio</a>
               )}
             </div>
-            <button className="btn btn-outline btn-block" onClick={() => setPessoaSelecionada(null)}>
+            <button className="btn btn-outline btn-block" onClick={fecharDetalhes}>
               Fechar
             </button>
           </div>

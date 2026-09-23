@@ -379,12 +379,16 @@
   .sidebar {
     position: fixed !important;
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    /* Mantém fora da ordem de tabulação enquanto fechado (evita foco fora da tela) */
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0s linear 0.3s;
     z-index: 1000;
   }
   
   .sidebar.mobile-open {
     transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.3s ease, visibility 0s linear 0s;
   }
   
   .sidebar.collapsed {

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import useFocusTrap from '../hooks/useFocusTrap';
 import '../styles/Sidebar.css';
 
 export default function Sidebar() {
@@ -8,6 +9,7 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const sidebarId = useId();
 
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
@@ -24,6 +26,10 @@ export default function Sidebar() {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
+
+  // Enquanto o menu mobile estiver aberto: move o foco para dentro,
+  // prende Tab/Shift+Tab, fecha com Escape e devolve o foco ao botão que abriu
+  const sidebarRef = useFocusTrap(isMobileMenuOpen, closeMobileMenu);
 
   // Sync collapsed state with body class for layout adjustments
   useEffect(() => {
@@ -96,6 +102,8 @@ export default function Sidebar() {
         onClick={toggleMobileMenu}
         aria-label="Abrir menu"
         title="Abrir menu"
+        aria-expanded={isMobileMenuOpen}
+        aria-controls={sidebarId}
       >
         <span className="menu-icon">☰</span>
       </button>
@@ -107,13 +115,18 @@ export default function Sidebar() {
         aria-hidden="true"
       />
 
-      <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+      <aside
+        id={sidebarId}
+        ref={sidebarRef}
+        className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}
+      >
       {/* Toggle Button */}
       <button 
         className="sidebar-toggle" 
         onClick={toggleSidebar}
         aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
         title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+        aria-expanded={!isCollapsed}
       >
         <span className="toggle-icon">{isCollapsed ? '▶' : '◀'}</span>
       </button>

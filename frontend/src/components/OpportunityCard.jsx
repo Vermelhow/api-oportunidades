@@ -146,6 +146,7 @@ export default function OpportunityCard({ oportunidade }) {
           <button 
             className="btn-expand" 
             onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
           >
             {expanded ? 'Ver menos ▲' : 'Ler mais ▼'}
           </button>

@@ -252,9 +252,10 @@ code {
   user-select: none;
 }
 
-.btn:focus {
+.btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 102, 161, 0.2);
+  /* Anel duplo (branco + azul) garante contraste evidente mesmo sobre botões coloridos */
+  box-shadow: 0 0 0 3px #ffffff, 0 0 0 6px var(--primary-blue);
 }
 
 .btn:active {

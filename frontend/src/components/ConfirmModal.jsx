@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
+import useFocusTrap from '../hooks/useFocusTrap';
 import '../styles/ConfirmModal.css';
 
 /**
@@ -26,25 +27,22 @@ export default function ConfirmModal({
   loading = false,
   children
 }) {
-  // Fecha modal ao pressionar ESC
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && !loading) {
-        onClose();
-      }
-    };
+  const titleId = useId();
 
+  // Ao abrir: move o foco para dentro do modal e prende a navegação por Tab.
+  // Escape fecha o modal (exceto durante loading) e o foco volta para quem abriu.
+  const containerRef = useFocusTrap(isOpen, loading ? undefined : onClose);
+
+  // Previne scroll do body enquanto o modal está aberto
+  useEffect(() => {
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      // Previne scroll do body
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, loading, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -69,10 +67,17 @@ export default function ConfirmModal({
 
   return (
     <div className="modal-overlay" onClick={handleBackdropClick}>
-      <div className={`modal-container modal-${type}`}>
+      <div
+        className={`modal-container modal-${type}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        ref={containerRef}
+        tabIndex={-1}
+      >
         <div className="modal-header">
-          <span className="modal-icon">{getIcon()}</span>
-          <h2 className="modal-title">{title}</h2>
+          <span className="modal-icon" aria-hidden="true">{getIcon()}</span>
+          <h2 className="modal-title" id={titleId}>{title}</h2>
         </div>
 
         <div className="modal-body">
