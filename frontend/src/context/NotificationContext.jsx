@@ -86,8 +86,14 @@ export function NotificationProvider({ children }) {
     <NotificationContext.Provider value={value}>
       {children}
       
-      {/* Container de Toasts */}
-      <div className="toast-container">
+      {/*
+        Container de Toasts: precisa existir no DOM ANTES do toast ser inserido
+        para que a live region seja detectada pelo leitor de tela (uma div nova
+        que já nasce com role/aria-live não é anunciada de forma confiável).
+        Fica fora das Routes (nunca desmonta em navegações), então o texto
+        inserido aqui continua sendo anunciado mesmo se a rota mudar logo em seguida.
+      */}
+      <div className="toast-container" role="status" aria-live="polite">
         {notifications.map((notification) => (
           <Toast
             key={notification.id}

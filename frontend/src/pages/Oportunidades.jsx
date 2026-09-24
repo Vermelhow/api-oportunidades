@@ -6,6 +6,7 @@ import SearchBar from '../components/SearchBar';
 import FilterBar from '../components/FilterBar';
 import { Loading, ErrorMessage, EmptyState, SkeletonCard } from '../components';
 import { useOportunidadesFilter } from '../hooks/useOportunidadesFilter';
+import useDeferredAnnounce from '../hooks/useDeferredAnnounce';
 import { useNotification } from '../context/NotificationContext';
 import '../styles/Oportunidades.css';
 
@@ -31,6 +32,8 @@ export default function Oportunidades() {
     totalResults,
     totalAvailable
   } = useOportunidadesFilter(dados);
+
+  const announceLoading = useDeferredAnnounce();
 
   useEffect(() => {
     // Carrega oportunidades e categorias em paralelo
@@ -70,7 +73,8 @@ export default function Oportunidades() {
             <div className="skeleton" style={{ height: '120px', borderRadius: '12px', marginTop: '1rem' }}></div>
           </div>
 
-          <div className="opportunities-grid">
+          <div className="opportunities-grid" role="status">
+            <span className="sr-only" aria-hidden={!announceLoading}>Carregando oportunidades, aguarde por favor...</span>
             {Array.from({ length: 6 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))}

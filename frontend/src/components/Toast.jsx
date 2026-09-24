@@ -44,9 +44,15 @@ export default function Toast({
     }
   };
 
+  // A live region "polite" fica no container persistente (NotificationContext).
+  // Aqui só sobrescrevemos para "alert" (assertive) em erros, que deve
+  // interromper a fala atual; nos demais tipos não repetimos role/aria-live
+  // para não criar uma live region aninhada e duplicar o anúncio.
+  const role = type === 'error' ? 'alert' : undefined;
+
   return (
-    <div className={`toast toast-${type}`}>
-      <div className="toast-icon">{getIcon()}</div>
+    <div className={`toast toast-${type}`} role={role}>
+      <div className="toast-icon" aria-hidden="true">{getIcon()}</div>
       <div className="toast-message">{message}</div>
       {onClose && (
         <button 

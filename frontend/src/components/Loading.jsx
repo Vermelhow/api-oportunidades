@@ -1,4 +1,5 @@
 import '../styles/Loading.css';
+import useDeferredAnnounce from '../hooks/useDeferredAnnounce';
 
 /**
  * Componente Loading com variações de tamanho e estilo
@@ -16,7 +17,8 @@ export default function Loading({
   fullscreen = false,
   color = 'primary'
 }) {
-  
+  const announce = useDeferredAnnounce();
+
   const renderSpinner = () => (
     <div className={`loading-spinner loading-${size} loading-${color}`}>
       <div className="spinner-circle"></div>
@@ -51,21 +53,29 @@ export default function Loading({
     }
   };
 
+  // role="status" já implica aria-live="polite"/aria-atomic, dispensando atributos extras.
+  // O texto só fica visível para o leitor de tela 1 frame após o mount
+  // (aria-hidden={!announce}), para a região já estar registrada como viva
+  // quando o conteúdo "aparece" — sem isso o anúncio inicial é perdido.
   if (fullscreen) {
     return (
-      <div className="loading-overlay">
+      <div className="loading-overlay" role="status">
         <div className="loading-container">
           {renderLoader()}
-          {text && <p className="loading-text">{text}</p>}
+          {text
+            ? <p className="loading-text" aria-hidden={!announce}>{text}</p>
+            : <span className="sr-only" aria-hidden={!announce}>Carregando, aguarde por favor...</span>}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="loading-inline">
+    <div className="loading-inline" role="status">
       {renderLoader()}
-      {text && <p className="loading-text">{text}</p>}
+      {text
+        ? <p className="loading-text" aria-hidden={!announce}>{text}</p>
+        : <span className="sr-only" aria-hidden={!announce}>Carregando, aguarde por favor...</span>}
     </div>
   );
 }
@@ -99,8 +109,11 @@ export function SkeletonCard() {
  * Skeleton loader para lista
  */
 export function SkeletonList({ count = 3 }) {
+  const announce = useDeferredAnnounce();
+
   return (
-    <div className="skeleton-list">
+    <div className="skeleton-list" role="status">
+      <span className="sr-only" aria-hidden={!announce}>Carregando lista, aguarde por favor...</span>
       {Array.from({ length: count }).map((_, index) => (
         <div key={index} className="skeleton-item">
           <div className="skeleton skeleton-circle"></div>
