@@ -43,6 +43,47 @@
   border: 0;
 }
 
+/* Resumo de erros de formulário (REQ-A13) */
+.form-error-summary {
+  border: 2px solid #ef4444;
+  background: #fef2f2;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-error-summary:focus {
+  outline: 3px solid #003d66;
+  outline-offset: 2px;
+}
+
+.form-error-summary-title {
+  color: #b91c1c;
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.form-error-summary-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.form-error-summary-list li {
+  margin-bottom: 0.25rem;
+}
+
+.form-error-summary-list a {
+  color: #b91c1c;
+  text-decoration: underline;
+}
+
+.form-error-summary-list a:hover,
+.form-error-summary-list a:focus {
+  color: #7f1d1d;
+}
+
+
 
 html {
   scroll-behavior: smooth;

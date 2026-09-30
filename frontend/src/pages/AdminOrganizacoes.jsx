@@ -6,7 +6,7 @@ import {
   getOrganizacaoById 
 } from '../services/api';
 import { useNotification } from '../context/NotificationContext';
-import { Sidebar, Loading, FormField, FormRow, FormSection, FormActions } from '../components';
+import { Sidebar, Loading, FormField, FormRow, FormSection, FormActions, FormErrorSummary } from '../components';
 import '../styles/AdminOrganizacoes.css';
 
 function AdminOrganizacoes() {
@@ -17,6 +17,7 @@ function AdminOrganizacoes() {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   const [formData, setFormData] = useState({
     nome: '',
@@ -121,12 +122,7 @@ function AdminOrganizacoes() {
     e.preventDefault();
 
     if (!validateForm()) {
-      showError('Corrija os erros no formulário');
-      // Scroll até o primeiro erro
-      const firstError = document.querySelector('.form-field.error');
-      if (firstError) {
-        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      setSubmitAttempts(prev => prev + 1);
       return;
     }
 
@@ -222,6 +218,8 @@ function AdminOrganizacoes() {
         </div>
 
         <form className="admin-form" onSubmit={handleSubmit}>
+          <FormErrorSummary errors={errors} focusTrigger={submitAttempts} />
+
           {/* Seção: Informações Básicas */}
           <FormSection title="📝 Informações Básicas">
             <FormRow>

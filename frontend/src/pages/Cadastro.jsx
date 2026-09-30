@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import { FormErrorSummary } from '../components';
 import Layout from '../components/Layout';
 import '../styles/Cadastro.css';
 
@@ -19,6 +20,7 @@ export default function Cadastro() {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -74,7 +76,7 @@ export default function Cadastro() {
     e.preventDefault();
 
     if (!validateForm()) {
-      showError('Por favor, corrija os erros do formulário');
+      setSubmitAttempts(prev => prev + 1);
       return;
     }
 
@@ -114,6 +116,8 @@ export default function Cadastro() {
           </div>
 
           <form onSubmit={handleSubmit} className="cadastro-form">
+            <FormErrorSummary errors={errors} focusTrigger={submitAttempts} />
+
             <div className="form-group">
               <label htmlFor="nome" className="form-label">
                 <span className="label-icon">👤</span>
@@ -128,9 +132,11 @@ export default function Cadastro() {
                 className={`form-input ${errors.nome ? 'input-error' : ''}`}
                 placeholder="Digite seu nome completo"
                 disabled={loading}
+                aria-invalid={Boolean(errors.nome)}
+                aria-describedby={errors.nome ? 'nome-error' : undefined}
               />
               {errors.nome && (
-                <span className="error-message">
+                <span id="nome-error" className="error-message">
                   <span className="error-icon">⚠️</span>
                   {errors.nome}
                 </span>
@@ -151,9 +157,11 @@ export default function Cadastro() {
                 className={`form-input ${errors.email ? 'input-error' : ''}`}
                 placeholder="seu@email.com"
                 disabled={loading}
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? 'email-error' : undefined}
               />
               {errors.email && (
-                <span className="error-message">
+                <span id="email-error" className="error-message">
                   <span className="error-icon">⚠️</span>
                   {errors.email}
                 </span>
@@ -174,9 +182,11 @@ export default function Cadastro() {
                 className={`form-input ${errors.senha ? 'input-error' : ''}`}
                 placeholder="Mínimo 6 caracteres"
                 disabled={loading}
+                aria-invalid={Boolean(errors.senha)}
+                aria-describedby={errors.senha ? 'senha-error' : undefined}
               />
               {errors.senha && (
-                <span className="error-message">
+                <span id="senha-error" className="error-message">
                   <span className="error-icon">⚠️</span>
                   {errors.senha}
                 </span>
@@ -197,9 +207,11 @@ export default function Cadastro() {
                 className={`form-input ${errors.confirmarSenha ? 'input-error' : ''}`}
                 placeholder="Digite a senha novamente"
                 disabled={loading}
+                aria-invalid={Boolean(errors.confirmarSenha)}
+                aria-describedby={errors.confirmarSenha ? 'confirmarSenha-error' : undefined}
               />
               {errors.confirmarSenha && (
-                <span className="error-message">
+                <span id="confirmarSenha-error" className="error-message">
                   <span className="error-icon">⚠️</span>
                   {errors.confirmarSenha}
                 </span>

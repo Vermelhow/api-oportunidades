@@ -14,6 +14,7 @@ import {
   ConfirmModal,
   FormField,
   FormActions,
+  FormErrorSummary,
   ButtonLoading,
 } from '../components';
 import '../styles/AdminCategorias.css';
@@ -31,6 +32,7 @@ function AdminCategorias() {
   const [errors, setErrors] = useState({});
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   const [categoriaParaExcluir, setCategoriaParaExcluir] = useState(null);
   const [excluindo, setExcluindo] = useState(false);
@@ -93,7 +95,10 @@ function AdminCategorias() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!validarFormulario()) return;
+    if (!validarFormulario()) {
+      setSubmitAttempts((prev) => prev + 1);
+      return;
+    }
 
     try {
       setSaving(true);
@@ -157,6 +162,8 @@ function AdminCategorias() {
             {editingId ? '✏️ Editar Categoria' : '➕ Nova Categoria'}
           </h2>
           <form onSubmit={handleSubmit}>
+            <FormErrorSummary errors={errors} focusTrigger={submitAttempts} />
+
             <FormField
               label="Nome"
               name="nome"

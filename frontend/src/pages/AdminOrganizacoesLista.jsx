@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getOrganizacoes, deleteOrganizacao } from '../services/api';
 import { useNotification } from '../context/NotificationContext';
@@ -14,7 +14,8 @@ function AdminOrganizacoesLista() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const searchInputId = useId();
+
   // Modal de confirmação
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [organizacaoToDelete, setOrganizacaoToDelete] = useState(null);
@@ -163,7 +164,11 @@ function AdminOrganizacoesLista() {
         <div className="search-bar-container">
           <div className="search-bar">
             <span className="search-icon">🔍</span>
+            <label htmlFor={searchInputId} className="sr-only">
+              Buscar por nome, descrição ou email
+            </label>
             <input
+              id={searchInputId}
               type="text"
               placeholder="Buscar por nome, descrição ou email..."
               value={searchTerm}

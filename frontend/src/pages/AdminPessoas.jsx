@@ -28,6 +28,7 @@ function AdminPessoas() {
   const [excluindo, setExcluindo] = useState(false);
 
   const pessoaModalTitleId = useId();
+  const searchInputId = useId();
 
   function fecharDetalhes() {
     setPessoaSelecionada(null);
@@ -99,7 +100,11 @@ function AdminPessoas() {
         <div className="search-bar-container">
           <div className="search-bar">
             <span className="search-icon">🔍</span>
+            <label htmlFor={searchInputId} className="sr-only">
+              Buscar por nome ou email
+            </label>
             <input
+              id={searchInputId}
               type="text"
               placeholder="Buscar por nome ou email..."
               value={searchTerm}

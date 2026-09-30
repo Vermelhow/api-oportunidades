@@ -15,5 +15,6 @@ export { default as ErrorBoundary, ErrorMessage, EmptyState } from './ErrorBound
 
 // Form components
 export { default as FormField, FormRow, FormSection, FormActions } from './FormField';
+export { default as FormErrorSummary } from './FormErrorSummary';
 
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Sidebar, Loading } from '../components';
+import { Sidebar, Loading, FormErrorSummary } from '../components';
 import { createOportunidade, updateOportunidade, getOportunidadeById, getCategorias, getOrganizacoes } from '../services/api';
 import { useNotification } from '../context/NotificationContext';
 import '../styles/AdminOportunidades.css';
@@ -41,6 +41,7 @@ export default function AdminOportunidades() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [errors, setErrors] = useState({});
+  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   // Carregar categorias, organizações e oportunidade (se editando)
   useEffect(() => {
@@ -263,19 +264,7 @@ export default function AdminOportunidades() {
     setSuccess('');
 
     if (!validateForm()) {
-      const errorMsg = 'Por favor, corrija os erros no formulário antes de continuar.';
-      setError(errorMsg);
-      showError(errorMsg);
-      
-      // Scroll até o primeiro campo com erro
-      setTimeout(() => {
-        const firstErrorField = Object.keys(errors)[0];
-        const element = document.getElementById(firstErrorField);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          element.focus();
-        }
-      }, 100);
+      setSubmitAttempts(prev => prev + 1);
       return;
     }
 
@@ -329,16 +318,7 @@ export default function AdminOportunidades() {
         if (Object.keys(apiErrors).length > 0) {
           setErrors(apiErrors);
           errorMsg = 'Corrija os erros indicados nos campos destacados.';
-          
-          // Scroll suave até o primeiro campo com erro
-          setTimeout(() => {
-            const firstErrorField = Object.keys(apiErrors)[0];
-            const element = document.getElementById(firstErrorField);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              element.focus();
-            }
-          }, 100);
+          setSubmitAttempts(prev => prev + 1);
         }
       }
       
@@ -352,13 +332,12 @@ export default function AdminOportunidades() {
             ? 'Não foi possível atualizar a oportunidade. Verifique os dados e tente novamente.' 
             : 'Não foi possível criar a oportunidade. Verifique os dados e tente novamente.';
         }
+        setError(errorMsg);
+        showError(errorMsg);
+
+        // Scroll para o topo para visualizar a mensagem de erro
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-      
-      setError(errorMsg);
-      showError(errorMsg);
-      
-      // Scroll para o topo para visualizar a mensagem de erro
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setLoading(false);
     }
@@ -444,6 +423,8 @@ export default function AdminOportunidades() {
 
           {/* Formulário */}
           <form onSubmit={handleSubmit} className="form-card">
+            <FormErrorSummary errors={errors} focusTrigger={submitAttempts} />
+
             {/* Informações Básicas */}
             <div className="form-section">
               <h2 className="form-section-title">📝 Informações Básicas</h2>
@@ -461,9 +442,11 @@ export default function AdminOportunidades() {
                     onChange={handleChange}
                     className={`form-input ${errors.titulo ? 'error' : ''}`}
                     placeholder="Ex: Voluntário para projeto social"
+                    aria-invalid={Boolean(errors.titulo)}
+                    aria-describedby={errors.titulo ? 'titulo-error' : 'titulo-hint'}
                   />
-                  {!errors.titulo && <span className="field-hint">Mínimo de 5 caracteres</span>}
-                  {errors.titulo && <span className="error-message">{errors.titulo}</span>}
+                  {!errors.titulo && <span id="titulo-hint" className="field-hint">Mínimo de 5 caracteres</span>}
+                  {errors.titulo && <span id="titulo-error" className="error-message">{errors.titulo}</span>}
                 </div>
               </div>
 
@@ -478,6 +461,8 @@ export default function AdminOportunidades() {
                     value={formData.categoria_id}
                     onChange={handleChange}
                     className={`form-select ${errors.categoria_id ? 'error' : ''}`}
+                    aria-invalid={Boolean(errors.categoria_id)}
+                    aria-describedby={errors.categoria_id ? 'categoria_id-error' : undefined}
                   >
                     <option value="">Selecione uma categoria</option>
                     {categorias.map(cat => (
@@ -486,7 +471,7 @@ export default function AdminOportunidades() {
                       </option>
                     ))}
                   </select>
-                  {errors.categoria_id && <span className="error-message">{errors.categoria_id}</span>}
+                  {errors.categoria_id && <span id="categoria_id-error" className="error-message">{errors.categoria_id}</span>}
                 </div>
 
                 <div className="form-group half">
@@ -499,6 +484,8 @@ export default function AdminOportunidades() {
                     value={formData.organizacao_id}
                     onChange={handleChange}
                     className={`form-select ${errors.organizacao_id ? 'error' : ''}`}
+                    aria-invalid={Boolean(errors.organizacao_id)}
+                    aria-describedby={errors.organizacao_id ? 'organizacao_id-error' : undefined}
                   >
                     <option value="">Selecione uma organização</option>
                     {organizacoes.map(org => (
@@ -507,7 +494,7 @@ export default function AdminOportunidades() {
                       </option>
                     ))}
                   </select>
-                  {errors.organizacao_id && <span className="error-message">{errors.organizacao_id}</span>}
+                  {errors.organizacao_id && <span id="organizacao_id-error" className="error-message">{errors.organizacao_id}</span>}
                 </div>
               </div>
 
@@ -524,9 +511,11 @@ export default function AdminOportunidades() {
                     className={`form-textarea ${errors.descricao ? 'error' : ''}`}
                     rows="5"
                     placeholder="Descreva os detalhes da oportunidade..."
+                    aria-invalid={Boolean(errors.descricao)}
+                    aria-describedby={errors.descricao ? 'descricao-error' : 'descricao-hint'}
                   ></textarea>
-                  {!errors.descricao && <span className="field-hint">Mínimo de 20 caracteres</span>}
-                  {errors.descricao && <span className="error-message">{errors.descricao}</span>}
+                  {!errors.descricao && <span id="descricao-hint" className="field-hint">Mínimo de 20 caracteres</span>}
+                  {errors.descricao && <span id="descricao-error" className="error-message">{errors.descricao}</span>}
                 </div>
               </div>
 
@@ -638,8 +627,10 @@ export default function AdminOportunidades() {
                     onChange={handleChange}
                     className={`form-input ${errors.localizacao ? 'error' : ''}`}
                     placeholder="Ex: São Paulo, SP"
+                    aria-invalid={Boolean(errors.localizacao)}
+                    aria-describedby={errors.localizacao ? 'localizacao-error' : undefined}
                   />
-                  {errors.localizacao && <span className="error-message">{errors.localizacao}</span>}
+                  {errors.localizacao && <span id="localizacao-error" className="error-message">{errors.localizacao}</span>}
                 </div>
               </div>
 
@@ -657,8 +648,10 @@ export default function AdminOportunidades() {
                     className={`form-input ${errors.vagas ? 'error' : ''}`}
                     min="1"
                     placeholder="Ex: 5"
+                    aria-invalid={Boolean(errors.vagas)}
+                    aria-describedby={errors.vagas ? 'vagas-error' : undefined}
                   />
-                  {errors.vagas && <span className="error-message">{errors.vagas}</span>}
+                  {errors.vagas && <span id="vagas-error" className="error-message">{errors.vagas}</span>}
                 </div>
 
                 <div className="form-group third">
@@ -672,8 +665,10 @@ export default function AdminOportunidades() {
                     value={formData.data_inicio}
                     onChange={handleChange}
                     className={`form-input ${errors.data_inicio ? 'error' : ''}`}
+                    aria-invalid={Boolean(errors.data_inicio)}
+                    aria-describedby={errors.data_inicio ? 'data_inicio-error' : undefined}
                   />
-                  {errors.data_inicio && <span className="error-message">{errors.data_inicio}</span>}
+                  {errors.data_inicio && <span id="data_inicio-error" className="error-message">{errors.data_inicio}</span>}
                 </div>
 
                 <div className="form-group third">
@@ -687,8 +682,10 @@ export default function AdminOportunidades() {
                     value={formData.data_fim}
                     onChange={handleChange}
                     className={`form-input ${errors.data_fim ? 'error' : ''}`}
+                    aria-invalid={Boolean(errors.data_fim)}
+                    aria-describedby={errors.data_fim ? 'data_fim-error' : undefined}
                   />
-                  {errors.data_fim && <span className="error-message">{errors.data_fim}</span>}
+                  {errors.data_fim && <span id="data_fim-error" className="error-message">{errors.data_fim}</span>}
                 </div>
               </div>
             </div>
@@ -712,9 +709,11 @@ export default function AdminOportunidades() {
                     min="0"
                     step="0.01"
                     placeholder="Ex: 2000.00"
+                    aria-invalid={Boolean(errors.salario_min)}
+                    aria-describedby={errors.salario_min ? 'salario_min-error' : 'salario_min-hint'}
                   />
-                  {!errors.salario_min && <span className="field-hint">Valor opcional em reais (R$)</span>}
-                  {errors.salario_min && <span className="error-message">{errors.salario_min}</span>}
+                  {!errors.salario_min && <span id="salario_min-hint" className="field-hint">Valor opcional em reais (R$)</span>}
+                  {errors.salario_min && <span id="salario_min-error" className="error-message">{errors.salario_min}</span>}
                 </div>
 
                 <div className="form-group half">
@@ -731,9 +730,11 @@ export default function AdminOportunidades() {
                     min="0"
                     step="0.01"
                     placeholder="Ex: 5000.00"
+                    aria-invalid={Boolean(errors.salario_max)}
+                    aria-describedby={errors.salario_max ? 'salario_max-error' : 'salario_max-hint'}
                   />
-                  {!errors.salario_max && <span className="field-hint">Valor opcional em reais (R$)</span>}
-                  {errors.salario_max && <span className="error-message">{errors.salario_max}</span>}
+                  {!errors.salario_max && <span id="salario_max-hint" className="field-hint">Valor opcional em reais (R$)</span>}
+                  {errors.salario_max && <span id="salario_max-error" className="error-message">{errors.salario_max}</span>}
                 </div>
               </div>
             </div>
@@ -755,13 +756,15 @@ export default function AdminOportunidades() {
                     onChange={handleChange}
                     className={`form-input ${errors.link_inscricao ? 'error' : ''}`}
                     placeholder="https://exemplo.com/inscricao"
+                    aria-invalid={Boolean(errors.link_inscricao)}
+                    aria-describedby={errors.link_inscricao ? 'link_inscricao-error' : 'link_inscricao-hint'}
                   />
                   {!errors.link_inscricao && (
-                    <small className="form-hint">
+                    <small id="link_inscricao-hint" className="form-hint">
                       Link externo onde os interessados podem se inscrever
                     </small>
                   )}
-                  {errors.link_inscricao && <span className="error-message">{errors.link_inscricao}</span>}
+                  {errors.link_inscricao && <span id="link_inscricao-error" className="error-message">{errors.link_inscricao}</span>}
                 </div>
               </div>
             </div>

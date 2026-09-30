@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { getPessoaById, updatePessoa } from '../services/api';
-import { Layout, Loading, FormField, FormActions, ButtonLoading } from '../components';
+import { Layout, Loading, FormField, FormActions, FormErrorSummary, ButtonLoading } from '../components';
 import '../styles/Perfil.css';
 
 export default function Perfil() {
@@ -24,6 +24,7 @@ export default function Perfil() {
   });
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
+  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   // Redireciona para login se não estiver autenticado
   useEffect(() => {
@@ -127,7 +128,10 @@ export default function Perfil() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!validarFormulario()) return;
+    if (!validarFormulario()) {
+      setSubmitAttempts((prev) => prev + 1);
+      return;
+    }
 
     try {
       setSaving(true);
@@ -284,6 +288,8 @@ export default function Perfil() {
           ) : (
             <form onSubmit={handleSubmit} className="perfil-edit-form">
               <h3 className="section-title">Editar Informações</h3>
+
+              <FormErrorSummary errors={errors} focusTrigger={submitAttempts} />
 
               <FormField
                 label="Nome Completo"

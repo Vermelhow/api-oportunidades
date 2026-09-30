@@ -32,9 +32,18 @@ export default function FormField({
   width = 'full'
 }) {
   const inputId = name;
+  const errorId = `${name}-error`;
+  const hintId = `${name}-hint`;
+  const hasError = Boolean(error);
+  // aria-describedby só referencia um id que realmente está renderizado no momento
+  const describedBy = hasError ? errorId : (hint ? hintId : undefined);
 
   const renderInput = () => {
     const baseClassName = error ? 'error' : '';
+    const a11yProps = {
+      'aria-invalid': hasError,
+      'aria-describedby': describedBy,
+    };
 
     // Textarea
     if (type === 'textarea') {
@@ -47,6 +56,7 @@ export default function FormField({
           className={`form-textarea ${baseClassName}`}
           placeholder={placeholder}
           rows={rows}
+          {...a11yProps}
           {...inputProps}
         />
       );
@@ -61,6 +71,7 @@ export default function FormField({
           value={value}
           onChange={onChange}
           className={`form-select ${baseClassName}`}
+          {...a11yProps}
           {...inputProps}
         >
           {options.map((option) => (
@@ -82,6 +93,7 @@ export default function FormField({
         onChange={onChange}
         className={`form-input ${baseClassName}`}
         placeholder={placeholder}
+        {...a11yProps}
         {...inputProps}
       />
     );
@@ -95,8 +107,8 @@ export default function FormField({
         </label>
       )}
       {renderInput()}
-      {!error && hint && <span className="field-hint">{hint}</span>}
-      {error && <span className="error-message">{error}</span>}
+      {!error && hint && <span id={hintId} className="field-hint">{hint}</span>}
+      {error && <span id={errorId} className="error-message">{error}</span>}
     </div>
   );
 }

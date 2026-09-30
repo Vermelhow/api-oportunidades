@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { isValidEmail, validatePassword } from '../utils/auth';
 import Layout from '../components/Layout';
-import { ButtonLoading } from '../components';
+import { ButtonLoading, FormErrorSummary } from '../components';
 import '../styles/Login.css';
 
 export default function Login() {
@@ -14,6 +14,7 @@ export default function Login() {
   const [errors, setErrors] = useState({ email: '', senha: '', general: '' });
   const [touched, setTouched] = useState({ email: false, senha: false });
   const [showPassword, setShowPassword] = useState(false);
+  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   const { login, signed } = useAuth();
   const { showSuccess, showError: showErrorNotification } = useNotification();
@@ -93,35 +94,36 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setErrors({ email: '', senha: '', general: '' });
-    setLoading(true);
 
-    // Validação de email
+    // Marca os campos como "tocados" para exibir erro/ aria-invalid mesmo
+    // se o usuário nunca saiu do campo (ex.: submissão via Enter)
+    setTouched({ email: true, senha: true });
+
+    const newErrors = { email: '', senha: '', general: '' };
+
     if (!email.trim()) {
-      setErrors(prev => ({ ...prev, email: 'Email é obrigatório' }));
-      setLoading(false);
-      return;
+      newErrors.email = 'Email é obrigatório';
+    } else if (!isValidEmail(email)) {
+      newErrors.email = 'Email inválido';
     }
 
-    if (!isValidEmail(email)) {
-      setErrors(prev => ({ ...prev, email: 'Email inválido' }));
-      setLoading(false);
-      return;
-    }
-
-    // Validação de senha
     if (!senha.trim()) {
-      setErrors(prev => ({ ...prev, senha: 'Senha é obrigatória' }));
-      setLoading(false);
+      newErrors.senha = 'Senha é obrigatória';
+    } else {
+      const passwordValidation = validatePassword(senha);
+      if (!passwordValidation.isValid) {
+        newErrors.senha = passwordValidation.message;
+      }
+    }
+
+    setErrors(newErrors);
+
+    if (newErrors.email || newErrors.senha) {
+      setSubmitAttempts(prev => prev + 1);
       return;
     }
 
-    const passwordValidation = validatePassword(senha);
-    if (!passwordValidation.isValid) {
-      setErrors(prev => ({ ...prev, senha: passwordValidation.message }));
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
 
     try {
       const result = await login(email.trim(), senha);
@@ -167,6 +169,11 @@ export default function Login() {
             )}
 
             <form onSubmit={handleSubmit} className="login-form">
+              <FormErrorSummary
+                errors={{ email: errors.email, senha: errors.senha }}
+                focusTrigger={submitAttempts}
+              />
+
               <div className="form-group">
                 <label htmlFor="email" className="form-label">
                   Email
@@ -188,13 +195,15 @@ export default function Login() {
                     disabled={loading}
                     autoComplete="email"
                     required
+                    aria-invalid={Boolean(errors.email && touched.email)}
+                    aria-describedby={errors.email && touched.email ? 'email-error' : undefined}
                   />
                   {!errors.email && touched.email && email && (
                     <span className="input-success-icon">✓</span>
                   )}
                 </div>
                 {errors.email && touched.email && (
-                  <span className="error-message">⚠️ {errors.email}</span>
+                  <span id="email-error" className="error-message">⚠️ {errors.email}</span>
                 )}
               </div>
 
@@ -219,6 +228,8 @@ export default function Login() {
                     disabled={loading}
                     autoComplete="current-password"
                     required
+                    aria-invalid={Boolean(errors.senha && touched.senha)}
+                    aria-describedby={errors.senha && touched.senha ? 'senha-error' : undefined}
                   />
                   {!errors.senha && touched.senha && senha && (
                     <span className="input-success-icon">✓</span>
@@ -234,14 +245,14 @@ export default function Login() {
                   </button>
                 </div>
                 {errors.senha && touched.senha && (
-                  <span className="error-message">⚠️ {errors.senha}</span>
+                  <span id="senha-error" className="error-message">⚠️ {errors.senha}</span>
                 )}
               </div>
 
               <button
                 type="submit"
                 className="btn btn-primary btn-block"
-                disabled={loading || !isFormValid()}
+                disabled={loading}
                 title={!isFormValid() && !loading ? 'Preencha todos os campos corretamente' : ''}
               >
                 {loading ? <><ButtonLoading /> Entrando...</> : 'Entrar'}
