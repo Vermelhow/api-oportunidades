@@ -39,5 +39,8 @@ dist/
 build/
 .vscode/
 
+# Arquivos de metadados do macOS (AppleDouble, gerados em drives não-HFS)
+._*
+
 # Documentação
 docs/

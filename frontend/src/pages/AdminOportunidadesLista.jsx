@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Sidebar, ConfirmModal, Loading, ErrorMessage, EmptyState, ButtonLoading } from '../components';
+import { Sidebar, ConfirmModal, Loading, ErrorMessage } from '../components';
 import { getOportunidades } from '../services/api';
 import { useDeleteOportunidade } from '../hooks/useDeleteOportunidade';
 import { useNotification } from '../context/NotificationContext';

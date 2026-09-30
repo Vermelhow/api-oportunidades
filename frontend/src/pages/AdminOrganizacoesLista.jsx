@@ -2,7 +2,7 @@ import { useState, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getOrganizacoes, deleteOrganizacao } from '../services/api';
 import { useNotification } from '../context/NotificationContext';
-import { Sidebar, Loading, ConfirmModal, EmptyState, ErrorMessage, SkeletonList, ButtonLoading } from '../components';
+import { Sidebar, ConfirmModal, EmptyState, ErrorMessage, SkeletonList } from '../components';
 import '../styles/AdminOrganizacoesLista.css';
 
 function AdminOrganizacoesLista() {

@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import OpportunityCard from '../components/OpportunityCard';
 import SearchBar from '../components/SearchBar';
 import FilterBar from '../components/FilterBar';
-import { Loading, ErrorMessage, EmptyState, SkeletonCard } from '../components';
+import { ErrorMessage, EmptyState, SkeletonCard } from '../components';
 import { useOportunidadesFilter } from '../hooks/useOportunidadesFilter';
 import useDeferredAnnounce from '../hooks/useDeferredAnnounce';
 import { useNotification } from '../context/NotificationContext';

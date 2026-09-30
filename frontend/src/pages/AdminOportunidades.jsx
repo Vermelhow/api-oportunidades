@@ -283,12 +283,11 @@ export default function AdminOportunidades() {
       };
 
       // Criar ou atualizar baseado no modo
-      let response;
       if (isEditMode) {
-        response = await updateOportunidade(id, dataToSend);
+        await updateOportunidade(id, dataToSend);
         showSuccess('✓ Oportunidade atualizada com sucesso!');
       } else {
-        response = await createOportunidade(dataToSend);
+        await createOportunidade(dataToSend);
         showSuccess('✓ Oportunidade criada com sucesso!');
       }
       
