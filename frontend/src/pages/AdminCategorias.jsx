@@ -152,14 +152,14 @@ function AdminCategorias() {
       <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
-            <h1>🏷️ Gerenciar Categorias</h1>
+            <h1><span aria-hidden="true">🏷️</span> Gerenciar Categorias</h1>
             <p>Cadastre e organize as categorias usadas nas oportunidades</p>
           </div>
         </div>
 
         <div className="categoria-form-card">
           <h2 className="categoria-form-title">
-            {editingId ? '✏️ Editar Categoria' : '➕ Nova Categoria'}
+            {editingId ? <><span aria-hidden="true">✏️</span> Editar Categoria</> : <><span aria-hidden="true">➕</span> Nova Categoria</>}
           </h2>
           <form onSubmit={handleSubmit}>
             <FormErrorSummary errors={errors} focusTrigger={submitAttempts} />
@@ -223,13 +223,13 @@ function AdminCategorias() {
                 {categoria.descricao && <p>{categoria.descricao}</p>}
                 <div className="categoria-card-actions">
                   <button className="btn btn-sm btn-secondary" onClick={() => iniciarEdicao(categoria)}>
-                    ✏️ Editar
+                    <span aria-hidden="true">✏️</span> Editar
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
                     onClick={() => setCategoriaParaExcluir(categoria)}
                   >
-                    🗑️ Excluir
+                    <span aria-hidden="true">🗑️</span> Excluir
                   </button>
                 </div>
               </div>

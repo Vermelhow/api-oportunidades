@@ -79,7 +79,7 @@ export default function OpportunityCard({ oportunidade }) {
         )}
         {tipo && (
           <span className="badge badge-type">
-            {tipoIcons[tipo] || '📌'} {tipo}
+            <span aria-hidden="true">{tipoIcons[tipo] || '📌'}</span> {tipo}
           </span>
         )}
       </div>
@@ -89,7 +89,7 @@ export default function OpportunityCard({ oportunidade }) {
         <h3 className="card-title">{titulo}</h3>
         {categoria_nome && (
           <span className="card-category">
-            🏷️ {categoria_nome}
+            <span aria-hidden="true">🏷️</span> {categoria_nome}
           </span>
         )}
       </div>
@@ -97,7 +97,7 @@ export default function OpportunityCard({ oportunidade }) {
       {/* Organização */}
       {organizacao_nome && (
         <div className="card-organization">
-          <span className="org-icon">🏢</span>
+          <span className="org-icon" aria-hidden="true">🏢</span>
           <span className="org-name">{organizacao_nome}</span>
         </div>
       )}
@@ -106,21 +106,21 @@ export default function OpportunityCard({ oportunidade }) {
       <div className="card-info-grid">
         {localizacao && (
           <div className="info-item">
-            <span className="info-icon">📍</span>
+            <span className="info-icon" aria-hidden="true">📍</span>
             <span className="info-text">{localizacao}</span>
           </div>
         )}
         
         {formato && (
           <div className="info-item">
-            <span className="info-icon">{formatoIcons[formato] || '📋'}</span>
+            <span className="info-icon" aria-hidden="true">{formatoIcons[formato] || '📋'}</span>
             <span className="info-text">{formato}</span>
           </div>
         )}
 
         {(data_inicio || data_fim) && (
           <div className="info-item">
-            <span className="info-icon">📅</span>
+            <span className="info-icon" aria-hidden="true">📅</span>
             <span className="info-text">
               {data_inicio && formatDate(data_inicio)}
               {data_inicio && data_fim && ' - '}
@@ -131,7 +131,7 @@ export default function OpportunityCard({ oportunidade }) {
 
         {vagas_disponiveis && (
           <div className="info-item">
-            <span className="info-icon">👥</span>
+            <span className="info-icon" aria-hidden="true">👥</span>
             <span className="info-text">
               {vagas_disponiveis} {vagas_disponiveis === 1 ? 'vaga' : 'vagas'}
             </span>
@@ -148,7 +148,7 @@ export default function OpportunityCard({ oportunidade }) {
             onClick={() => setExpanded(!expanded)}
             aria-expanded={expanded}
           >
-            {expanded ? 'Ver menos ▲' : 'Ler mais ▼'}
+            {expanded ? <>Ver menos <span aria-hidden="true">▲</span></> : <>Ler mais <span aria-hidden="true">▼</span></>}
           </button>
         )}
       </div>

@@ -109,7 +109,7 @@ function AdminOrganizacoesLista() {
         <div className="admin-content" id="main-content">
           <div className="admin-header">
             <div>
-              <h1>🏢 Gerenciar Organizações</h1>
+              <h1><span aria-hidden="true">🏢</span> Gerenciar Organizações</h1>
               <p>Carregando organizações parceiras...</p>
             </div>
           </div>
@@ -127,7 +127,7 @@ function AdminOrganizacoesLista() {
         <div className="admin-content" id="main-content">
           <div className="admin-header">
             <div>
-              <h1>🏢 Gerenciar Organizações</h1>
+              <h1><span aria-hidden="true">🏢</span> Gerenciar Organizações</h1>
               <p>Erro ao carregar dados</p>
             </div>
           </div>
@@ -149,21 +149,21 @@ function AdminOrganizacoesLista() {
       <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
-            <h1>🏢 Gerenciar Organizações</h1>
+            <h1><span aria-hidden="true">🏢</span> Gerenciar Organizações</h1>
             <p>Gerencie as organizações parceiras do sistema</p>
           </div>
           <button 
             className="btn btn-primary"
             onClick={handleNova}
           >
-            ➕ Nova Organização
+            <span aria-hidden="true">➕</span> Nova Organização
           </button>
         </div>
 
         {/* Barra de Busca */}
         <div className="search-bar-container">
           <div className="search-bar">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon" aria-hidden="true">🔍</span>
             <label htmlFor={searchInputId} className="sr-only">
               Buscar por nome, descrição ou email
             </label>
@@ -174,6 +174,7 @@ function AdminOrganizacoesLista() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
+              autoComplete="off"
             />
             {searchTerm && (
               <button 
@@ -181,7 +182,7 @@ function AdminOrganizacoesLista() {
                 onClick={() => setSearchTerm('')}
                 aria-label="Limpar busca"
               >
-                ✕
+                <span aria-hidden="true">✕</span>
               </button>
             )}
           </div>
@@ -206,7 +207,7 @@ function AdminOrganizacoesLista() {
               ? 'Tente ajustar os termos de busca ou limpar o filtro.' 
               : 'Comece cadastrando uma nova organização parceira no sistema.'
             }
-            actionText={!searchTerm ? '➕ Cadastrar Primeira Organização' : undefined}
+            actionText={!searchTerm ? 'Cadastrar Primeira Organização' : undefined}
             onAction={!searchTerm ? handleNova : undefined}
           />
         ) : (
@@ -230,21 +231,21 @@ function AdminOrganizacoesLista() {
                   <div className="organizacao-info">
                     {org.email && (
                       <div className="info-item">
-                        <span className="info-icon">📧</span>
+                        <span className="info-icon" aria-hidden="true">📧</span>
                         <span className="info-text">{org.email}</span>
                       </div>
                     )}
                     
                     {org.telefone && (
                       <div className="info-item">
-                        <span className="info-icon">📱</span>
+                        <span className="info-icon" aria-hidden="true">📱</span>
                         <span className="info-text">{org.telefone}</span>
                       </div>
                     )}
                     
                     {org.website && (
                       <div className="info-item">
-                        <span className="info-icon">🌐</span>
+                        <span className="info-icon" aria-hidden="true">🌐</span>
                         <a 
                           href={org.website} 
                           target="_blank" 
@@ -258,7 +259,7 @@ function AdminOrganizacoesLista() {
                     
                     {org.endereco && (
                       <div className="info-item">
-                        <span className="info-icon">📍</span>
+                        <span className="info-icon" aria-hidden="true">📍</span>
                         <span className="info-text">{org.endereco}</span>
                       </div>
                     )}
@@ -271,21 +272,21 @@ function AdminOrganizacoesLista() {
                     onClick={() => handleVisualizarDetalhes(org.id)}
                     title="Ver detalhes"
                   >
-                    👁️ Ver
+                    <span aria-hidden="true">👁️</span> Ver
                   </button>
                   <button
                     className="btn btn-sm btn-primary"
                     onClick={() => handleEditar(org.id)}
                     title="Editar organização"
                   >
-                    ✏️ Editar
+                    <span aria-hidden="true">✏️</span> Editar
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
                     onClick={() => openDeleteConfirm(org)}
                     title="Excluir organização"
                   >
-                    🗑️ Excluir
+                    <span aria-hidden="true">🗑️</span> Excluir
                   </button>
                 </div>
               </div>

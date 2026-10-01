@@ -176,7 +176,7 @@ export default function Perfil() {
     return (
       <Layout>
         <div className="perfil-error">
-          <div className="error-icon">⚠️</div>
+          <div className="error-icon" aria-hidden="true">⚠️</div>
           <h2>Dados do usuário não encontrados</h2>
           <p>Não foi possível carregar as informações do seu perfil.</p>
           <button onClick={() => navigate('/login')} className="btn btn-primary">
@@ -221,7 +221,7 @@ export default function Perfil() {
 
                 <div className="info-group">
                   <div className="info-item">
-                    <span className="info-icon">👤</span>
+                    <span className="info-icon" aria-hidden="true">👤</span>
                     <div className="info-content">
                       <label className="info-label">Nome Completo</label>
                       <p className="info-value">{perfilCompleto?.nome}</p>
@@ -229,7 +229,7 @@ export default function Perfil() {
                   </div>
 
                   <div className="info-item">
-                    <span className="info-icon">📧</span>
+                    <span className="info-icon" aria-hidden="true">📧</span>
                     <div className="info-content">
                       <label className="info-label">E-mail</label>
                       <p className="info-value">{perfilCompleto?.email}</p>
@@ -237,7 +237,7 @@ export default function Perfil() {
                   </div>
 
                   <div className="info-item">
-                    <span className="info-icon">📝</span>
+                    <span className="info-icon" aria-hidden="true">📝</span>
                     <div className="info-content">
                       <label className="info-label">Bio</label>
                       <p className="info-value">{perfilCompleto?.bio || 'Nenhuma bio cadastrada'}</p>
@@ -245,7 +245,7 @@ export default function Perfil() {
                   </div>
 
                   <div className="info-item">
-                    <span className="info-icon">🔗</span>
+                    <span className="info-icon" aria-hidden="true">🔗</span>
                     <div className="info-content">
                       <label className="info-label">Links</label>
                       <p className="info-value">
@@ -266,7 +266,7 @@ export default function Perfil() {
                   </div>
 
                   <div className="info-item">
-                    <span className="info-icon">🆔</span>
+                    <span className="info-icon" aria-hidden="true">🆔</span>
                     <div className="info-content">
                       <label className="info-label">ID de Usuário</label>
                       <p className="info-value">#{user.id}</p>
@@ -278,10 +278,10 @@ export default function Perfil() {
               {/* Ações */}
               <div className="perfil-actions">
                 <button onClick={iniciarEdicao} className="btn btn-primary">
-                  ✏️ Editar Perfil
+                  <span aria-hidden="true">✏️</span> Editar Perfil
                 </button>
                 <button onClick={handleLogout} className="btn btn-danger btn-logout">
-                  🚪 Sair da Conta
+                  <span aria-hidden="true">🚪</span> Sair da Conta
                 </button>
               </div>
             </>
@@ -298,6 +298,7 @@ export default function Perfil() {
                 onChange={handleChange}
                 error={errors.nome}
                 required
+                inputProps={{ autoComplete: 'name' }}
               />
               <FormField
                 label="E-mail"
@@ -307,6 +308,7 @@ export default function Perfil() {
                 onChange={handleChange}
                 error={errors.email}
                 required
+                inputProps={{ autoComplete: 'email' }}
               />
               <FormField
                 label="Bio"

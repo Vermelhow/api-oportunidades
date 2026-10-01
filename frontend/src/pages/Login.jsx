@@ -163,7 +163,7 @@ export default function Login() {
 
             {errors.general && (
               <div className="alert alert-error">
-                <span className="alert-icon">⚠️</span>
+                <span className="alert-icon" aria-hidden="true">⚠️</span>
                 <span>{errors.general}</span>
               </div>
             )}
@@ -179,7 +179,7 @@ export default function Login() {
                   Email
                 </label>
                 <div className="input-wrapper">
-                  <span className="input-icon">📧</span>
+                  <span className="input-icon" aria-hidden="true">📧</span>
                   <input
                     id="email"
                     type="email"
@@ -199,11 +199,11 @@ export default function Login() {
                     aria-describedby={errors.email && touched.email ? 'email-error' : undefined}
                   />
                   {!errors.email && touched.email && email && (
-                    <span className="input-success-icon">✓</span>
+                    <span className="input-success-icon" aria-hidden="true">✓</span>
                   )}
                 </div>
                 {errors.email && touched.email && (
-                  <span id="email-error" className="error-message">⚠️ {errors.email}</span>
+                  <span id="email-error" className="error-message"><span aria-hidden="true">⚠️</span> {errors.email}</span>
                 )}
               </div>
 
@@ -212,7 +212,7 @@ export default function Login() {
                   Senha
                 </label>
                 <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                  <span className="input-icon" aria-hidden="true">🔒</span>
                   <input
                     id="senha"
                     type={showPassword ? 'text' : 'password'}
@@ -232,7 +232,7 @@ export default function Login() {
                     aria-describedby={errors.senha && touched.senha ? 'senha-error' : undefined}
                   />
                   {!errors.senha && touched.senha && senha && (
-                    <span className="input-success-icon">✓</span>
+                    <span className="input-success-icon" aria-hidden="true">✓</span>
                   )}
                   <button
                     type="button"
@@ -241,11 +241,11 @@ export default function Login() {
                     disabled={loading}
                     aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   >
-                    {showPassword ? '👁️' : '👁️‍🗨️'}
+                    <span aria-hidden="true">{showPassword ? '👁️' : '👁️‍🗨️'}</span>
                   </button>
                 </div>
                 {errors.senha && touched.senha && (
-                  <span id="senha-error" className="error-message">⚠️ {errors.senha}</span>
+                  <span id="senha-error" className="error-message"><span aria-hidden="true">⚠️</span> {errors.senha}</span>
                 )}
               </div>
 
@@ -260,7 +260,7 @@ export default function Login() {
               
               {!isFormValid() && (touched.email || touched.senha) && !loading && (
                 <div className="form-hint">
-                  💡 Preencha todos os campos corretamente para fazer login
+                  <span aria-hidden="true">💡</span> Preencha todos os campos corretamente para fazer login
                 </div>
               )}
             </form>
@@ -284,15 +284,15 @@ export default function Login() {
               </p>
               <div className="info-features">
                 <div className="feature-item">
-                  <span className="feature-icon">✨</span>
+                  <span className="feature-icon" aria-hidden="true">✨</span>
                   <span>Oportunidades verificadas</span>
                 </div>
                 <div className="feature-item">
-                  <span className="feature-icon">🤝</span>
+                  <span className="feature-icon" aria-hidden="true">🤝</span>
                   <span>Conexão direta com ONGs</span>
                 </div>
                 <div className="feature-item">
-                  <span className="feature-icon">📊</span>
+                  <span className="feature-icon" aria-hidden="true">📊</span>
                   <span>Acompanhe seu impacto</span>
                 </div>
               </div>

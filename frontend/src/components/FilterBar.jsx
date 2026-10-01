@@ -30,25 +30,25 @@ export default function FilterBar({
   const [isExpanded, setIsExpanded] = useState(true);
 
   const statusOptions = [
-    { value: '', label: 'Todos os Status' },
-    { value: 'ativa', label: '🟢 Ativas' },
-    { value: 'pausada', label: '🟡 Pausadas' },
-    { value: 'encerrada', label: '🔴 Encerradas' }
+    { value: '', label: 'Todos os Status', optionLabel: 'Todos os Status' },
+    { value: 'ativa', label: '🟢 Ativas', optionLabel: 'Ativas' },
+    { value: 'pausada', label: '🟡 Pausadas', optionLabel: 'Pausadas' },
+    { value: 'encerrada', label: '🔴 Encerradas', optionLabel: 'Encerradas' }
   ];
 
   const tipoOptions = [
-    { value: '', label: 'Todos os Tipos' },
-    { value: 'emprego', label: '💼 Emprego' },
-    { value: 'estagio', label: '🎓 Estágio' },
-    { value: 'voluntariado', label: '❤️ Voluntariado' },
-    { value: 'freelancer', label: '💻 Freelancer' }
+    { value: '', label: 'Todos os Tipos', optionLabel: 'Todos os Tipos' },
+    { value: 'emprego', label: '💼 Emprego', optionLabel: 'Emprego' },
+    { value: 'estagio', label: '🎓 Estágio', optionLabel: 'Estágio' },
+    { value: 'voluntariado', label: '❤️ Voluntariado', optionLabel: 'Voluntariado' },
+    { value: 'freelancer', label: '💻 Freelancer', optionLabel: 'Freelancer' }
   ];
 
   const formatoOptions = [
-    { value: '', label: 'Todos os Formatos' },
-    { value: 'presencial', label: '🏢 Presencial' },
-    { value: 'remoto', label: '💻 Remoto' },
-    { value: 'hibrido', label: '🔄 Híbrido' }
+    { value: '', label: 'Todos os Formatos', optionLabel: 'Todos os Formatos' },
+    { value: 'presencial', label: '🏢 Presencial', optionLabel: 'Presencial' },
+    { value: 'remoto', label: '💻 Remoto', optionLabel: 'Remoto' },
+    { value: 'hibrido', label: '🔄 Híbrido', optionLabel: 'Híbrido' }
   ];
 
   // Conta quantos filtros estão ativos
@@ -87,7 +87,7 @@ export default function FilterBar({
               type="button"
               title="Limpar todos os filtros"
             >
-              ✕ Limpar Filtros
+              <span aria-hidden="true">✕</span> Limpar Filtros
             </button>
           )}
           
@@ -98,7 +98,7 @@ export default function FilterBar({
             aria-label={isExpanded ? 'Ocultar filtros' : 'Mostrar filtros'}
             aria-expanded={isExpanded}
           >
-            {isExpanded ? '▲' : '▼'} Filtros
+            <span aria-hidden="true">{isExpanded ? '▲' : '▼'}</span> Filtros
           </button>
         </div>
       </div>
@@ -108,7 +108,7 @@ export default function FilterBar({
           {/* Filtro por Categoria */}
           <div className="filter-group">
             <label htmlFor="filter-categoria" className="filter-label">
-              <span className="filter-label-icon">🏷️</span>
+              <span className="filter-label-icon" aria-hidden="true">🏷️</span>
               <span>Categoria</span>
             </label>
             <select
@@ -129,7 +129,7 @@ export default function FilterBar({
           {/* Filtro por Status */}
           <div className="filter-group">
             <label htmlFor="filter-status" className="filter-label">
-              <span className="filter-label-icon">📊</span>
+              <span className="filter-label-icon" aria-hidden="true">📊</span>
               <span>Status</span>
             </label>
             <select
@@ -140,7 +140,7 @@ export default function FilterBar({
             >
               {statusOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                  {opt.optionLabel}
                 </option>
               ))}
             </select>
@@ -149,7 +149,7 @@ export default function FilterBar({
           {/* Filtro por Tipo */}
           <div className="filter-group">
             <label htmlFor="filter-tipo" className="filter-label">
-              <span className="filter-label-icon">💡</span>
+              <span className="filter-label-icon" aria-hidden="true">💡</span>
               <span>Tipo</span>
             </label>
             <select
@@ -160,7 +160,7 @@ export default function FilterBar({
             >
               {tipoOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                  {opt.optionLabel}
                 </option>
               ))}
             </select>
@@ -169,7 +169,7 @@ export default function FilterBar({
           {/* Filtro por Formato */}
           <div className="filter-group">
             <label htmlFor="filter-formato" className="filter-label">
-              <span className="filter-label-icon">📍</span>
+              <span className="filter-label-icon" aria-hidden="true">📍</span>
               <span>Formato</span>
             </label>
             <select
@@ -180,7 +180,7 @@ export default function FilterBar({
             >
               {formatoOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                  {opt.optionLabel}
                 </option>
               ))}
             </select>
@@ -200,8 +200,8 @@ export default function FilterBar({
               type="button"
               title="Remover filtro de categoria"
             >
-              <span>🏷️ {categorias.find(c => c.id === parseInt(filters.categoria))?.nome || 'Categoria'}</span>
-              <span className="filter-tag-remove">✕</span>
+              <span><span aria-hidden="true">🏷️</span> {categorias.find(c => c.id === parseInt(filters.categoria))?.nome || 'Categoria'}</span>
+              <span className="filter-tag-remove" aria-hidden="true">✕</span>
             </button>
           )}
           
@@ -213,7 +213,7 @@ export default function FilterBar({
               title="Remover filtro de status"
             >
               <span>{statusOptions.find(o => o.value === filters.status)?.label || filters.status}</span>
-              <span className="filter-tag-remove">✕</span>
+              <span className="filter-tag-remove" aria-hidden="true">✕</span>
             </button>
           )}
           
@@ -225,7 +225,7 @@ export default function FilterBar({
               title="Remover filtro de tipo"
             >
               <span>{tipoOptions.find(o => o.value === filters.tipo)?.label || filters.tipo}</span>
-              <span className="filter-tag-remove">✕</span>
+              <span className="filter-tag-remove" aria-hidden="true">✕</span>
             </button>
           )}
           
@@ -237,7 +237,7 @@ export default function FilterBar({
               title="Remover filtro de formato"
             >
               <span>{formatoOptions.find(o => o.value === filters.formato)?.label || filters.formato}</span>
-              <span className="filter-tag-remove">✕</span>
+              <span className="filter-tag-remove" aria-hidden="true">✕</span>
             </button>
           )}
         </div>

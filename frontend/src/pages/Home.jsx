@@ -10,7 +10,7 @@ export default function Home() {
         <section className="hero-section">
           <div className="hero-content">
             <div className="hero-badge">
-              <span className="badge-icon">🌟</span>
+              <span className="badge-icon" aria-hidden="true">🌟</span>
               <span className="badge-text">Conectando pessoas a causas sociais</span>
             </div>
             
@@ -25,32 +25,32 @@ export default function Home() {
             
             <div className="hero-buttons">
               <Link to="/oportunidades" className="btn btn-primary">
-                <span>🚀</span>
+                <span aria-hidden="true">🚀</span>
                 Explorar Oportunidades
               </Link>
               <a href="#about" className="btn btn-secondary">
-                <span>📖</span>
+                <span aria-hidden="true">📖</span>
                 Saiba Mais
               </a>
             </div>
             
             <div className="hero-stats">
               <div className="stat-item">
-                <span className="stat-icon">📋</span>
+                <span className="stat-icon" aria-hidden="true">📋</span>
                 <div className="stat-info">
                   <strong>Oportunidades</strong>
                   <span>Centralizadas</span>
                 </div>
               </div>
               <div className="stat-item">
-                <span className="stat-icon">🏢</span>
+                <span className="stat-icon" aria-hidden="true">🏢</span>
                 <div className="stat-info">
                   <strong>Organizações</strong>
                   <span>Conectadas</span>
                 </div>
               </div>
               <div className="stat-item">
-                <span className="stat-icon">👥</span>
+                <span className="stat-icon" aria-hidden="true">👥</span>
                 <div className="stat-info">
                   <strong>Voluntários</strong>
                   <span>Engajados</span>
@@ -64,7 +64,7 @@ export default function Home() {
         <section id="about" className="about-section">
           <div className="section-container">
             <div className="section-header">
-              <span className="section-badge">💡 Sobre o Projeto</span>
+              <span className="section-badge"><span aria-hidden="true">💡</span> Sobre o Projeto</span>
               <h2 className="section-title">Transformando o Acesso a Oportunidades Sociais</h2>
               <p className="section-subtitle">
                 Nossa missão é facilitar a conexão entre organizações sociais e voluntários, 
@@ -74,7 +74,7 @@ export default function Home() {
             
             <div className="about-content">
               <div className="about-card">
-                <div className="about-icon">🎯</div>
+                <div className="about-icon" aria-hidden="true">🎯</div>
                 <h3>Objetivo</h3>
                 <p>
                   Criar uma plataforma centralizada que permita a instituições como ONGs, 
@@ -84,7 +84,7 @@ export default function Home() {
               </div>
               
               <div className="about-card">
-                <div className="about-icon">🌍</div>
+                <div className="about-icon" aria-hidden="true">🌍</div>
                 <h3>Impacto Social</h3>
                 <p>
                   Reduzir barreiras entre pessoas que querem contribuir e organizações que 
@@ -94,7 +94,7 @@ export default function Home() {
               </div>
               
               <div className="about-card">
-                <div className="about-icon">🤝</div>
+                <div className="about-icon" aria-hidden="true">🤝</div>
                 <h3>Compromisso</h3>
                 <p>
                   Oferecer uma ferramenta gratuita, intuitiva e profissional que empodere 
@@ -110,7 +110,7 @@ export default function Home() {
         <section className="how-section">
           <div className="section-container">
             <div className="section-header">
-              <span className="section-badge">⚙️ Como Funciona</span>
+              <span className="section-badge"><span aria-hidden="true">⚙️</span> Como Funciona</span>
               <h2 className="section-title">Simples, Rápido e Eficiente</h2>
               <p className="section-subtitle">
                 Em poucos passos, sua organização pode começar a divulgar oportunidades 
@@ -121,7 +121,7 @@ export default function Home() {
             <div className="steps-container">
               <div className="step-card">
                 <div className="step-number">1</div>
-                <div className="step-icon">📝</div>
+                <div className="step-icon" aria-hidden="true">📝</div>
                 <h3>Cadastre sua Organização</h3>
                 <p>
                   Crie um perfil para sua instituição com informações básicas, 
@@ -129,11 +129,11 @@ export default function Home() {
                 </p>
               </div>
               
-              <div className="step-arrow">→</div>
+              <div className="step-arrow" aria-hidden="true">→</div>
               
               <div className="step-card">
                 <div className="step-number">2</div>
-                <div className="step-icon">📋</div>
+                <div className="step-icon" aria-hidden="true">📋</div>
                 <h3>Publique Oportunidades</h3>
                 <p>
                   Adicione detalhes sobre as vagas de voluntariado: descrição, 
@@ -141,11 +141,11 @@ export default function Home() {
                 </p>
               </div>
               
-              <div className="step-arrow">→</div>
+              <div className="step-arrow" aria-hidden="true">→</div>
               
               <div className="step-card">
                 <div className="step-number">3</div>
-                <div className="step-icon">🌐</div>
+                <div className="step-icon" aria-hidden="true">🌐</div>
                 <h3>Conecte-se com Voluntários</h3>
                 <p>
                   Voluntários interessados poderão visualizar e entrar em contato 
@@ -153,11 +153,11 @@ export default function Home() {
                 </p>
               </div>
               
-              <div className="step-arrow">→</div>
+              <div className="step-arrow" aria-hidden="true">→</div>
               
               <div className="step-card">
                 <div className="step-number">4</div>
-                <div className="step-icon">📊</div>
+                <div className="step-icon" aria-hidden="true">📊</div>
                 <h3>Gerencie e Acompanhe</h3>
                 <p>
                   Use o painel administrativo para gerenciar inscrições, atualizar 
@@ -172,43 +172,43 @@ export default function Home() {
         <section className="benefits-section">
           <div className="section-container">
             <div className="section-header">
-              <span className="section-badge">✨ Benefícios</span>
+              <span className="section-badge"><span aria-hidden="true">✨</span> Benefícios</span>
               <h2 className="section-title">Por Que Usar Nossa Plataforma?</h2>
             </div>
             
             <div className="benefits-grid">
               <div className="benefit-card">
-                <div className="benefit-icon">🔓</div>
+                <div className="benefit-icon" aria-hidden="true">🔓</div>
                 <h3>Acesso Gratuito</h3>
                 <p>100% gratuito para organizações sociais sem fins lucrativos.</p>
               </div>
               
               <div className="benefit-card">
-                <div className="benefit-icon">⚡</div>
+                <div className="benefit-icon" aria-hidden="true">⚡</div>
                 <h3>Fácil de Usar</h3>
                 <p>Interface intuitiva que não requer conhecimento técnico.</p>
               </div>
               
               <div className="benefit-card">
-                <div className="benefit-icon">📱</div>
+                <div className="benefit-icon" aria-hidden="true">📱</div>
                 <h3>Responsivo</h3>
                 <p>Funciona perfeitamente em computadores, tablets e celulares.</p>
               </div>
               
               <div className="benefit-card">
-                <div className="benefit-icon">🔍</div>
+                <div className="benefit-icon" aria-hidden="true">🔍</div>
                 <h3>Busca Inteligente</h3>
                 <p>Sistema de busca e filtros para encontrar oportunidades rapidamente.</p>
               </div>
               
               <div className="benefit-card">
-                <div className="benefit-icon">📊</div>
+                <div className="benefit-icon" aria-hidden="true">📊</div>
                 <h3>Dashboard Completo</h3>
                 <p>Painel administrativo com estatísticas e gestão centralizada.</p>
               </div>
               
               <div className="benefit-card">
-                <div className="benefit-icon">🔒</div>
+                <div className="benefit-icon" aria-hidden="true">🔒</div>
                 <h3>Seguro</h3>
                 <p>Sistema de autenticação protegido e dados criptografados.</p>
               </div>
@@ -226,11 +226,11 @@ export default function Home() {
             </p>
             <div className="cta-buttons">
               <Link to="/cadastro" className="btn btn-primary btn-large">
-                <span>🚀</span>
+                <span aria-hidden="true">🚀</span>
                 Cadastrar Minha Organização
               </Link>
               <Link to="/oportunidades" className="btn btn-secondary btn-large">
-                <span>🔍</span>
+                <span aria-hidden="true">🔍</span>
                 Ver Oportunidades Disponíveis
               </Link>
             </div>
@@ -241,11 +241,11 @@ export default function Home() {
         <section className="footer-info">
           <div className="footer-content">
             <div className="footer-column">
-              <h4>📞 Contato</h4>
+              <h4><span aria-hidden="true">📞</span> Contato</h4>
               <p>Para dúvidas ou suporte, entre em contato através da sua instituição de ensino.</p>
             </div>
             <div className="footer-column">
-              <h4>🎓 Projeto Acadêmico</h4>
+              <h4><span aria-hidden="true">🎓</span> Projeto Acadêmico</h4>
               <p>Desenvolvido como parte de um projeto acadêmico voltado para impacto social.</p>
             </div>
             <div className="footer-column">

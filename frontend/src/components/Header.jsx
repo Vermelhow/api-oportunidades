@@ -54,7 +54,7 @@ export default function Header() {
     <header className="header">
       <div className="header-container">
         <Link to="/" className="logo" onClick={closeMobileMenu}>
-          <span className="logo-icon">🌟</span>
+          <span className="logo-icon" aria-hidden="true">🌟</span>
           <span className="logo-text">Oportunidades</span>
         </Link>
 
@@ -77,7 +77,7 @@ export default function Header() {
                 aria-expanded={userMenuOpen}
                 aria-controls={userMenuId}
               >
-                <span className="user-avatar">👤</span>
+                <span className="user-avatar" aria-hidden="true">👤</span>
                 <span className="user-name">Olá, {user?.nome?.split(' ')[0]}</span>
                 <span className="dropdown-arrow" aria-hidden="true">{userMenuOpen ? '▲' : '▼'}</span>
               </button>
@@ -86,16 +86,16 @@ export default function Header() {
                   <div className="user-menu-overlay" onClick={closeUserMenu}></div>
                   <div className="user-menu-dropdown" id={userMenuId} ref={userMenuRef}>
                     <Link to="/perfil" className="dropdown-item" onClick={closeUserMenu} aria-current={currentPage('/perfil')}>
-                      <span className="dropdown-icon">👤</span>
+                      <span className="dropdown-icon" aria-hidden="true">👤</span>
                       Meu Perfil
                     </Link>
                     <Link to="/dashboard" className="dropdown-item" onClick={closeUserMenu} aria-current={currentPage('/dashboard')}>
-                      <span className="dropdown-icon">📊</span>
+                      <span className="dropdown-icon" aria-hidden="true">📊</span>
                       Dashboard
                     </Link>
                     <div className="dropdown-divider"></div>
                     <button onClick={handleLogoutDesktop} className="dropdown-item dropdown-logout">
-                      <span className="dropdown-icon">🚪</span>
+                      <span className="dropdown-icon" aria-hidden="true">🚪</span>
                       Sair
                     </button>
                   </div>
@@ -139,7 +139,7 @@ export default function Header() {
         <div className="mobile-menu-header">
           {signed && user && (
             <div className="mobile-user-info">
-              <span className="mobile-user-avatar">👤</span>
+              <span className="mobile-user-avatar" aria-hidden="true">👤</span>
               <div>
                 <p className="mobile-user-name">{user.nome}</p>
                 <p className="mobile-user-email">{user.email}</p>
@@ -150,21 +150,21 @@ export default function Header() {
 
         <div className="mobile-menu-links">
           <Link to="/" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/')}>
-            <span className="mobile-link-icon">🏠</span>
+            <span className="mobile-link-icon" aria-hidden="true">🏠</span>
             Home
           </Link>
           <Link to="/oportunidades" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/oportunidades')}>
-            <span className="mobile-link-icon">📋</span>
+            <span className="mobile-link-icon" aria-hidden="true">📋</span>
             Oportunidades
           </Link>
           {signed && (
             <>
               <Link to="/perfil" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/perfil')}>
-                <span className="mobile-link-icon">👤</span>
+                <span className="mobile-link-icon" aria-hidden="true">👤</span>
                 Meu Perfil
               </Link>
               <Link to="/dashboard" className="mobile-nav-link" onClick={closeMobileMenu} aria-current={currentPage('/dashboard')}>
-                <span className="mobile-link-icon">📊</span>
+                <span className="mobile-link-icon" aria-hidden="true">📊</span>
                 Dashboard
               </Link>
             </>
@@ -174,7 +174,7 @@ export default function Header() {
         <div className="mobile-menu-actions">
           {signed ? (
             <button onClick={handleLogout} className="btn btn-outline btn-block">
-              🚪 Sair
+              <span aria-hidden="true">🚪</span> Sair
             </button>
           ) : (
             <>

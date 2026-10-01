@@ -292,12 +292,12 @@ export default function Dashboard() {
           <div>
             <h1 className="dashboard-title">Dashboard Administrativo</h1>
             <p className="dashboard-subtitle">
-              Bem-vindo de volta, <strong>{user?.nome}</strong>! 👋
+              Bem-vindo de volta, <strong>{user?.nome}</strong>! <span aria-hidden="true">👋</span>
             </p>
           </div>
           <div className="header-actions">
             <Link to="/oportunidades" className="btn btn-outline">
-              🔍 Explorar Oportunidades
+              <span aria-hidden="true">🔍</span> Explorar Oportunidades
             </Link>
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function Dashboard() {
         <div className="stats-grid">
           {stats.map((stat, idx) => (
             <div key={idx} className="stat-card" style={{ '--stat-color': stat.color }}>
-              <div className="stat-icon">{stat.icon}</div>
+              <div className="stat-icon" aria-hidden="true">{stat.icon}</div>
               <div className="stat-info">
                 <p className="stat-label">{stat.label}</p>
                 <h3 className="stat-value">{stat.value}</h3>
@@ -318,12 +318,12 @@ export default function Dashboard() {
 
         {/* Insights Section */}
         <div className="section insights-section">
-          <h2 className="section-title">💡 Insights e Métricas</h2>
+          <h2 className="section-title"><span aria-hidden="true">💡</span> Insights e Métricas</h2>
           <div className="insights-grid">
             {insights.map((insight, idx) => (
               <div key={idx} className="insight-card" style={{ '--insight-color': insight.color }}>
                 <div className="insight-header">
-                  <span className="insight-icon">{insight.icon}</span>
+                  <span className="insight-icon" aria-hidden="true">{insight.icon}</span>
                 </div>
                 <h3 className="insight-title">{insight.title}</h3>
                 <div className="insight-value">{insight.value}</div>
@@ -336,16 +336,16 @@ export default function Dashboard() {
         {/* Alerts Section */}
         {alerts.length > 0 && (
           <div className="section alerts-section">
-            <h2 className="section-title">🔔 Alertas e Notificações</h2>
+            <h2 className="section-title"><span aria-hidden="true">🔔</span> Alertas e Notificações</h2>
             <div className="alerts-container">
               {alerts.map((alert, idx) => (
                 <div key={idx} className={`alert-card alert-${alert.type}`}>
-                  <span className="alert-icon">{alert.icon}</span>
+                  <span className="alert-icon" aria-hidden="true">{alert.icon}</span>
                   <div className="alert-content">
                     <p className="alert-text">{alert.text}</p>
                     {alert.action && (
                       <Link to={alert.link} className="alert-action">
-                        {alert.action} →
+                        {alert.action} <span aria-hidden="true">→</span>
                       </Link>
                     )}
                   </div>
@@ -357,7 +357,7 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="section">
-          <h2 className="section-title">⚡ Ações Rápidas</h2>
+          <h2 className="section-title"><span aria-hidden="true">⚡</span> Ações Rápidas</h2>
           <div className="quick-actions-grid">
             {quickActions.map((action, idx) => (
               <Link 
@@ -366,7 +366,7 @@ export default function Dashboard() {
                 className="quick-action-card"
                 style={{ '--action-color': action.color }}
               >
-                <div className="action-icon">{action.icon}</div>
+                <div className="action-icon" aria-hidden="true">{action.icon}</div>
                 <div className="action-content">
                   <span className="action-label">{action.label}</span>
                   <span className="action-description">{action.description}</span>
@@ -379,9 +379,9 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <div className="section">
           <div className="section-header">
-            <h2 className="section-title">🕒 Atividades Recentes</h2>
+            <h2 className="section-title"><span aria-hidden="true">🕒</span> Atividades Recentes</h2>
             <Link to="/admin/oportunidades" className="section-link">
-              Ver todas →
+              Ver todas <span aria-hidden="true">→</span>
             </Link>
           </div>
           {recentActivities.length === 0 ? (
@@ -393,6 +393,7 @@ export default function Dashboard() {
                   <div 
                     className="activity-icon" 
                     style={{ backgroundColor: activity.color + '20', color: activity.color }}
+                    aria-hidden="true"
                   >
                     {activity.icon}
                   </div>
@@ -410,7 +411,7 @@ export default function Dashboard() {
 
         {/* User Info */}
         <div className="section">
-          <h2 className="section-title">👤 Suas Informações</h2>
+          <h2 className="section-title"><span aria-hidden="true">👤</span> Suas Informações</h2>
           <div className="user-info-card">
             <div className="info-grid">
               <div className="info-item">
@@ -428,7 +429,7 @@ export default function Dashboard() {
             </div>
             <div className="info-actions">
               <Link to="/perfil" className="btn btn-primary">
-                ✏️ Editar Perfil
+                <span aria-hidden="true">✏️</span> Editar Perfil
               </Link>
             </div>
           </div>

@@ -77,18 +77,18 @@ function AdminOrganizacoes() {
 
     // Nome: obrigatório, mínimo 3 caracteres
     if (!formData.nome?.trim()) {
-      newErrors.nome = '⚠ Nome é obrigatório';
+      newErrors.nome = 'Nome é obrigatório';
     } else if (formData.nome.trim().length < 3) {
-      newErrors.nome = '⚠ Nome deve ter no mínimo 3 caracteres';
+      newErrors.nome = 'Nome deve ter no mínimo 3 caracteres';
     }
 
     // Email: obrigatório, formato válido
     if (!formData.email?.trim()) {
-      newErrors.email = '⚠ Email é obrigatório';
+      newErrors.email = 'Email é obrigatório';
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-        newErrors.email = '⚠ Email inválido';
+        newErrors.email = 'Email inválido';
       }
     }
 
@@ -96,7 +96,7 @@ function AdminOrganizacoes() {
     if (formData.telefone?.trim()) {
       const telefoneRegex = /^[\d\s\-\(\)]+$/;
       if (!telefoneRegex.test(formData.telefone) || formData.telefone.replace(/\D/g, '').length < 10) {
-        newErrors.telefone = '⚠ Telefone inválido (mínimo 10 dígitos)';
+        newErrors.telefone = 'Telefone inválido (mínimo 10 dígitos)';
       }
     }
 
@@ -105,13 +105,13 @@ function AdminOrganizacoes() {
       try {
         new URL(formData.website);
       } catch {
-        newErrors.website = '⚠ URL inválida (deve começar com http:// ou https://)';
+        newErrors.website = 'URL inválida (deve começar com http:// ou https://)';
       }
     }
 
     // Descrição: opcional, mas se preenchida deve ter mínimo 10 caracteres
     if (formData.descricao?.trim() && formData.descricao.trim().length < 10) {
-      newErrors.descricao = '⚠ Descrição deve ter no mínimo 10 caracteres';
+      newErrors.descricao = 'Descrição deve ter no mínimo 10 caracteres';
     }
 
     setErrors(newErrors);
@@ -200,7 +200,7 @@ function AdminOrganizacoes() {
       <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
-            <h1>{isEditMode ? '✏️ Editar Organização' : '➕ Nova Organização'}</h1>
+            <h1>{isEditMode ? <><span aria-hidden="true">✏️</span> Editar Organização</> : <><span aria-hidden="true">➕</span> Nova Organização</>}</h1>
             <p>
               {isEditMode 
                 ? 'Atualize as informações da organização' 
@@ -213,7 +213,7 @@ function AdminOrganizacoes() {
             className="btn btn-secondary"
             onClick={handleBack}
           >
-            ← Voltar para Lista
+            <span aria-hidden="true">←</span> Voltar para Lista
           </button>
         </div>
 
@@ -221,7 +221,7 @@ function AdminOrganizacoes() {
           <FormErrorSummary errors={errors} focusTrigger={submitAttempts} />
 
           {/* Seção: Informações Básicas */}
-          <FormSection title="📝 Informações Básicas">
+          <FormSection title="Informações Básicas" icon="📝">
             <FormRow>
               <FormField
                 label="Nome da Organização"
@@ -253,7 +253,7 @@ function AdminOrganizacoes() {
           </FormSection>
 
           {/* Seção: Contato */}
-          <FormSection title="📞 Informações de Contato">
+          <FormSection title="Informações de Contato" icon="📞">
             <FormRow>
               <FormField
                 label="Email"
@@ -265,6 +265,7 @@ function AdminOrganizacoes() {
                 required
                 placeholder="contato@organizacao.com.br"
                 width="half"
+                inputProps={{ autoComplete: 'email' }}
               />
 
               <FormField
@@ -296,7 +297,7 @@ function AdminOrganizacoes() {
           </FormSection>
 
           {/* Seção: Localização */}
-          <FormSection title="📍 Localização">
+          <FormSection title="Localização" icon="📍">
             <FormRow>
               <FormField
                 label="Endereço"
@@ -322,7 +323,7 @@ function AdminOrganizacoes() {
                 onClick={handleClear}
                 disabled={saving}
               >
-                🔄 Limpar Formulário
+                <span aria-hidden="true">🔄</span> Limpar Formulário
               </button>
             )}
             <button
@@ -332,7 +333,7 @@ function AdminOrganizacoes() {
             >
               {saving 
                 ? (isEditMode ? 'Salvando...' : 'Criando...') 
-                : (isEditMode ? '✓ Salvar Alterações' : '✓ Criar Organização')
+                : (isEditMode ? <><span aria-hidden="true">✓</span> Salvar Alterações</> : <><span aria-hidden="true">✓</span> Criar Organização</>)
               }
             </button>
           </FormActions>

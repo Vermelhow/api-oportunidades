@@ -132,7 +132,7 @@ export function FormSection({ title, icon, children, className = '' }) {
     <div className={`form-section ${className}`}>
       {title && (
         <h2 className="form-section-title">
-          {icon && <span>{icon}</span>} {title}
+          {icon && <span aria-hidden="true">{icon}</span>} {title}
         </h2>
       )}
       {children}

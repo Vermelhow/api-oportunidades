@@ -64,10 +64,10 @@ export default function AdminOportunidades() {
         
         // Validar se há dados disponíveis
         if (categoriasData.length === 0) {
-          setError('⚠️ Nenhuma categoria cadastrada. Cadastre categorias antes de criar oportunidades.');
+          setError('Nenhuma categoria cadastrada. Cadastre categorias antes de criar oportunidades.');
         }
         if (organizacoesData.length === 0) {
-          setError('⚠️ Nenhuma organização cadastrada. Cadastre organizações antes de criar oportunidades.');
+          setError('Nenhuma organização cadastrada. Cadastre organizações antes de criar oportunidades.');
         }
         
         // Se estiver em modo de edição, carregar dados da oportunidade
@@ -391,7 +391,7 @@ export default function AdminOportunidades() {
           {/* Header */}
           <div className="page-header">
             <div>
-              <h1 className="page-title">{isEditMode ? '✏️ Editar Oportunidade' : '📋 Cadastrar Oportunidade'}</h1>
+              <h1 className="page-title">{isEditMode ? <><span aria-hidden="true">✏️</span> Editar Oportunidade</> : <><span aria-hidden="true">📋</span> Cadastrar Oportunidade</>}</h1>
               <p className="page-subtitle">
                 {isEditMode ? 'Atualize as informações da oportunidade' : 'Preencha os campos abaixo para criar uma nova oportunidade'}
               </p>
@@ -401,21 +401,21 @@ export default function AdminOportunidades() {
               onClick={() => navigate('/admin/oportunidades/lista')}
               className="btn btn-outline"
             >
-              ← Voltar para Lista
+              <span aria-hidden="true">←</span> Voltar para Lista
             </button>
           </div>
 
           {/* Mensagens de feedback */}
           {error && (
             <div className="alert alert-error">
-              <span className="alert-icon">⚠️</span>
+              <span className="alert-icon" aria-hidden="true">⚠️</span>
               <span>{error}</span>
             </div>
           )}
 
           {success && (
             <div className="alert alert-success">
-              <span className="alert-icon">✓</span>
+              <span className="alert-icon" aria-hidden="true">✓</span>
               <span>{success}</span>
             </div>
           )}
@@ -426,7 +426,7 @@ export default function AdminOportunidades() {
 
             {/* Informações Básicas */}
             <div className="form-section">
-              <h2 className="form-section-title">📝 Informações Básicas</h2>
+              <h2 className="form-section-title"><span aria-hidden="true">📝</span> Informações Básicas</h2>
               
               <div className="form-row">
                 <div className="form-group full">
@@ -555,7 +555,7 @@ export default function AdminOportunidades() {
 
             {/* Detalhes */}
             <div className="form-section">
-              <h2 className="form-section-title">📍 Detalhes</h2>
+              <h2 className="form-section-title"><span aria-hidden="true">📍</span> Detalhes</h2>
               
               <div className="form-row">
                 <div className="form-group third">
@@ -569,12 +569,12 @@ export default function AdminOportunidades() {
                     onChange={handleChange}
                     className="form-select"
                   >
-                    <option value="emprego">💼 Emprego</option>
-                    <option value="estagio">🎓 Estágio</option>
-                    <option value="curso">📚 Curso</option>
-                    <option value="evento">🎉 Evento</option>
-                    <option value="projeto">🚀 Projeto</option>
-                    <option value="voluntariado">❤️ Voluntariado</option>
+                    <option value="emprego">Emprego</option>
+                    <option value="estagio">Estágio</option>
+                    <option value="curso">Curso</option>
+                    <option value="evento">Evento</option>
+                    <option value="projeto">Projeto</option>
+                    <option value="voluntariado">Voluntariado</option>
                   </select>
                 </div>
 
@@ -589,9 +589,9 @@ export default function AdminOportunidades() {
                     onChange={handleChange}
                     className="form-select"
                   >
-                    <option value="presencial">🏢 Presencial</option>
-                    <option value="remoto">💻 Remoto</option>
-                    <option value="hibrido">🔄 Híbrido</option>
+                    <option value="presencial">Presencial</option>
+                    <option value="remoto">Remoto</option>
+                    <option value="hibrido">Híbrido</option>
                   </select>
                 </div>
 
@@ -606,9 +606,9 @@ export default function AdminOportunidades() {
                     onChange={handleChange}
                     className="form-select"
                   >
-                    <option value="ativa">✓ Ativa</option>
-                    <option value="pausada">⏸ Pausada</option>
-                    <option value="encerrada">✗ Encerrada</option>
+                    <option value="ativa">Ativa</option>
+                    <option value="pausada">Pausada</option>
+                    <option value="encerrada">Encerrada</option>
                   </select>
                 </div>
               </div>
@@ -776,7 +776,7 @@ export default function AdminOportunidades() {
                 className="btn btn-secondary"
                 disabled={loading}
               >
-                🔄 Limpar Formulário
+                <span aria-hidden="true">🔄</span> Limpar Formulário
               </button>
               <button
                 type="submit"
@@ -785,15 +785,15 @@ export default function AdminOportunidades() {
                 title={!isFormValid() && !loading ? 'Preencha todos os campos obrigatórios' : ''}
               >
                 {loading 
-                  ? (isEditMode ? '⏳ Atualizando...' : '⏳ Criando...') 
-                  : (isEditMode ? '✓ Salvar Alterações' : '✓ Criar Oportunidade')
+                  ? (isEditMode ? <><span aria-hidden="true">⏳</span> Atualizando...</> : <><span aria-hidden="true">⏳</span> Criando...</>) 
+                  : (isEditMode ? <><span aria-hidden="true">✓</span> Salvar Alterações</> : <><span aria-hidden="true">✓</span> Criar Oportunidade</>)
                 }
               </button>
             </div>
             
             {!isFormValid() && !loading && !loadingData && (
               <div className="form-validation-hint">
-                💡 Preencha todos os campos obrigatórios (marcados com *) para {isEditMode ? 'salvar' : 'criar'} a oportunidade
+                <span aria-hidden="true">💡</span> Preencha todos os campos obrigatórios (marcados com *) para {isEditMode ? 'salvar' : 'criar'} a oportunidade
               </div>
             )}
           </form>

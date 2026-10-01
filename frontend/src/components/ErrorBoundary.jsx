@@ -65,7 +65,7 @@ class ErrorBoundary extends Component {
       return (
         <div className="error-boundary">
           <div className="error-boundary-container">
-            <div className="error-boundary-icon">⚠️</div>
+            <div className="error-boundary-icon" aria-hidden="true">⚠️</div>
             
             <h1 className="error-boundary-title">
               Oops! Algo deu errado
@@ -98,18 +98,18 @@ class ErrorBoundary extends Component {
                 onClick={this.handleReset}
                 className="btn btn-primary"
               >
-                🔄 Tentar Novamente
+                <span aria-hidden="true">🔄</span> Tentar Novamente
               </button>
               
               <button
                 onClick={this.handleReload}
                 className="btn btn-outline"
               >
-                ↻ Recarregar Página
+                <span aria-hidden="true">↻</span> Recarregar Página
               </button>
 
               <a href="/" className="btn btn-outline">
-                🏠 Voltar ao Início
+                <span aria-hidden="true">🏠</span> Voltar ao Início
               </a>
             </div>
 
@@ -144,12 +144,12 @@ export function ErrorMessage({
 }) {
   return (
     <div className="error-message-component">
-      <div className="error-icon">{icon}</div>
+      <div className="error-icon" aria-hidden="true">{icon}</div>
       <h3 className="error-title">{title}</h3>
       <p className="error-text">{message}</p>
       {showRetry && onRetry && (
         <button onClick={onRetry} className="btn btn-primary">
-          🔄 Tentar Novamente
+          <span aria-hidden="true">🔄</span> Tentar Novamente
         </button>
       )}
     </div>
@@ -172,9 +172,9 @@ export function EmptyState({
     <div className="empty-state-component">
       <div className="empty-state-visual">
         {illustration ? (
-          <div className="empty-state-illustration">{illustration}</div>
+          <div className="empty-state-illustration" aria-hidden="true">{illustration}</div>
         ) : (
-          <div className="empty-state-icon">{icon}</div>
+          <div className="empty-state-icon" aria-hidden="true">{icon}</div>
         )}
       </div>
       

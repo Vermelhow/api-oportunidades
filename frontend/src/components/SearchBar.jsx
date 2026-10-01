@@ -64,7 +64,7 @@ export default function SearchBar({
   return (
     <div className="search-bar">
       <div className={`search-input-wrapper ${isSearching ? 'searching' : ''} ${localValue ? 'has-value' : ''}`}>
-        <span className="search-icon">🔍</span>
+        <span className="search-icon" aria-hidden="true">🔍</span>
         <input
           type="text"
           className="search-input"
@@ -85,11 +85,11 @@ export default function SearchBar({
             title="Limpar busca (Esc)"
             type="button"
           >
-            ✕
+            <span aria-hidden="true">✕</span>
           </button>
         )}
         {isSearching && (
-          <span className="search-loading">⏳</span>
+          <span className="search-loading" aria-hidden="true">⏳</span>
         )}
       </div>
       
@@ -97,11 +97,11 @@ export default function SearchBar({
         <div className="search-feedback">
           {resultCount === 0 ? (
             <span className="search-no-results">
-              ❌ Nenhum resultado para "<strong>{localValue}</strong>"
+              <span aria-hidden="true">❌</span> Nenhum resultado para "<strong>{localValue}</strong>"
             </span>
           ) : (
             <span className="search-results-count">
-              ✓ {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
+              <span aria-hidden="true">✓</span> {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </span>
           )}
         </div>

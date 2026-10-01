@@ -26,17 +26,17 @@ export default function Footer() {
           <div className="footer-section">
             <h4 className="footer-heading">Contato</h4>
             <ul className="footer-links">
-              <li>📧 contato@oportunidades.com</li>
-              <li>📱 (11) 99999-9999</li>
+              <li><span aria-hidden="true">📧</span> contato@oportunidades.com</li>
+              <li><span aria-hidden="true">📱</span> (11) 99999-9999</li>
             </ul>
           </div>
 
           <div className="footer-section">
             <h4 className="footer-heading">Redes Sociais</h4>
             <div className="social-links">
-              <a href="#" className="social-link" aria-label="Facebook">📘</a>
-              <a href="#" className="social-link" aria-label="Instagram">📷</a>
-              <a href="#" className="social-link" aria-label="LinkedIn">💼</a>
+              <a href="#" className="social-link" aria-label="Facebook"><span aria-hidden="true">📘</span></a>
+              <a href="#" className="social-link" aria-label="Instagram"><span aria-hidden="true">📷</span></a>
+              <a href="#" className="social-link" aria-label="LinkedIn"><span aria-hidden="true">💼</span></a>
             </div>
           </div>
         </div>

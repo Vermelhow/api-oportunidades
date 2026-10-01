@@ -60,7 +60,7 @@ export default function Toast({
           className="toast-close"
           aria-label="Fechar notificação"
         >
-          ✕
+          <span aria-hidden="true">✕</span>
         </button>
       )}
     </div>

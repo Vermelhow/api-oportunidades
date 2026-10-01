@@ -86,7 +86,7 @@ export default function Cadastro() {
       const result = await register(formData.nome, formData.email, formData.senha);
 
       if (result && result.success) {
-        showSuccess('✅ Conta criada com sucesso! Redirecionando...');
+        showSuccess('Conta criada com sucesso! Redirecionando...');
         setTimeout(() => {
           navigate('/dashboard');
         }, 1500);
@@ -108,7 +108,7 @@ export default function Cadastro() {
       <div className="cadastro-container">
         <div className="cadastro-card">
           <div className="cadastro-header">
-            <div className="cadastro-icon">✨</div>
+            <div className="cadastro-icon" aria-hidden="true">✨</div>
             <h1 className="cadastro-title">Criar Conta</h1>
             <p className="cadastro-subtitle">
               Junte-se a nós e faça a diferença no mundo!
@@ -120,7 +120,7 @@ export default function Cadastro() {
 
             <div className="form-group">
               <label htmlFor="nome" className="form-label">
-                <span className="label-icon">👤</span>
+                <span className="label-icon" aria-hidden="true">👤</span>
                 Nome Completo
               </label>
               <input
@@ -132,12 +132,13 @@ export default function Cadastro() {
                 className={`form-input ${errors.nome ? 'input-error' : ''}`}
                 placeholder="Digite seu nome completo"
                 disabled={loading}
+                autoComplete="name"
                 aria-invalid={Boolean(errors.nome)}
                 aria-describedby={errors.nome ? 'nome-error' : undefined}
               />
               {errors.nome && (
                 <span id="nome-error" className="error-message">
-                  <span className="error-icon">⚠️</span>
+                  <span className="error-icon" aria-hidden="true">⚠️</span>
                   {errors.nome}
                 </span>
               )}
@@ -145,7 +146,7 @@ export default function Cadastro() {
 
             <div className="form-group">
               <label htmlFor="email" className="form-label">
-                <span className="label-icon">📧</span>
+                <span className="label-icon" aria-hidden="true">📧</span>
                 E-mail
               </label>
               <input
@@ -157,12 +158,13 @@ export default function Cadastro() {
                 className={`form-input ${errors.email ? 'input-error' : ''}`}
                 placeholder="seu@email.com"
                 disabled={loading}
+                autoComplete="email"
                 aria-invalid={Boolean(errors.email)}
                 aria-describedby={errors.email ? 'email-error' : undefined}
               />
               {errors.email && (
                 <span id="email-error" className="error-message">
-                  <span className="error-icon">⚠️</span>
+                  <span className="error-icon" aria-hidden="true">⚠️</span>
                   {errors.email}
                 </span>
               )}
@@ -170,7 +172,7 @@ export default function Cadastro() {
 
             <div className="form-group">
               <label htmlFor="senha" className="form-label">
-                <span className="label-icon">🔒</span>
+                <span className="label-icon" aria-hidden="true">🔒</span>
                 Senha
               </label>
               <input
@@ -182,12 +184,13 @@ export default function Cadastro() {
                 className={`form-input ${errors.senha ? 'input-error' : ''}`}
                 placeholder="Mínimo 6 caracteres"
                 disabled={loading}
+                autoComplete="new-password"
                 aria-invalid={Boolean(errors.senha)}
                 aria-describedby={errors.senha ? 'senha-error' : undefined}
               />
               {errors.senha && (
                 <span id="senha-error" className="error-message">
-                  <span className="error-icon">⚠️</span>
+                  <span className="error-icon" aria-hidden="true">⚠️</span>
                   {errors.senha}
                 </span>
               )}
@@ -195,7 +198,7 @@ export default function Cadastro() {
 
             <div className="form-group">
               <label htmlFor="confirmarSenha" className="form-label">
-                <span className="label-icon">🔐</span>
+                <span className="label-icon" aria-hidden="true">🔐</span>
                 Confirmar Senha
               </label>
               <input
@@ -207,12 +210,13 @@ export default function Cadastro() {
                 className={`form-input ${errors.confirmarSenha ? 'input-error' : ''}`}
                 placeholder="Digite a senha novamente"
                 disabled={loading}
+                autoComplete="new-password"
                 aria-invalid={Boolean(errors.confirmarSenha)}
                 aria-describedby={errors.confirmarSenha ? 'confirmarSenha-error' : undefined}
               />
               {errors.confirmarSenha && (
                 <span id="confirmarSenha-error" className="error-message">
-                  <span className="error-icon">⚠️</span>
+                  <span className="error-icon" aria-hidden="true">⚠️</span>
                   {errors.confirmarSenha}
                 </span>
               )}
@@ -230,7 +234,7 @@ export default function Cadastro() {
                 </>
               ) : (
                 <>
-                  <span>🚀</span>
+                  <span aria-hidden="true">🚀</span>
                   Criar Conta
                 </>
               )}
@@ -252,7 +256,7 @@ export default function Cadastro() {
           
           <div className="benefits-list">
             <div className="benefit-item">
-              <span className="benefit-icon">🎯</span>
+              <span className="benefit-icon" aria-hidden="true">🎯</span>
               <div className="benefit-content">
                 <h3>Encontre Oportunidades</h3>
                 <p>Acesse vagas de voluntariado e ações sociais</p>
@@ -260,7 +264,7 @@ export default function Cadastro() {
             </div>
 
             <div className="benefit-item">
-              <span className="benefit-icon">💼</span>
+              <span className="benefit-icon" aria-hidden="true">💼</span>
               <div className="benefit-content">
                 <h3>Gerencie Projetos</h3>
                 <p>Organize e publique suas próprias oportunidades</p>
@@ -268,7 +272,7 @@ export default function Cadastro() {
             </div>
 
             <div className="benefit-item">
-              <span className="benefit-icon">🤝</span>
+              <span className="benefit-icon" aria-hidden="true">🤝</span>
               <div className="benefit-content">
                 <h3>Conecte-se</h3>
                 <p>Faça parte de uma comunidade engajada</p>
@@ -276,7 +280,7 @@ export default function Cadastro() {
             </div>
 
             <div className="benefit-item">
-              <span className="benefit-icon">📊</span>
+              <span className="benefit-icon" aria-hidden="true">📊</span>
               <div className="benefit-content">
                 <h3>Acompanhe seu Impacto</h3>
                 <p>Veja estatísticas e resultados do seu trabalho</p>

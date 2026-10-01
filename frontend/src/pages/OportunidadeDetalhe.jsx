@@ -143,7 +143,7 @@ export default function OportunidadeDetalhe() {
         />
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <button onClick={() => navigate('/oportunidades')} className="btn btn-outline">
-            ← Voltar para Oportunidades
+            <span aria-hidden="true">←</span> Voltar para Oportunidades
           </button>
         </div>
       </Layout>
@@ -154,7 +154,7 @@ export default function OportunidadeDetalhe() {
     return (
       <Layout>
         <div className="error-container">
-          <h2>🔍 Oportunidade não encontrada</h2>
+          <h2><span aria-hidden="true">🔍</span> Oportunidade não encontrada</h2>
           <p>A oportunidade que você procura não existe ou foi removida.</p>
           <button onClick={() => navigate('/oportunidades')} className="btn btn-primary">
             Voltar para Oportunidades
@@ -186,7 +186,7 @@ export default function OportunidadeDetalhe() {
             )}
             {oportunidade.tipo && (
               <span className="badge badge-type">
-                {tipoIcons[oportunidade.tipo] || '📌'} {oportunidade.tipo}
+                <span aria-hidden="true">{tipoIcons[oportunidade.tipo] || '📌'}</span> {oportunidade.tipo}
               </span>
             )}
           </div>
@@ -195,7 +195,7 @@ export default function OportunidadeDetalhe() {
 
           {oportunidade.categoria_nome && (
             <div className="oportunidade-category">
-              <span className="category-icon">🏷️</span>
+              <span className="category-icon" aria-hidden="true">🏷️</span>
               <span className="category-name">{oportunidade.categoria_nome}</span>
             </div>
           )}
@@ -207,14 +207,14 @@ export default function OportunidadeDetalhe() {
           <div className="main-content">
             {/* Descrição */}
             <section className="content-section">
-              <h2 className="section-title">📋 Sobre a Oportunidade</h2>
+              <h2 className="section-title"><span aria-hidden="true">📋</span> Sobre a Oportunidade</h2>
               <p className="description-text">{oportunidade.descricao}</p>
             </section>
 
             {/* Requisitos */}
             {oportunidade.requisitos && (
               <section className="content-section">
-                <h2 className="section-title">✅ Requisitos</h2>
+                <h2 className="section-title"><span aria-hidden="true">✅</span> Requisitos</h2>
                 <p className="section-text">{oportunidade.requisitos}</p>
               </section>
             )}
@@ -222,7 +222,7 @@ export default function OportunidadeDetalhe() {
             {/* Benefícios */}
             {oportunidade.beneficios && (
               <section className="content-section">
-                <h2 className="section-title">🎁 Benefícios</h2>
+                <h2 className="section-title"><span aria-hidden="true">🎁</span> Benefícios</h2>
                 <p className="section-text">{oportunidade.beneficios}</p>
               </section>
             )}
@@ -230,7 +230,7 @@ export default function OportunidadeDetalhe() {
             {/* Salário */}
             {(oportunidade.salario_min || oportunidade.salario_max) && (
               <section className="content-section">
-                <h2 className="section-title">💰 Remuneração</h2>
+                <h2 className="section-title"><span aria-hidden="true">💰</span> Remuneração</h2>
                 <p className="salary-range">
                   {oportunidade.salario_min && formatSalary(oportunidade.salario_min)}
                   {oportunidade.salario_min && oportunidade.salario_max && ' - '}
@@ -245,18 +245,18 @@ export default function OportunidadeDetalhe() {
             {/* Organização */}
             {oportunidade.organizacao_nome && (
               <div className="info-card">
-                <h3 className="info-card-title">🏢 Organização</h3>
+                <h3 className="info-card-title"><span aria-hidden="true">🏢</span> Organização</h3>
                 <p className="info-card-value">{oportunidade.organizacao_nome}</p>
               </div>
             )}
 
             {/* Informações Principais */}
             <div className="info-card">
-              <h3 className="info-card-title">📌 Informações</h3>
+              <h3 className="info-card-title"><span aria-hidden="true">📌</span> Informações</h3>
               <div className="info-list">
                 {oportunidade.localizacao && (
                   <div className="info-item">
-                    <span className="info-icon">📍</span>
+                    <span className="info-icon" aria-hidden="true">📍</span>
                     <div className="info-content">
                       <span className="info-label">Localização</span>
                       <span className="info-value">{oportunidade.localizacao}</span>
@@ -266,7 +266,7 @@ export default function OportunidadeDetalhe() {
 
                 {oportunidade.formato && (
                   <div className="info-item">
-                    <span className="info-icon">{formatoIcons[oportunidade.formato] || '📋'}</span>
+                    <span className="info-icon" aria-hidden="true">{formatoIcons[oportunidade.formato] || '📋'}</span>
                     <div className="info-content">
                       <span className="info-label">Formato</span>
                       <span className="info-value">{oportunidade.formato}</span>
@@ -276,7 +276,7 @@ export default function OportunidadeDetalhe() {
 
                 {oportunidade.vagas_disponiveis && (
                   <div className="info-item">
-                    <span className="info-icon">👥</span>
+                    <span className="info-icon" aria-hidden="true">👥</span>
                     <div className="info-content">
                       <span className="info-label">Vagas</span>
                       <span className="info-value">
@@ -288,7 +288,7 @@ export default function OportunidadeDetalhe() {
 
                 {(oportunidade.data_inicio || oportunidade.data_fim) && (
                   <div className="info-item">
-                    <span className="info-icon">📅</span>
+                    <span className="info-icon" aria-hidden="true">📅</span>
                     <div className="info-content">
                       <span className="info-label">Período</span>
                       <span className="info-value">
@@ -312,7 +312,7 @@ export default function OportunidadeDetalhe() {
                 {enviandoInteresse ? (
                   <><ButtonLoading /> Enviando...</>
                 ) : jaInteressado ? (
-                  '✓ Interesse já registrado'
+                  <><span aria-hidden="true">✓</span> Interesse já registrado</>
                 ) : (
                   oportunidade.link_inscricao ? 'Candidatar-se' : 'Demonstrar Interesse'
                 )}
@@ -324,14 +324,14 @@ export default function OportunidadeDetalhe() {
                   rel="noopener noreferrer"
                   className="btn btn-outline btn-block"
                 >
-                  Acessar Link Externo 🔗
+                  Acessar Link Externo <span aria-hidden="true">🔗</span>
                 </a>
               )}
               <button 
                 onClick={() => navigate('/oportunidades')} 
                 className="btn btn-secondary btn-block"
               >
-                ← Voltar
+                <span aria-hidden="true">←</span> Voltar
               </button>
             </div>
           </aside>

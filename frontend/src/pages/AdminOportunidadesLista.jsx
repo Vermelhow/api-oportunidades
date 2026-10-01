@@ -48,9 +48,9 @@ export default function AdminOportunidadesLista() {
       
       // Se veio de uma criação/edição bem-sucedida, mostrar notificação
       if (location.state?.created) {
-        showSuccess('✓ Oportunidade criada com sucesso!');
+        showSuccess('Oportunidade criada com sucesso!');
       } else if (location.state?.updated) {
-        showSuccess('✓ Oportunidade atualizada com sucesso!');
+        showSuccess('Oportunidade atualizada com sucesso!');
       }
     } catch (err) {
       console.error('Erro ao carregar oportunidades:', err);
@@ -73,7 +73,7 @@ export default function AdminOportunidadesLista() {
       (deletedId) => {
         // Remove da lista local sem precisar recarregar
         setOportunidades(prev => prev.filter(op => op.id !== deletedId));
-        showSuccess('✓ Oportunidade excluída com sucesso!');
+        showSuccess('Oportunidade excluída com sucesso!');
       },
       // onError
       (errorMessage) => {
@@ -93,19 +93,19 @@ export default function AdminOportunidadesLista() {
 
   const getStatusBadge = (status) => {
     const badges = {
-      ativa: { class: 'status-ativa', text: '✓ Ativa', icon: '🟢' },
-      encerrada: { class: 'status-encerrada', text: '✕ Encerrada', icon: '🔴' },
-      pausada: { class: 'status-pausada', text: '⏸ Pausada', icon: '🟡' }
+      ativa: { class: 'status-ativa', text: 'Ativa', icon: '🟢' },
+      encerrada: { class: 'status-encerrada', text: 'Encerrada', icon: '🔴' },
+      pausada: { class: 'status-pausada', text: 'Pausada', icon: '🟡' }
     };
     return badges[status] || badges.ativa;
   };
 
   const getTipoBadge = (tipo) => {
     const badges = {
-      emprego: { class: 'tipo-emprego', text: '💼 Emprego' },
-      estagio: { class: 'tipo-estagio', text: '🎓 Estágio' },
-      voluntariado: { class: 'tipo-voluntariado', text: '❤️ Voluntariado' },
-      freelancer: { class: 'tipo-freelancer', text: '💻 Freelancer' }
+      emprego: { class: 'tipo-emprego', text: 'Emprego', icon: '💼' },
+      estagio: { class: 'tipo-estagio', text: 'Estágio', icon: '🎓' },
+      voluntariado: { class: 'tipo-voluntariado', text: 'Voluntariado', icon: '❤️' },
+      freelancer: { class: 'tipo-freelancer', text: 'Freelancer', icon: '💻' }
     };
     return badges[tipo] || badges.emprego;
   };
@@ -151,11 +151,11 @@ export default function AdminOportunidadesLista() {
         {/* Header */}
         <div className="admin-header">
           <div>
-            <h1 className="page-title">📋 Gerenciar Oportunidades</h1>
+            <h1 className="page-title"><span aria-hidden="true">📋</span> Gerenciar Oportunidades</h1>
             <p className="page-subtitle">Visualize, edite e exclua oportunidades cadastradas</p>
           </div>
           <Link to="/admin/oportunidades/nova" className="btn btn-primary">
-            ➕ Nova Oportunidade
+            <span aria-hidden="true">➕</span> Nova Oportunidade
           </Link>
         </div>
 
@@ -172,19 +172,19 @@ export default function AdminOportunidadesLista() {
               className={`filter-tab ${filter === 'ativa' ? 'active' : ''}`}
               onClick={() => setFilter('ativa')}
             >
-              🟢 Ativas ({oportunidades.filter(o => o.status === 'ativa').length})
+              <span aria-hidden="true">🟢</span> Ativas ({oportunidades.filter(o => o.status === 'ativa').length})
             </button>
             <button 
               className={`filter-tab ${filter === 'encerrada' ? 'active' : ''}`}
               onClick={() => setFilter('encerrada')}
             >
-              🔴 Encerradas ({oportunidades.filter(o => o.status === 'encerrada').length})
+              <span aria-hidden="true">🔴</span> Encerradas ({oportunidades.filter(o => o.status === 'encerrada').length})
             </button>
             <button 
               className={`filter-tab ${filter === 'pausada' ? 'active' : ''}`}
               onClick={() => setFilter('pausada')}
             >
-              🟡 Pausadas ({oportunidades.filter(o => o.status === 'pausada').length})
+              <span aria-hidden="true">🟡</span> Pausadas ({oportunidades.filter(o => o.status === 'pausada').length})
             </button>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function AdminOportunidadesLista() {
         <div className="opportunities-table-container">
           {oportunidadesFiltradas.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">📋</div>
+              <div className="empty-icon" aria-hidden="true">📋</div>
               <h3>Nenhuma oportunidade encontrada</h3>
               <p>
                 {filter === 'todas' 
@@ -215,23 +215,23 @@ export default function AdminOportunidadesLista() {
                         <h3 className="opportunity-title">{oportunidade.titulo}</h3>
                         <div className="opportunity-meta">
                           <span className="meta-item">
-                            🏢 {oportunidade.organizacao_nome}
+                            <span aria-hidden="true">🏢</span> {oportunidade.organizacao_nome}
                           </span>
                           <span className="meta-item">
-                            🏷️ {oportunidade.categoria_nome}
+                            <span aria-hidden="true">🏷️</span> {oportunidade.categoria_nome}
                           </span>
                           <span className="meta-item">
-                            📍 {oportunidade.localizacao || 'Não especificado'}
+                            <span aria-hidden="true">📍</span> {oportunidade.localizacao || 'Não especificado'}
                           </span>
                         </div>
                       </div>
 
                       <div className="opportunity-badges">
                         <span className={`badge ${tipoBadge.class}`}>
-                          {tipoBadge.text}
+                          <span aria-hidden="true">{tipoBadge.icon}</span> {tipoBadge.text}
                         </span>
                         <span className={`badge ${statusBadge.class}`}>
-                          {statusBadge.text}
+                          <span aria-hidden="true">{statusBadge.icon}</span> {statusBadge.text}
                         </span>
                       </div>
                     </div>
@@ -242,14 +242,14 @@ export default function AdminOportunidadesLista() {
                         className="btn-action btn-view"
                         title="Visualizar"
                       >
-                        👁️ Ver
+                        <span aria-hidden="true">👁️</span> Ver
                       </button>
                       <button
                         onClick={() => handleEdit(oportunidade.id)}
                         className="btn-action btn-edit"
                         title="Editar"
                       >
-                        ✏️ Editar
+                        <span aria-hidden="true">✏️</span> Editar
                       </button>
                       <button
                         onClick={() => handleDeleteClick(oportunidade.id, oportunidade.titulo)}
@@ -257,7 +257,7 @@ export default function AdminOportunidadesLista() {
                         title="Excluir"
                         disabled={isDeleting}
                       >
-                        🗑️ Excluir
+                        <span aria-hidden="true">🗑️</span> Excluir
                       </button>
                     </div>
                   </div>

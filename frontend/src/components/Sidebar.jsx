@@ -105,7 +105,7 @@ export default function Sidebar() {
         aria-expanded={isMobileMenuOpen}
         aria-controls={sidebarId}
       >
-        <span className="menu-icon">☰</span>
+        <span className="menu-icon" aria-hidden="true">☰</span>
       </button>
 
       {/* Mobile Overlay */}
@@ -128,13 +128,13 @@ export default function Sidebar() {
         title={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
         aria-expanded={!isCollapsed}
       >
-        <span className="toggle-icon">{isCollapsed ? '▶' : '◀'}</span>
+        <span className="toggle-icon" aria-hidden="true">{isCollapsed ? '▶' : '◀'}</span>
       </button>
 
       {/* User Info */}
       <div className="sidebar-header">
         <div className="user-avatar">
-          <span className="avatar-icon">👤</span>
+          <span className="avatar-icon" aria-hidden="true">👤</span>
         </div>
         {!isCollapsed && (
           <div className="user-details">
@@ -158,9 +158,10 @@ export default function Sidebar() {
                     to={item.path} 
                     className={`nav-link ${isActive(item.path)}`}
                     title={isCollapsed ? item.label : ''}
+                    aria-label={isCollapsed ? item.label : undefined}
                     aria-current={location.pathname === item.path ? 'page' : undefined}
                   >
-                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-icon" aria-hidden="true">{item.icon}</span>
                     {!isCollapsed && (
                       <div className="nav-content">
                         <span className="nav-label">{item.label}</span>
@@ -177,8 +178,13 @@ export default function Sidebar() {
 
       {/* Logout Button */}
       <div className="sidebar-footer">
-        <button onClick={handleLogout} className="btn-logout" title={isCollapsed ? 'Sair' : ''}>
-          <span className="logout-icon">🚪</span>
+        <button
+          onClick={handleLogout}
+          className="btn-logout"
+          title={isCollapsed ? 'Sair' : ''}
+          aria-label={isCollapsed ? 'Sair' : undefined}
+        >
+          <span className="logout-icon" aria-hidden="true">🚪</span>
           {!isCollapsed && <span>Sair</span>}
         </button>
       </div>

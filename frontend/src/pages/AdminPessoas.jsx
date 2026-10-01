@@ -92,14 +92,14 @@ function AdminPessoas() {
       <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
-            <h1>👥 Gerenciar Pessoas</h1>
+            <h1><span aria-hidden="true">👥</span> Gerenciar Pessoas</h1>
             <p>Visualize as pessoas cadastradas no sistema</p>
           </div>
         </div>
 
         <div className="search-bar-container">
           <div className="search-bar">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon" aria-hidden="true">🔍</span>
             <label htmlFor={searchInputId} className="sr-only">
               Buscar por nome ou email
             </label>
@@ -110,6 +110,7 @@ function AdminPessoas() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
+              autoComplete="off"
             />
           </div>
         </div>
@@ -146,18 +147,18 @@ function AdminPessoas() {
                   <p className="pessoa-email">{pessoa.email}</p>
                   <div className="pessoa-card-actions">
                     <button className="btn btn-sm btn-secondary" onClick={() => setPessoaSelecionada(pessoa)}>
-                      👁️ Ver detalhes
+                      <span aria-hidden="true">👁️</span> Ver detalhes
                     </button>
                     {isOwnAccount ? (
                       <>
                         <Link to="/perfil" className="btn btn-sm btn-primary">
-                          ✏️ Editar
+                          <span aria-hidden="true">✏️</span> Editar
                         </Link>
                         <button
                           className="btn btn-sm btn-danger"
                           onClick={() => setPessoaParaExcluir(pessoa)}
                         >
-                          🗑️ Excluir
+                          <span aria-hidden="true">🗑️</span> Excluir
                         </button>
                       </>
                     ) : (

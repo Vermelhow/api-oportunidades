@@ -65,7 +65,7 @@ export default function OrganizacaoDetalhe() {
             showRetry={true}
           />
           <button onClick={() => navigate('/admin/organizacoes')} className="btn btn-outline" style={{ marginTop: '1rem' }}>
-            ← Voltar para Organizações
+            <span aria-hidden="true">←</span> Voltar para Organizações
           </button>
         </div>
       </div>
@@ -78,15 +78,15 @@ export default function OrganizacaoDetalhe() {
       <div className="admin-content" id="main-content">
         <div className="admin-header">
           <div>
-            <h1>🏢 {organizacao.nome}</h1>
+            <h1><span aria-hidden="true">🏢</span> {organizacao.nome}</h1>
             <p>Detalhes da organização parceira</p>
           </div>
           <div className="organizacao-detalhe-actions">
             <button onClick={() => navigate('/admin/organizacoes')} className="btn btn-outline">
-              ← Voltar
+              <span aria-hidden="true">←</span> Voltar
             </button>
             <button onClick={() => navigate(`/admin/organizacoes/${id}/editar`)} className="btn btn-primary">
-              ✏️ Editar
+              <span aria-hidden="true">✏️</span> Editar
             </button>
           </div>
         </div>
@@ -99,19 +99,19 @@ export default function OrganizacaoDetalhe() {
           <div className="organizacao-detalhe-info-grid">
             {organizacao.email && (
               <div className="info-item">
-                <span className="info-icon">📧</span>
+                <span className="info-icon" aria-hidden="true">📧</span>
                 <span>{organizacao.email}</span>
               </div>
             )}
             {organizacao.telefone && (
               <div className="info-item">
-                <span className="info-icon">📱</span>
+                <span className="info-icon" aria-hidden="true">📱</span>
                 <span>{organizacao.telefone}</span>
               </div>
             )}
             {organizacao.website && (
               <div className="info-item">
-                <span className="info-icon">🌐</span>
+                <span className="info-icon" aria-hidden="true">🌐</span>
                 <a href={organizacao.website} target="_blank" rel="noopener noreferrer">
                   {organizacao.website}
                 </a>
@@ -119,7 +119,7 @@ export default function OrganizacaoDetalhe() {
             )}
             {organizacao.endereco && (
               <div className="info-item">
-                <span className="info-icon">📍</span>
+                <span className="info-icon" aria-hidden="true">📍</span>
                 <span>{organizacao.endereco}</span>
               </div>
             )}
@@ -127,7 +127,7 @@ export default function OrganizacaoDetalhe() {
         </div>
 
         <div className="organizacao-detalhe-oportunidades">
-          <h2>📋 Oportunidades desta organização</h2>
+          <h2><span aria-hidden="true">📋</span> Oportunidades desta organização</h2>
           {oportunidades.length === 0 ? (
             <p className="organizacao-detalhe-vazio">
               Nenhuma oportunidade cadastrada para esta organização ainda.
