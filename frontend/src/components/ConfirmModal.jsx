@@ -92,6 +92,7 @@ export default function ConfirmModal({
             type="button"
           >
             {cancelText}
+            {loading && <span className="sr-only"> (indisponível enquanto a solicitação está em andamento)</span>}
           </button>
           <button
             onClick={onConfirm}

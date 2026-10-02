@@ -164,6 +164,7 @@ function AdminPessoas() {
                     ) : (
                       <span className="pessoa-readonly-hint" title="Somente o próprio usuário pode editar ou excluir sua conta">
                         Somente visualização
+                        <span className="sr-only"> — somente o próprio usuário pode editar ou excluir sua conta</span>
                       </span>
                     )}
                   </div>

@@ -324,6 +324,7 @@ function AdminOrganizacoes() {
                 disabled={saving}
               >
                 <span aria-hidden="true">🔄</span> Limpar Formulário
+                {saving && <span className="sr-only"> (indisponível enquanto a solicitação está em andamento)</span>}
               </button>
             )}
             <button

@@ -777,12 +777,14 @@ export default function AdminOportunidades() {
                 disabled={loading}
               >
                 <span aria-hidden="true">🔄</span> Limpar Formulário
+                {loading && <span className="sr-only"> (indisponível enquanto a solicitação está em andamento)</span>}
               </button>
               <button
                 type="submit"
                 className="btn btn-primary"
                 disabled={loading || !isFormValid()}
                 title={!isFormValid() && !loading ? 'Preencha todos os campos obrigatórios' : ''}
+                aria-describedby={!isFormValid() && !loading ? 'oportunidade-form-hint' : undefined}
               >
                 {loading 
                   ? (isEditMode ? <><span aria-hidden="true">⏳</span> Atualizando...</> : <><span aria-hidden="true">⏳</span> Criando...</>) 
@@ -792,7 +794,7 @@ export default function AdminOportunidades() {
             </div>
             
             {!isFormValid() && !loading && !loadingData && (
-              <div className="form-validation-hint">
+              <div className="form-validation-hint" id="oportunidade-form-hint">
                 <span aria-hidden="true">💡</span> Preencha todos os campos obrigatórios (marcados com *) para {isEditMode ? 'salvar' : 'criar'} a oportunidade
               </div>
             )}

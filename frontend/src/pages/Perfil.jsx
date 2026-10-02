@@ -348,6 +348,7 @@ export default function Perfil() {
               <FormActions>
                 <button type="button" className="btn btn-outline" onClick={cancelarEdicao} disabled={saving}>
                   Cancelar
+                  {saving && <span className="sr-only"> (indisponível enquanto a solicitação está em andamento)</span>}
                 </button>
                 <button type="submit" className="btn btn-primary" disabled={saving}>
                   {saving ? <><ButtonLoading /> Salvando...</> : 'Salvar Alterações'}
