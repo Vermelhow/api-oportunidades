@@ -118,7 +118,8 @@
 }
 
 .form-input::placeholder {
-  color: #94a3b8;
+  /* REQ-A19: #94a3b8 ficava em ~2.6:1 sobre branco */
+  color: #6b7280;
 }
 
 .form-input:disabled {

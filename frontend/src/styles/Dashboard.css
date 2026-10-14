@@ -236,7 +236,8 @@ body.sidebar-collapsed .dashboard-content {
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, var(--stat-color)15 0%, transparent 70%);
+  /* REQ-A19: var(--x)NN concatenado e sintaxe invalida em CSS puro; color-mix() preserva a opacidade pretendida */
+  background: radial-gradient(circle, color-mix(in srgb, var(--stat-color) 8%, transparent) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
@@ -277,18 +278,18 @@ body.sidebar-collapsed .dashboard-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--stat-color)20, var(--stat-color)08);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--stat-color) 13%, transparent), color-mix(in srgb, var(--stat-color) 3%, transparent));
   border-radius: 16px;
   flex-shrink: 0;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 16px var(--stat-color)20;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--stat-color) 13%, transparent);
   position: relative;
   z-index: 1;
 }
 
 .stat-card:hover .stat-icon {
   transform: scale(1.1) rotate(-5deg);
-  box-shadow: 0 8px 24px var(--stat-color)30;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--stat-color) 19%, transparent);
 }
 
 .stat-info {

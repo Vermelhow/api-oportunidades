@@ -72,7 +72,8 @@
 }
 
 .search-input::placeholder {
-  color: #9ca3af;
+  /* REQ-A19: #9ca3af ficava em ~2.5:1 sobre branco */
+  color: #6b7280;
 }
 
 .search-input:disabled {
@@ -147,7 +148,8 @@
 }
 
 .search-results-count {
-  color: #059669;
+  /* REQ-A19: #059669 ficava em ~3.8:1 sobre branco */
+  color: #065f46;
   font-weight: 600;
   display: inline-flex;
   align-items: center;

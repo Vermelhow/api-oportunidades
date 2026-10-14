@@ -16,7 +16,8 @@
   gap: var(--spacing-xl);
   flex-wrap: wrap;
   padding: var(--spacing-xl);
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+  /* REQ-A19: accent-teal puro (#17a2b8) nao atingia 4.5:1 com texto branco; #117a8a e o mesmo tom ~25% mais escuro */
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #117a8a 100%);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   color: white;

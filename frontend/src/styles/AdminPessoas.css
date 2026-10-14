@@ -47,7 +47,8 @@
 
 .pessoa-readonly-hint {
   font-size: 0.8rem;
-  color: var(--text-light);
+  /* REQ-A19: text-light (#adb5bd) ficava em ~2:1 sobre branco */
+  color: var(--text-medium);
   align-self: center;
 }
 

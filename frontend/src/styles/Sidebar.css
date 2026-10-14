@@ -186,7 +186,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.6);
+  /* REQ-A19: 0.6 de opacidade ficava abaixo de 4.5:1 na parte mais clara do gradiente; alinhado com .user-role (0.85) */
+  color: rgba(255, 255, 255, 0.85);
   padding: 0 1.5rem;
   margin: 0 0 0.75rem;
   animation: fadeIn 0.3s ease;
@@ -298,7 +299,8 @@
 
 .nav-description {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
+  /* REQ-A19: 0.7 ficava abaixo de 4.5:1 na parte mais clara do gradiente */
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.2;
 }
 
