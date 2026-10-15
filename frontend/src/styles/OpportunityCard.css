@@ -335,7 +335,8 @@
 
   .badge {
     padding: 0.3125rem 0.625rem;
-    font-size: 0.6875rem;
+    /* REQ-A20: 0.6875rem (11px) prejudicava a leitura do status/tipo da vaga */
+    font-size: 0.8125rem;
   }
 
   .card-header {
@@ -401,7 +402,8 @@
   }
 
   .badge {
-    font-size: 0.625rem;
+    /* REQ-A20: 0.625rem (10px) ficava ilegível em telas muito pequenas */
+    font-size: 0.8125rem;
     padding: 0.25rem 0.5rem;
   }
 
@@ -595,7 +597,10 @@
   }
 
   .badge {
-    font-size: 0.7rem;
+    /* REQ-A20: regra posterior na cascata (vence sobre os blocos @media acima
+       para telas <=480px); mantido alinhado ao mesmo valor para não reintroduzir
+       a redução silenciosa de tamanho */
+    font-size: 0.8125rem;
   }
 
   .card-title {

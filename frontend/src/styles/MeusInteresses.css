@@ -64,7 +64,8 @@
   align-self: flex-start;
   padding: 0.2rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  /* REQ-A20: 0.8rem (12.8px) prejudicava a leitura do status do interesse */
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
@@ -84,7 +85,8 @@
 }
 
 .interesse-data {
-  font-size: 0.85rem;
+  /* REQ-A20: 0.85rem (13.6px) alinhado ao padrão de 14px usado em metadados similares */
+  font-size: 0.875rem;
   color: var(--text-medium);
 }
 

@@ -182,7 +182,8 @@
 }
 
 .nav-section-title {
-  font-size: 0.75rem;
+  /* REQ-A20: 0.75rem (12px) prejudicava a leitura do título de categoria do menu */
+  font-size: 0.8125rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -298,7 +299,8 @@
 }
 
 .nav-description {
-  font-size: 0.75rem;
+  /* REQ-A20: 0.75rem (12px) prejudicava a leitura da descrição do item de menu */
+  font-size: 0.8125rem;
   /* REQ-A19: 0.7 ficava abaixo de 4.5:1 na parte mais clara do gradiente */
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.2;

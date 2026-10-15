@@ -236,7 +236,8 @@
 /* Error Messages */
 .error-message {
   color: #ef4444;
-  font-size: 0.85rem;
+  /* REQ-A20: 0.85rem (13.6px) ficava pequeno para uma mensagem de erro de formulário */
+  font-size: 0.875rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -251,7 +252,8 @@
 /* Field Hints */
 .field-hint {
   color: #6b7280;
-  font-size: 0.8rem;
+  /* REQ-A20: 0.8rem (12.8px) prejudicava a leitura da dica do campo */
+  font-size: 0.875rem;
   display: block;
   margin-top: var(--spacing-xs);
   font-style: italic;
@@ -260,7 +262,8 @@
 /* Form Hint */
 .form-hint {
   color: var(--text-medium);
-  font-size: 0.85rem;
+  /* REQ-A20: 0.85rem (13.6px) ficava pequeno para um aviso de formulário */
+  font-size: 0.875rem;
   font-style: italic;
 }
 
@@ -511,7 +514,8 @@
   }
 
   .form-hint {
-    font-size: 0.8rem;
+    /* REQ-A20: mantido igual ao tamanho base (0.875rem) em vez de reduzir no mobile */
+    font-size: 0.875rem;
   }
 
   .alert {
@@ -527,7 +531,8 @@
   }
 
   .form-validation-hint {
-    font-size: 0.85rem;
+    /* REQ-A20: mantido igual ao tamanho base (0.9rem) em vez de reduzir para 0.85rem no mobile */
+    font-size: 0.9rem;
     padding: var(--spacing-sm) var(--spacing-md);
   }
 }

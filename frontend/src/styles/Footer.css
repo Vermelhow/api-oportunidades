@@ -55,13 +55,14 @@
 }
 
 .footer-heading {
+  /* REQ-A20: havia uma segunda declaração de font-size (0.875rem) nesta mesma
+     regra que sobrescrevia silenciosamente este valor, reduzindo o título */
   font-size: 1.0625rem;
   font-weight: 700;
   color: white;
   margin-bottom: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 0.875rem;
 }
 
 .footer-links {

@@ -342,7 +342,9 @@
   }
 
   .stat-label {
-    font-size: 0.825rem;
+    /* REQ-A20: alinhado com a outra regra @media(480px) mais abaixo no arquivo,
+       que sobrescrevia este valor silenciosamente */
+    font-size: 0.8125rem;
   }
 
   .empty-state,
@@ -436,6 +438,8 @@
   }
   
   .stat-label {
-    font-size: 0.8rem;
+    /* REQ-A20: esta regra vem depois na cascata e sobrescrevia a correção acima;
+       mantida com o mesmo valor para não reintroduzir a redução para 12.8px */
+    font-size: 0.8125rem;
   }
 }

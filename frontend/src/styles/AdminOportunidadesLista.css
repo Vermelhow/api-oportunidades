@@ -178,7 +178,8 @@
 .badge {
   padding: 0.375rem 0.75rem;
   border-radius: 6px;
-  font-size: 0.75rem;
+  /* REQ-A20: 0.75rem (12px) prejudicava a leitura do tipo de oportunidade */
+  font-size: 0.8125rem;
   font-weight: 600;
   white-space: nowrap;
 }

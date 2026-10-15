@@ -199,7 +199,8 @@
 }
 
 .info-label {
-  font-size: 0.85rem;
+  /* REQ-A20: 0.85rem (13.6px) alinhado ao padrão de 14px usado nos demais labels (Dashboard, Perfil) */
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-medium);
   text-transform: uppercase;
@@ -232,7 +233,8 @@
 .badge {
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-full);
-  font-size: 0.75rem;
+  /* REQ-A20: 0.75rem (12px) prejudicava a leitura do status/tipo da vaga */
+  font-size: 0.8125rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;

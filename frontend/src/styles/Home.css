@@ -199,7 +199,8 @@
 }
 
 .stat-info span {
-  font-size: 0.75rem;
+  /* REQ-A20: 0.75rem (12px) prejudicava a leitura da legenda da estatística */
+  font-size: 0.8125rem;
   /* REQ-A19: #718096 ficava em ~4:1; reaproveitado tom ja usado em .hero-description/.section-subtitle */
   color: #4a5568;
 }
@@ -693,7 +694,8 @@
   }
 
   .hero-badge {
-    font-size: 0.8rem;
+    /* REQ-A20: 0.8rem (12.8px) prejudicava a leitura do texto do selo da hero */
+    font-size: 0.875rem;
     padding: 0.4rem 1rem;
   }
 

@@ -27,7 +27,8 @@
 .pessoa-badge {
   background: var(--primary-blue);
   color: white;
-  font-size: 0.7rem;
+  /* REQ-A20: 0.7rem (~11.2px) prejudicava a leitura do tipo/papel do usuário */
+  font-size: 0.8125rem;
   font-weight: 600;
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
@@ -46,7 +47,8 @@
 }
 
 .pessoa-readonly-hint {
-  font-size: 0.8rem;
+  /* REQ-A20: 0.8rem (12.8px) prejudicava a leitura da explicação sobre a restrição da ação (REQ-A18) */
+  font-size: 0.875rem;
   /* REQ-A19: text-light (#adb5bd) ficava em ~2:1 sobre branco */
   color: var(--text-medium);
   align-self: center;
