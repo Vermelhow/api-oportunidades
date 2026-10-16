@@ -28,6 +28,13 @@
   gap: 0.5rem;
 }
 
+/* REQ-A21: o link do site precisa ser reconhecível sem depender só da cor,
+   já que fica ao lado de informações não clicáveis (e-mail, telefone, endereço) */
+.organizacao-detalhe-link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .organizacao-detalhe-oportunidades {
   background: white;
   border-radius: 12px;
@@ -58,6 +65,13 @@
   padding: 0.75rem 1rem;
   background: var(--bg-gray, #f8f9fa);
   border-radius: 8px;
+}
+
+/* REQ-A21: título clicável da oportunidade relacionada precisa de sublinhado,
+   pois fica ao lado do badge de status (não clicável) na mesma linha */
+.organizacao-detalhe-lista li a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 @media (max-width: 640px) {

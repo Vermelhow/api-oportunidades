@@ -165,24 +165,28 @@ export default function AdminOportunidadesLista() {
             <button 
               className={`filter-tab ${filter === 'todas' ? 'active' : ''}`}
               onClick={() => setFilter('todas')}
+              aria-pressed={filter === 'todas'}
             >
               Todas ({oportunidades.length})
             </button>
             <button 
               className={`filter-tab ${filter === 'ativa' ? 'active' : ''}`}
               onClick={() => setFilter('ativa')}
+              aria-pressed={filter === 'ativa'}
             >
               <span aria-hidden="true">🟢</span> Ativas ({oportunidades.filter(o => o.status === 'ativa').length})
             </button>
             <button 
               className={`filter-tab ${filter === 'encerrada' ? 'active' : ''}`}
               onClick={() => setFilter('encerrada')}
+              aria-pressed={filter === 'encerrada'}
             >
               <span aria-hidden="true">🔴</span> Encerradas ({oportunidades.filter(o => o.status === 'encerrada').length})
             </button>
             <button 
               className={`filter-tab ${filter === 'pausada' ? 'active' : ''}`}
               onClick={() => setFilter('pausada')}
+              aria-pressed={filter === 'pausada'}
             >
               <span aria-hidden="true">🟡</span> Pausadas ({oportunidades.filter(o => o.status === 'pausada').length})
             </button>

@@ -250,7 +250,7 @@ export default function Home() {
             </div>
             <div className="footer-column">
               <h4>🔗 Links Rápidos</h4>
-              <div className="footer-links">
+              <div className="home-footer-links">
                 <Link to="/oportunidades">Oportunidades</Link>
                 <Link to="/login">Login</Link>
                 <Link to="/cadastro">Cadastro</Link>

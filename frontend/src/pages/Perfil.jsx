@@ -250,13 +250,13 @@ export default function Perfil() {
                       <label className="info-label">Links</label>
                       <p className="info-value">
                         {perfilCompleto?.linkedin_url && (
-                          <a href={perfilCompleto.linkedin_url} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                          <a href={perfilCompleto.linkedin_url} target="_blank" rel="noopener noreferrer" className="info-value-link">LinkedIn</a>
                         )}
                         {perfilCompleto?.github_url && (
-                          <> · <a href={perfilCompleto.github_url} target="_blank" rel="noopener noreferrer">GitHub</a></>
+                          <> · <a href={perfilCompleto.github_url} target="_blank" rel="noopener noreferrer" className="info-value-link">GitHub</a></>
                         )}
                         {perfilCompleto?.portfolio_url && (
-                          <> · <a href={perfilCompleto.portfolio_url} target="_blank" rel="noopener noreferrer">Portfólio</a></>
+                          <> · <a href={perfilCompleto.portfolio_url} target="_blank" rel="noopener noreferrer" className="info-value-link">Portfólio</a></>
                         )}
                         {!perfilCompleto?.linkedin_url && !perfilCompleto?.github_url && !perfilCompleto?.portfolio_url && (
                           'Nenhum link cadastrado'

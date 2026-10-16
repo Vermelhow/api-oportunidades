@@ -112,7 +112,12 @@ export default function OrganizacaoDetalhe() {
             {organizacao.website && (
               <div className="info-item">
                 <span className="info-icon" aria-hidden="true">🌐</span>
-                <a href={organizacao.website} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={organizacao.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="organizacao-detalhe-link"
+                >
                   {organizacao.website}
                 </a>
               </div>

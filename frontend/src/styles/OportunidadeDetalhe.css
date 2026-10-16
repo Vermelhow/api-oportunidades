@@ -19,7 +19,10 @@
 
 .breadcrumb a {
   color: var(--primary-blue);
-  text-decoration: none;
+  /* REQ-A21: sublinhado visível no estado normal — diferencia os itens
+     navegáveis (Home, Oportunidades) do item atual, sem depender só da cor */
+  text-decoration: underline;
+  text-underline-offset: 2px;
   transition: color 0.2s ease;
 }
 

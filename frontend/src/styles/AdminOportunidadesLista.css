@@ -76,6 +76,9 @@
 .filter-tab {
   padding: 0.625rem 1.25rem;
   border: 2px solid #9ca3af;
+  /* REQ-A21: espaço reservado para a borda inferior do estado ativo,
+     evitando deslocamento de layout quando o filtro muda */
+  border-bottom: 4px solid transparent;
   background: white;
   border-radius: 8px;
   font-size: 0.875rem;
@@ -96,6 +99,10 @@
   background: #3b82f6;
   color: white;
   border-color: #3b82f6;
+  /* REQ-A21: indicador não cromático do filtro ativo — borda inferior
+     mais espessa/visível e peso de fonte maior, além da mudança de cor */
+  border-bottom-color: #1e3a8a;
+  font-weight: 700;
 }
 
 /* Table Container */

@@ -54,6 +54,10 @@
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-dark);
+  /* REQ-A21: sublinhado visível no estado normal, para que o link seja
+     reconhecível mesmo sem hover e sem depender apenas da cor */
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .interesse-titulo:hover {
