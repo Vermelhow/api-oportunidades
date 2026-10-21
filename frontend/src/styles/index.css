@@ -638,3 +638,43 @@ span[class*="icon-"],
     background-clip: initial;
   }
 }
+
+/* ========================================
+   REQ-A22: PREFERÊNCIA POR REDUÇÃO DE MOVIMENTO
+   ========================================
+   Estratégia centralizada: quando o usuário ativa "reduzir movimento"
+   no SO/navegador, não removemos as animações/transições (isso faria
+   elementos controlados por @keyframes de entrada, ex. fadeIn/slideUp,
+   nunca chegarem ao estado final e sumirem da tela). Em vez disso:
+   - encurtamos drasticamente a duração (quase instantâneo, mas ainda
+     dispara o fim da animação e deixa o elemento no seu estado final);
+   - zeramos o atraso (animation-delay/transition-delay), para que
+     elementos com entrada escalonada (ex. cards do Dashboard) não
+     fiquem invisíveis à espera do delay original;
+   - limitamos a 1 repetição, o que interrompe qualquer animação
+     contínua/decorativa (pulse, float, bounce, shimmer, pulse-ring,
+     shake, spin) sem apagar a estrutura estática do elemento (loaders
+     continuam visíveis, só deixam de girar/pulsar/balançar);
+   - forçamos scroll-behavior: auto, cobrindo o scroll suave global,
+     o "html.smooth-scroll" e qualquer rolagem disparada via JS com
+     behavior: 'smooth' (ver window.matchMedia no componente).
+   Sem essa preferência ativada, nada muda: toda a aplicação continua
+   com as animações e transições originais.
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html,
+  html.smooth-scroll {
+    scroll-behavior: auto !important;
+  }
+}

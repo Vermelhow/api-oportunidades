@@ -335,7 +335,9 @@ export default function AdminOportunidades() {
         showError(errorMsg);
 
         // Scroll para o topo para visualizar a mensagem de erro
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // REQ-A22: respeita a preferência por redução de movimento
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
       }
     } finally {
       setLoading(false);
