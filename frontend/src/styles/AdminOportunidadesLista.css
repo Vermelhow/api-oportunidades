@@ -152,6 +152,7 @@
 
 .opportunity-info {
   flex: 1;
+  min-width: 0;
 }
 
 .opportunity-title {
@@ -229,6 +230,8 @@
 /* Actions */
 .opportunity-actions {
   display: flex;
+  /* REQ-A23/A24: os botões quebram de linha em vez de sair da tela (ex.: "Excluir" cortado a 400%) */
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-left: 1rem;
 }

@@ -12,7 +12,16 @@
   flex: 1;
   padding: 2rem;
   max-width: 100%;
-  overflow-x: hidden;
+  /* REQ-A24: antes era overflow-x:hidden, que escondia (cortava sem rolagem) qualquer conteúdo
+     que excedesse a largura, como o botão "Excluir". min-width:0 mantém o item flex podendo
+     encolher, sem mascarar overflow. */
+  min-width: 0;
+  /* textos longos (títulos, e-mails, URLs) quebram em vez de estourar a página */
+  overflow-wrap: anywhere;
+}
+
+.admin-header > div:first-child {
+  min-width: 0;
 }
 
 /* Header */
@@ -225,6 +234,7 @@
   background-color: #f8fafc;
   border-top: 2px solid #e2e8f0;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: flex-end;
 }
@@ -358,7 +368,11 @@
   }
 
   .btn-sm {
-    flex: 1;
+    /* REQ-A24: flex:1 (base 0) + overflow:hidden do .btn deixavam os botões encolherem abaixo do
+       próprio rótulo ("Excluir", "Ver detalhes", "Ver oportunidade" cortados). Agora a base é o
+       conteúdo e o botão não encolhe além dele; os contêineres quebram de linha. */
+    flex: 1 1 auto;
+    min-width: max-content;
   }
 }
 

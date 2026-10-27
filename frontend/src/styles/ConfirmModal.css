@@ -8,8 +8,13 @@
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;
+  /* REQ-A23/A24: com zoom/viewport baixo o modal pode ser mais alto que a tela.
+     align-items:flex-start + margin:auto no container centraliza quando cabe e,
+     quando não cabe, alinha ao topo e permite rolar o overlay (título e botões alcançáveis) */
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   z-index: 9999;
   animation: fadeIn 0.2s ease;
   padding: 1rem;
@@ -31,6 +36,7 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 500px;
   width: 100%;
+  margin: auto;
   animation: slideUp 0.3s ease;
   overflow: hidden;
 }
@@ -182,7 +188,8 @@
 /* Responsive */
 @media (max-width: 640px) {
   .modal-container {
-    margin: 1rem;
+    /* vertical auto mantém a centralização/rolagem; horizontal preserva o espaçamento original */
+    margin: auto 1rem;
     max-width: calc(100% - 2rem);
   }
 

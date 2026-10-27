@@ -18,7 +18,8 @@
 
 .organizacao-detalhe-info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* min(220px, 100%): em colunas mais estreitas que 220px a coluna encolhe em vez de estourar */
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 1rem;
 }
 
@@ -26,6 +27,10 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.organizacao-detalhe-info-grid .info-item > * {
+  min-width: 0;
 }
 
 /* REQ-A21: o link do site precisa ser reconhecível sem depender só da cor,
@@ -60,6 +65,9 @@
 
 .organizacao-detalhe-lista li {
   display: flex;
+  /* REQ-A24: o badge de status desce para a linha de baixo quando o título não deixa espaço */
+  flex-wrap: wrap;
+  gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
@@ -72,6 +80,7 @@
 .organizacao-detalhe-lista li a {
   text-decoration: underline;
   text-underline-offset: 2px;
+  min-width: 0;
 }
 
 @media (max-width: 640px) {

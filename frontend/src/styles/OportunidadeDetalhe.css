@@ -5,6 +5,8 @@
   margin: 0 auto;
   padding: var(--spacing-2xl) var(--spacing-xl);
   min-height: calc(100vh - 200px);
+  /* REQ-A24: URLs, e-mails e palavras longas quebram em vez de alargar a página */
+  overflow-wrap: anywhere;
 }
 
 /* Breadcrumb */
@@ -89,6 +91,10 @@
   grid-template-columns: 1fr 380px;
   gap: var(--spacing-2xl);
   align-items: start;
+}
+
+.content-grid > * {
+  min-width: 0;
 }
 
 /* Main Content */
@@ -352,8 +358,10 @@
 
   .breadcrumb {
     font-size: 0.85rem;
-    overflow-x: auto;
-    white-space: nowrap;
+    /* REQ-A24: quebra de linha em vez de rolagem interna (que não é focável) para o trajeto
+       Home › Oportunidades › título continuar legível */
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
   }
 
   .section-title {
@@ -397,9 +405,5 @@
   .actions-card,
   .content-section {
     padding: var(--spacing-md);
-  }
-
-  .breadcrumb {
-    display: none;
   }
 }

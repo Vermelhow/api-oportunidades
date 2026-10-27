@@ -108,11 +108,24 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  /* REQ-A24: palavras longas sem espaço quebram, em vez de serem cortadas na lateral */
+  overflow-wrap: anywhere;
   transition: color 0.3s ease;
 }
 
 .opportunity-card:hover .card-title {
   color: var(--primary-blue);
+}
+
+/* REQ-A23/A24: com zoom/tela estreita (<= 1200px, onde o grid já usa colunas menores) o título
+   completo deve aparecer; o corte em 2 linhas (line-clamp) escondia o restante sem alternativa */
+@media (max-width: 1200px) {
+  .card-title {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    overflow-wrap: anywhere;
+  }
 }
 
 .card-category {
@@ -148,9 +161,9 @@
   font-size: 0.9375rem;
   color: var(--text-dark);
   font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* REQ-A24: o nome da organização quebra de linha em vez de ser truncado com reticências */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* Card Info Grid */
@@ -189,9 +202,9 @@
   line-height: 1.4;
   font-weight: 600;
   color: var(--text-dark);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* REQ-A24: quebra de linha em vez de truncar com reticências (informação não pode se perder) */
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: 0.875rem;
 }
 
@@ -475,9 +488,8 @@
   line-height: 1.4;
   font-weight: 500;
   color: var(--text-dark);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* Card Description */

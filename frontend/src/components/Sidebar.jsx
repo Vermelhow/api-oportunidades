@@ -96,17 +96,20 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button 
-        className="mobile-menu-button" 
-        onClick={toggleMobileMenu}
-        aria-label="Abrir menu"
-        title="Abrir menu"
-        aria-expanded={isMobileMenuOpen}
-        aria-controls={sidebarId}
-      >
-        <span className="menu-icon" aria-hidden="true">☰</span>
-      </button>
+      {/* Barra superior mobile: abriga o botão de menu fora do conteúdo (REQ-A24),
+          com classes próprias para não colidir com o menu do Header */}
+      <div className="sidebar-mobile-bar">
+        <button 
+          className="sidebar-mobile-toggle" 
+          onClick={toggleMobileMenu}
+          aria-label="Abrir menu"
+          title="Abrir menu"
+          aria-expanded={isMobileMenuOpen}
+          aria-controls={sidebarId}
+        >
+          <span className="sidebar-menu-icon" aria-hidden="true">☰</span>
+        </button>
+      </div>
 
       {/* Mobile Overlay */}
       <div 

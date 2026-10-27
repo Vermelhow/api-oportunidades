@@ -92,7 +92,7 @@
   padding: 1.5rem 0.5rem;
 }
 
-.user-avatar {
+.sidebar .user-avatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -113,12 +113,12 @@
   margin-bottom: 0;
 }
 
-.user-avatar:hover {
+.sidebar .user-avatar:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
-.avatar-icon {
+.sidebar .avatar-icon {
   font-size: 2.5rem;
   transition: font-size 0.3s ease;
 }
@@ -127,7 +127,7 @@
   font-size: 1.5rem;
 }
 
-.user-details {
+.sidebar .user-details {
   margin-top: 1rem;
   animation: fadeIn 0.3s ease;
 }
@@ -143,15 +143,18 @@
   }
 }
 
-.user-name {
+.sidebar .user-name {
   font-size: 1.25rem;
+  /* REQ-A24: nomes longos quebram de linha (o .user-name do Header força nowrap) */
+  white-space: normal;
+  overflow-wrap: anywhere;
   font-weight: 700;
   margin: 0 0 0.25rem;
   color: white;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.user-role {
+.sidebar .user-role {
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.85);
   margin: 0;
@@ -410,16 +413,16 @@
     padding: 1.5rem;
   }
 
-  .user-avatar {
+  .sidebar .user-avatar {
     width: 64px;
     height: 64px;
   }
 
-  .avatar-icon {
+  .sidebar .avatar-icon {
     font-size: 2rem;
   }
 
-  .user-name {
+  .sidebar .user-name {
     font-size: 1.125rem;
   }
 
@@ -432,15 +435,32 @@
   }
 }
 
-/* Mobile Menu Button */
-.mobile-menu-button {
+/* Barra superior mobile (<= 1023px)
+   REQ-A24: o botão de menu fica numa barra fixa e opaca, fora do conteúdo.
+   Antes ele era um botão flutuante (position:fixed) que cobria logo, título e texto
+   e, por usar a mesma classe do Header (.mobile-menu-button), sobrescrevia o botão dele. */
+:root {
+  --sidebar-bar-height: 3.5rem;
+}
+
+.sidebar-mobile-bar {
   display: none;
   position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1100;
-  width: 48px;
-  height: 48px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--sidebar-bar-height);
+  padding: 0 0.75rem;
+  align-items: center;
+  background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+}
+
+.sidebar-mobile-toggle {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
   background: linear-gradient(135deg, rgba(30, 58, 138, 0.75) 0%, rgba(30, 64, 175, 0.75) 100%);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -453,18 +473,18 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mobile-menu-button:hover {
+.sidebar-mobile-toggle:hover {
   background: linear-gradient(135deg, rgba(30, 64, 175, 1) 0%, rgba(29, 78, 216, 1) 100%);
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 3px 12px rgba(30, 58, 138, 0.6);
   border-color: white;
 }
 
-.mobile-menu-button:active {
+.sidebar-mobile-toggle:active {
   transform: scale(0.95);
 }
 
-.menu-icon {
+.sidebar-menu-icon {
   font-size: 1.5rem;
   color: white;
 }
@@ -489,8 +509,20 @@
 }
 
 @media (max-width: 1023px) {
-  .mobile-menu-button {
+  .sidebar-mobile-bar {
     display: flex;
+  }
+
+  /* A sidebar aberta começa abaixo da barra, que continua visível para fechar o menu */
+  .sidebar {
+    top: var(--sidebar-bar-height);
+    min-height: 0;
+  }
+
+  /* Reserva o espaço da barra para o conteúdo não nascer por baixo dela */
+  .sidebar-mobile-bar ~ .admin-content,
+  .sidebar-mobile-bar ~ .dashboard-content {
+    padding-top: calc(var(--sidebar-bar-height) + 1rem);
   }
   
   .sidebar-overlay {
@@ -501,3 +533,52 @@
     pointer-events: none;
   }
 }
+
+  /* REQ-A23: viewport baixo (ex.: zoom 400% = 256px de altura).
+     Antes, cabeçalho + rodapé ocupavam ~290px e a lista de navegação ficava com ~48px de altura,
+     com rolagem aninhada. Agora a sidebar inteira rola como uma única área e o cabeçalho/rodapé
+     ficam compactos (nenhum conteúdo é removido). */
+  @media (max-height: 600px) {
+    .sidebar:not(.collapsed) .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      text-align: left;
+    }
+
+    .sidebar:not(.collapsed) .user-avatar {
+      width: 48px;
+      height: 48px;
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar:not(.collapsed) .avatar-icon {
+      font-size: 1.5rem;
+    }
+
+    .sidebar:not(.collapsed) .user-details {
+      margin-top: 0;
+      min-width: 0;
+    }
+
+    .sidebar:not(.collapsed) .user-name {
+      font-size: 1rem;
+      margin-bottom: 0.125rem;
+    }
+
+    .sidebar-nav {
+      flex: 1 0 auto;
+      overflow-y: visible;
+      padding: 0.75rem 0;
+    }
+
+    .nav-section {
+      margin-bottom: 1rem;
+    }
+
+    .sidebar:not(.collapsed) .sidebar-footer {
+      padding: 0.75rem 1.25rem;
+    }
+  }

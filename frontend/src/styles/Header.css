@@ -5,7 +5,10 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(10px);
+  /* REQ-A24: sem backdrop-filter aqui. Ele transforma o .header no bloco de referência dos
+     descendentes position:fixed (.mobile-menu, overlays), o que empurrava o menu fechado
+     para fora da tela e criava scroll horizontal (scrollWidth = 2x o viewport).
+     O fundo é opaco, então não há mudança visual. */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -494,7 +497,10 @@
    RESPONSIVE DESIGN
    ============================================ */
 
-/* Mobile First - Default (< 768px) */
+/* Mobile First - Default (< 1024px) */
+/* REQ-A23/A24: o menu desktop só cabe a partir de 1024px. Entre 768px e 1023px (≈125–167% de zoom
+   numa janela de 1280px) o botão "Olá, usuário ▼" saía da tela e criava scroll horizontal; agora
+   essa faixa usa o menu hambúrguer, o mesmo breakpoint da Sidebar (1023px). */
 /* Menu hambúrguer visível, desktop-nav e desktop-actions escondidos */
 /* Já definido nas seções anteriores:
    - .desktop-nav { display: none; }
@@ -502,8 +508,8 @@
    - .mobile-menu-button { display: flex; }
 */
 
-/* Tablet and Desktop (768px+) */
-@media (min-width: 768px) {
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
   .header-container {
     padding: 1rem 2rem;
   }
@@ -556,18 +562,6 @@
 
   .header-actions {
     gap: 1rem;
-  }
-}
-
-/* Tablet Medium (768px - 1023px) */
-@media (max-width: 1023px) and (min-width: 768px) {
-  .header-container {
-    padding: 1rem 1.5rem;
-  }
-
-  .nav-link {
-    font-size: 0.95rem;
-    padding: 0.5rem 0.875rem;
   }
 }
 
@@ -630,8 +624,8 @@
    MOBILE MENU SPECIFIC FIXES
    ============================================ */
 
-/* Garantir que em mobile o menu hambúrguer sempre apareça */
-@media (max-width: 767px) {
+/* Garantir que em mobile/tablet o menu hambúrguer sempre apareça */
+@media (max-width: 1023px) {
   .desktop-nav {
     display: none !important;
   }

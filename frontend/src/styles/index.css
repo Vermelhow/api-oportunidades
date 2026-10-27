@@ -218,7 +218,6 @@ html {
 
 body {
   margin: 0;
-  min-width: 320px;
   min-height: 100vh;
   color: var(--text-dark);
   background: linear-gradient(135deg, #d0d4d9 0%, #bec3c9 100%);

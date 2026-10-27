@@ -22,6 +22,9 @@
 
 .pessoa-card-header h3 {
   font-size: 1.05rem;
+  /* REQ-A24: nomes/e-mails longos quebram em vez de estourar o card */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .pessoa-badge {
@@ -37,6 +40,7 @@
 .pessoa-email {
   color: var(--text-medium);
   font-size: 0.9rem;
+  overflow-wrap: anywhere;
 }
 
 .pessoa-card-actions {
@@ -59,8 +63,12 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  /* REQ-A23/A24: centraliza quando cabe; quando o modal é mais alto que a tela (zoom 400%),
+     alinha ao topo e o overlay rola, mantendo título e "Fechar" alcançáveis */
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   z-index: var(--z-modal, 1050);
   padding: 1rem;
 }
@@ -71,9 +79,11 @@
   padding: 2rem;
   max-width: 420px;
   width: 100%;
+  margin: auto;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  overflow-wrap: anywhere;
 }
 
 .pessoa-modal-email {

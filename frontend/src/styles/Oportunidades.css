@@ -24,8 +24,9 @@
 }
 
 .header-content {
-  flex: 1;
-  min-width: 300px;
+  /* REQ-A23/A24: flex-basis em vez de min-width:300px, que forçava o container a 348px em 320px */
+  flex: 1 1 300px;
+  min-width: 0;
 }
 
 .page-header .page-title {
@@ -424,7 +425,10 @@
     padding: var(--spacing-lg) var(--spacing-sm);
   }
   
-  .page-title {
+  /* REQ-A23/A24: .page-header .page-title (2.5rem, especificidade maior) anulava esta escala responsiva,
+     deixando o título com 40px em 320px e estourando a largura ("Voluntariado" não cabe).
+     Aplicada só no menor breakpoint, com a mesma especificidade da regra base. */
+  .page-header .page-title {
     font-size: 1.75rem;
   }
   

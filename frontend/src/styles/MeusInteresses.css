@@ -7,6 +7,8 @@
   margin: 0 auto;
   padding: 2rem 1rem;
   min-height: calc(100vh - 120px);
+  /* REQ-A24: títulos, mensagens e links longos quebram em vez de alargar a página */
+  overflow-wrap: anywhere;
 }
 
 .meus-interesses-header {
@@ -46,8 +48,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  flex: 1;
-  min-width: 220px;
+  /* REQ-A23/A24: flex-basis em vez de min-width:220px (que impedia o card de caber em 320px) */
+  flex: 1 1 220px;
+  min-width: 0;
 }
 
 .interesse-titulo {
@@ -102,8 +105,11 @@
 
 .interesse-card-actions {
   display: flex;
+  /* REQ-A23/A24: "Ver oportunidade" e "Cancelar" quebram de linha quando não cabem lado a lado */
+  flex-wrap: wrap;
   gap: 0.5rem;
   flex-shrink: 0;
+  max-width: 100%;
 }
 
 @media (max-width: 640px) {

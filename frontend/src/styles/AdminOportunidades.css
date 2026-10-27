@@ -490,12 +490,29 @@
   }
 
   .form-card {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
   }
 
   .form-section {
     margin-bottom: var(--spacing-xl);
     padding-bottom: var(--spacing-xl);
+  }
+
+  /* REQ-A23/A24: .form-section também é definido em AdminOrganizacoes.css como um cartão com
+     padding/borda; dentro do .form-card isso aninhava cartões e deixava os campos com ~55% da
+     largura a 400% (rótulos de select/placeholders cortados). Em telas estreitas a seção vira
+     um bloco simples, separado só pela linha inferior. */
+  .form-card .form-section {
+    padding: 0 0 var(--spacing-xl);
+    border-width: 0 0 2px;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .form-card .form-section:last-of-type {
+    padding-bottom: 0;
+    border-width: 0;
   }
 
   .form-section-title {
