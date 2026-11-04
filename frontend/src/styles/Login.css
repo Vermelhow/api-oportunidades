@@ -106,7 +106,14 @@
 
 .toggle-password {
   position: absolute;
-  right: var(--spacing-md);
+  /* REQ-A25: área de toque de 44x44px. O deslocamento do right mantém o ícone
+     na mesma posição visual de antes */
+  right: calc(var(--spacing-md) - 0.4375rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: none;
   cursor: pointer;
@@ -172,6 +179,9 @@
   font-weight: 600;
   text-decoration: none;
   transition: color 0.3s ease;
+  /* REQ-A25: link em linha — o padding vertical amplia a área de toque (≥24px)
+     sem alterar a altura da linha de texto */
+  padding-block: 0.25rem;
 }
 
 .link-primary:hover {

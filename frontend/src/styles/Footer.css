@@ -86,7 +86,10 @@
   color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
   transition: all 0.3s ease;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  /* REQ-A25: área de toque mínima de 24px sem depender do espaçamento entre links */
+  min-height: 24px;
   position: relative;
 }
 
@@ -101,40 +104,16 @@
   transition: width 0.3s ease;
 }
 
+/* REQ-A28: só os itens que contêm link reagem ao hover; os dados de contato
+   (texto simples) não devem parecer clicáveis */
 .footer-links a:hover,
-.footer-links li:hover {
+.footer-links li:has(> a):hover {
   color: var(--accent-yellow);
   transform: translateX(4px);
 }
 
 .footer-links a:hover::before {
   width: 100%;
-}
-
-.social-links {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.social-link {
-  font-size: 2rem;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.social-link:hover {
-  transform: translateY(-4px) scale(1.05);
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .footer-bottom {
@@ -202,19 +181,22 @@
     font-size: 0.875rem;
   }
 
-  .social-links {
-    justify-content: flex-start;
-  }
-
-  .social-link {
-    width: 44px;
-    height: 44px;
-    font-size: 1.75rem;
-  }
-
   .footer-bottom {
     font-size: 0.8125rem;
     padding-top: 1.5rem;
+  }
+}
+
+/* REQ-A25: em telas pequenas/de toque os links de navegação do rodapé ganham
+   área de toque de 44px. A altura vem do próprio link, então o espaçamento
+   entre eles passa a ser zero para o bloco não crescer além do necessário. */
+@media (max-width: 767px), (pointer: coarse) {
+  .footer-nav .footer-links {
+    gap: 0;
+  }
+
+  .footer-nav .footer-links a {
+    min-height: 44px;
   }
 }
 
@@ -228,12 +210,6 @@
     gap: 1.5rem;
   }
 
-  .social-link {
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
-  }
-
   .footer-content {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -241,9 +217,5 @@
 
   .footer-section {
     text-align: center;
-  }
-
-  .social-links {
-    justify-content: center;
   }
 }

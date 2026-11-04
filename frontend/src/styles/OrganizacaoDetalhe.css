@@ -38,6 +38,10 @@
 .organizacao-detalhe-link {
   text-decoration: underline;
   text-underline-offset: 2px;
+  /* REQ-A25: área de toque mínima de 24px sem depender do espaçamento */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 
 .organizacao-detalhe-oportunidades {

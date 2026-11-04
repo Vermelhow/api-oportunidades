@@ -30,6 +30,10 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
+  /* REQ-A25: área de toque de 44px de altura. A margem negativa devolve o espaço
+     extra, então a altura do cabeçalho e o visual do logo não mudam */
+  min-height: 44px;
+  margin-block: -0.5rem;
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: 700;
@@ -282,12 +286,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 2.5rem;
-  height: 2.5rem;
+  /* REQ-A25: área de toque de 44x44px. O padding mantém o ícone com os mesmos
+     24x24px de antes e a margem negativa preserva a altura do cabeçalho */
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -0.125rem;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.625rem;
   z-index: 1001;
   position: relative;
 }
@@ -610,9 +617,11 @@
   }
 
   .mobile-menu-button {
-    width: 2rem;
-    height: 2rem;
-    padding: 0.375rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.75rem;
+    /* o botão antigo tinha 32px; a margem maior mantém a altura e a posição do ícone */
+    margin: -0.375rem;
   }
 
   .hamburger-line {

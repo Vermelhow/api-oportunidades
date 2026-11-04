@@ -542,10 +542,26 @@
   text-underline-offset: 2px;
   font-size: 0.9375rem;
   transition: color 0.3s ease;
+  /* REQ-A25: área de toque mínima de 24px sem depender do espaçamento entre links */
+  display: flex;
+  align-items: center;
+  min-height: 24px;
 }
 
 .home-footer-links a:hover {
   color: #667eea;
+}
+
+/* REQ-A25: em telas pequenas/de toque, 44px de altura por link (o espaçamento
+   passa a vir da própria altura do link) */
+@media (max-width: 767px), (pointer: coarse) {
+  .home-footer-links {
+    gap: 0;
+  }
+
+  .home-footer-links a {
+    min-height: 44px;
+  }
 }
 
 /* =================================================================

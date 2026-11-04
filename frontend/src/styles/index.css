@@ -76,6 +76,10 @@
 .form-error-summary-list a {
   color: #b91c1c;
   text-decoration: underline;
+  /* REQ-A25: área de toque de pelo menos 24px de altura, sem depender do espaçamento
+     entre os itens (o texto do link tem ~18px) */
+  display: inline-block;
+  padding-block: 0.25rem;
 }
 
 .form-error-summary-list a:hover,

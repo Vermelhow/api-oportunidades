@@ -148,6 +148,9 @@
 .info-value-link {
   text-decoration: underline;
   text-underline-offset: 2px;
+  /* REQ-A25: link em linha — o padding vertical amplia a área de toque (≥24px)
+     sem alterar a altura da linha de texto */
+  padding-block: 0.25rem;
 }
 
 /* Ações */

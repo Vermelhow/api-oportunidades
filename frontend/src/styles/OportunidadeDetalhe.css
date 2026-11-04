@@ -26,6 +26,10 @@
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color 0.2s ease;
+  /* REQ-A25: área de toque maior que o texto; a margem negativa devolve o
+     espaço, então a altura do breadcrumb não muda */
+  padding-block: 0.25rem;
+  margin-block: -0.25rem;
 }
 
 .breadcrumb a:hover {
@@ -362,6 +366,12 @@
        Home › Oportunidades › título continuar legível */
     flex-wrap: wrap;
     overflow-wrap: anywhere;
+  }
+
+  /* REQ-A25: 44px de altura de toque nos itens navegáveis do breadcrumb */
+  .breadcrumb a {
+    padding-block: 0.75rem;
+    margin-block: -0.75rem;
   }
 
   .section-title {

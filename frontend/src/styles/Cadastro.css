@@ -229,6 +229,9 @@
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
+  /* REQ-A25: link em linha — o padding vertical amplia a área de toque (≥24px)
+     sem alterar a altura da linha de texto */
+  padding-block: 0.25rem;
 }
 
 .link-primary:hover {

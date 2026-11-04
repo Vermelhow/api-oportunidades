@@ -293,7 +293,7 @@ export default function AdminOportunidades() {
       
       // Redirecionar imediatamente para a listagem
       setTimeout(() => {
-        navigate('/admin/oportunidades/lista', { 
+        navigate('/admin/oportunidades', { 
           replace: true,
           state: { refresh: true } // Sinaliza que deve recarregar a lista
         });
@@ -400,7 +400,7 @@ export default function AdminOportunidades() {
             </div>
             <button 
               type="button" 
-              onClick={() => navigate('/admin/oportunidades/lista')}
+              onClick={() => navigate('/admin/oportunidades')}
               className="btn btn-outline"
             >
               <span aria-hidden="true">←</span> Voltar para Lista

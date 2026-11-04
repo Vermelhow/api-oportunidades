@@ -1,7 +1,9 @@
+import { useId } from 'react';
 import '../styles/Footer.css';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const quickLinksHeadingId = useId();
 
   return (
     <footer className="footer">
@@ -14,14 +16,16 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="footer-section">
-            <h4 className="footer-heading">Links Rápidos</h4>
+          {/* Região de navegação nomeada pelo próprio título visível: distingue este
+              <nav> da navegação do cabeçalho sem repetir texto para leitores de tela */}
+          <nav className="footer-section footer-nav" aria-labelledby={quickLinksHeadingId}>
+            <h4 className="footer-heading" id={quickLinksHeadingId}>Links Rápidos</h4>
             <ul className="footer-links">
               <li><a href="/">Home</a></li>
               <li><a href="/oportunidades">Oportunidades</a></li>
               <li><a href="/dashboard">Dashboard</a></li>
             </ul>
-          </div>
+          </nav>
 
           <div className="footer-section">
             <h4 className="footer-heading">Contato</h4>
@@ -29,15 +33,6 @@ export default function Footer() {
               <li><span aria-hidden="true">📧</span> contato@oportunidades.com</li>
               <li><span aria-hidden="true">📱</span> (11) 99999-9999</li>
             </ul>
-          </div>
-
-          <div className="footer-section">
-            <h4 className="footer-heading">Redes Sociais</h4>
-            <div className="social-links">
-              <a href="#" className="social-link" aria-label="Facebook"><span aria-hidden="true">📘</span></a>
-              <a href="#" className="social-link" aria-label="Instagram"><span aria-hidden="true">📷</span></a>
-              <a href="#" className="social-link" aria-label="LinkedIn"><span aria-hidden="true">💼</span></a>
-            </div>
           </div>
         </div>
 

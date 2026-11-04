@@ -517,6 +517,8 @@
   cursor: pointer;
   font-size: 0.85rem;
   padding: var(--spacing-xs) 0;
+  /* REQ-A25: altura mínima de 24px (antes ~23px, por depender só do padding) */
+  min-height: 24px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -526,6 +528,13 @@
 .btn-expand:hover {
   color: var(--primary-dark);
   transform: translateX(4px);
+}
+
+/* REQ-A25: em telas pequenas/de toque o "Ler mais"/"Ver menos" ganha 44px de altura */
+@media (max-width: 767px), (pointer: coarse) {
+  .btn-expand {
+    min-height: 44px;
+  }
 }
 
 /* Card Actions */

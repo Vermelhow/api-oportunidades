@@ -89,15 +89,20 @@
 
 .search-clear {
   position: absolute;
-  right: 1rem;
+  right: calc(1rem - 10px);
   top: 50%;
   transform: translateY(-50%);
   background: #ef4444;
+  /* REQ-A25: o botão tem 44x44px de área de toque; o padding + background-clip
+     mantêm o círculo vermelho visível com os mesmos 24px de antes
+     (a margem esquerda do SearchBar.css não interfere, pois usa right) */
+  background-clip: content-box;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +112,7 @@
 }
 
 .search-clear:hover {
-  background: #dc2626;
+  background-color: #dc2626;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -222,6 +227,10 @@
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
+  /* REQ-A25: área de toque mínima de 24px sem depender do espaçamento */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 
 .info-link:hover {

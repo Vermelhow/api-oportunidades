@@ -125,15 +125,21 @@
   word-break: break-word;
 }
 
-/* Toast Close Button */
+/* Toast Close Button
+   REQ-A25: o círculo visível continua com 28px (24px em telas pequenas), mas o botão
+   tem 44x44px de área de toque. O padding + background-clip desenham o círculo no
+   tamanho original e a margem negativa preserva o layout do toast. */
 .toast-close {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
+  padding: 8px;
+  margin: -8px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.2);
+  background-clip: content-box;
   border: none;
   border-radius: 50%;
   color: white;
@@ -144,6 +150,7 @@
 
 .toast-close:hover {
   background: rgba(255, 255, 255, 0.35);
+  background-clip: content-box;
   transform: scale(1.1);
 }
 
@@ -180,8 +187,9 @@
   }
 
   .toast-close {
-    width: 24px;
-    height: 24px;
+    /* círculo visível de 24px dentro dos mesmos 44px de área de toque */
+    padding: 10px;
+    margin: -10px;
     font-size: 0.875rem;
   }
 }
