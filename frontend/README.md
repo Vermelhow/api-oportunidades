@@ -137,14 +137,20 @@ frontend/
 │   │   ├── Toast.jsx
 │   │   ├── SearchBar.jsx
 │   │   ├── FilterBar.jsx
+│   │   ├── AccessibilityButton.jsx
+│   │   ├── AccessibilityPanel.jsx
 │   │   ├── Loading.jsx
 │   │   ├── ErrorBoundary.jsx
 │   │   ├── FormField.jsx
 │   │   └── index.js        # Barrel exports
+│   ├── accessibility/      # Preferências de acessibilidade (módulo sem React + testes)
+│   │   └── preferences.js
 │   ├── context/            # Context API (Estado Global)
 │   │   ├── AuthContext.jsx
-│   │   └── NotificationContext.jsx
+│   │   ├── NotificationContext.jsx
+│   │   └── AccessibilityContext.jsx
 │   ├── hooks/              # Custom Hooks
+│   │   ├── useAccessibility.js
 │   │   ├── useAsync.js
 │   │   ├── useDeleteOportunidade.js
 │   │   └── useOportunidadesFilter.js

@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
-import { ErrorBoundary } from "./components";
+import { AccessibilityProvider } from "./context/AccessibilityContext";
+import { ErrorBoundary, AccessibilityPanel } from "./components";
 import PrivateRoute from "./routes/PrivateRoute";
 
 import Home from "./pages/Home";
@@ -28,6 +29,8 @@ function App() {
         Pular para o conteúdo principal
       </a>
       <ErrorBoundary>
+        {/* Fora do AuthProvider: as preferências valem antes e depois do login */}
+        <AccessibilityProvider>
         <NotificationProvider>
           <AuthProvider>
             <BrowserRouter>
@@ -138,6 +141,8 @@ function App() {
           </BrowserRouter>
         </AuthProvider>
       </NotificationProvider>
+        <AccessibilityPanel />
+        </AccessibilityProvider>
     </ErrorBoundary>
     </>
   );

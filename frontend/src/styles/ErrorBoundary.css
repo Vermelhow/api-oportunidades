@@ -39,21 +39,21 @@
 }
 
 .error-boundary-icon {
-  font-size: 80px;
+  font-size: 5rem;
   line-height: 1;
   margin-bottom: 24px;
   animation: bounce 2s ease-in-out infinite;
 }
 
 .error-boundary-title {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 16px 0;
 }
 
 .error-boundary-message {
-  font-size: 16px;
+  font-size: 1rem;
   color: #64748b;
   margin: 0 0 32px 0;
   line-height: 1.6;
@@ -91,13 +91,13 @@
 
 .error-message {
   color: #f87171;
-  font-size: 14px;
+  font-size: 0.875rem;
   margin: 0 0 12px 0;
 }
 
 .error-stack {
   color: #e2e8f0;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-family: 'Courier New', monospace;
   margin: 0;
   white-space: pre-wrap;
@@ -116,7 +116,7 @@
   padding: 12px 24px;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
@@ -155,7 +155,7 @@
 }
 
 .error-boundary-footer p {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #64748b;
   margin: 0;
 }
@@ -190,21 +190,21 @@
 }
 
 .error-message-component .error-icon {
-  font-size: 48px;
+  font-size: 3rem;
   line-height: 1;
   margin-bottom: 16px;
   animation: shake 0.5s ease-in-out;
 }
 
 .error-message-component .error-title {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #991b1b;
   margin: 0 0 12px 0;
 }
 
 .error-message-component .error-text {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #7f1d1d;
   margin: 0 0 24px 0;
   line-height: 1.5;
@@ -217,7 +217,7 @@
   border: none;
   border-radius: 10px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
@@ -258,7 +258,7 @@
 }
 
 .empty-state-icon {
-  font-size: 80px;
+  font-size: 5rem;
   line-height: 1;
   opacity: 0.8;
   animation: float 3s ease-in-out infinite;
@@ -275,14 +275,14 @@
 }
 
 .empty-state-title {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 12px 0;
 }
 
 .empty-state-message {
-  font-size: 16px;
+  font-size: 1rem;
   color: #64748b;
   margin: 0;
   line-height: 1.6;
@@ -302,7 +302,7 @@
   border: none;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
@@ -402,11 +402,11 @@
   }
 
   .error-boundary-icon {
-    font-size: 60px;
+    font-size: 3.75rem;
   }
 
   .error-boundary-title {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 
   .error-boundary-actions {
@@ -426,14 +426,14 @@
   }
 
   .empty-state-icon {
-    font-size: 64px;
+    font-size: 4rem;
   }
 
   .empty-state-title {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 
   .empty-state-message {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 }

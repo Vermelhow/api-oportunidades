@@ -1,0 +1,318 @@
+/* Painel de acessibilidade (gaveta lateral). Os estilos de texto, contraste e espaçamento
+   aplicados à plataforma ficam em accessibility-preferences.css. */
+
+.a11y-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: var(--z-modal-backdrop);
+}
+
+.a11y-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(26rem, 100%);
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  color: #1f2937;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
+  z-index: var(--z-modal);
+  /* A gaveta inteira rola como uma única área: em zoom 400% (viewport de ~200px de altura)
+     cabeçalho e rodapé fixos deixariam quase nada de espaço para os controles */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  animation: a11yPanelIn var(--transition-base) ease-out;
+}
+
+.a11y-panel:focus {
+  outline: none;
+}
+
+@keyframes a11yPanelIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.a11y-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--primary-dark);
+  color: #ffffff;
+}
+
+.a11y-panel-title {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.a11y-panel-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 0.875rem;
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.a11y-panel-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.a11y-panel-close:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.a11y-panel-body {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.25rem;
+}
+
+.a11y-panel-intro,
+.a11y-hint,
+.a11y-note {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.a11y-note {
+  padding: 0.75rem 1rem;
+  border: 2px solid #b45309;
+  border-radius: var(--radius-md);
+  background: #fffbeb;
+  color: #78350f;
+}
+
+.a11y-group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.a11y-legend {
+  display: block;
+  margin: 0 0 0.625rem;
+  padding: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #111827;
+}
+
+.a11y-group > .a11y-hint {
+  margin-top: 0.5rem;
+}
+
+/* Radios */
+.a11y-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.a11y-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #6b7280;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.a11y-choice input {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--primary-blue);
+  cursor: pointer;
+}
+
+.a11y-choice-hint {
+  color: #4b5563;
+}
+
+.a11y-choice:has(input:checked) {
+  border-color: var(--primary-dark);
+  background: var(--primary-light);
+  font-weight: 700;
+}
+
+.a11y-choice:has(input:focus-visible),
+.a11y-switch-row:has(input:focus-visible) {
+  outline: 3px solid #003d66;
+  outline-offset: 2px;
+}
+
+/* Switch (alto contraste): a posição do botão e o texto Ativado/Desativado indicam o estado sem depender de cor */
+.a11y-switch-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #6b7280;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+}
+
+.a11y-switch-row:has(input:checked) {
+  border-color: var(--primary-dark);
+  background: var(--primary-light);
+}
+
+.a11y-switch-input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: 0 0 auto;
+  width: 3rem;
+  height: 1.75rem;
+  margin: 0;
+  border: 2px solid var(--primary-dark);
+  border-radius: 999px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.a11y-switch-input::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  transform: translateY(-50%);
+  transition: left var(--transition-fast);
+}
+
+.a11y-switch-input:checked {
+  background: var(--primary-dark);
+}
+
+.a11y-switch-input:checked::after {
+  left: calc(100% - 1.3rem);
+  background: #ffffff;
+}
+
+.a11y-switch-label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  min-height: 44px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+.a11y-switch-state {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+/* Selects de espaçamento individual */
+.a11y-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.a11y-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.a11y-field label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.a11y-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #6b7280;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: #1f2937;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.a11y-select:focus-visible {
+  outline: 3px solid #003d66;
+  outline-offset: 2px;
+}
+
+/* Rodapé */
+.a11y-panel-footer {
+  flex: 0 0 auto;
+  padding: 1rem 1.25rem 1.5rem;
+  border-top: 1px solid #d1d5db;
+}
+
+.a11y-reset {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.625rem 1rem;
+  background: #ffffff;
+  color: var(--primary-dark);
+  border: 2px solid var(--primary-dark);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.a11y-reset:hover {
+  background: var(--primary-light);
+}
+
+.a11y-reset:focus-visible {
+  outline: 3px solid #003d66;
+  outline-offset: 2px;
+}

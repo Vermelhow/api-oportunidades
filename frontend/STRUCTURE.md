@@ -26,6 +26,8 @@ frontend/src/
 - **Layout**: Wrapper com Header e Footer
 - **OpportunityCard**: Card para exibir oportunidades
 - **Sidebar**: Menu lateral para área administrativa
+- **AccessibilityButton**: Gatilho do painel de acessibilidade (Header e Sidebar)
+- **AccessibilityPanel**: Painel único de personalização (gaveta lateral): tamanho do texto, alto contraste e espaçamento
 
 ### Componentes de Feedback
 - **Loading**: Indicadores de carregamento
@@ -60,6 +62,7 @@ frontend/src/
 - Validações de autenticação
 
 ### Custom Hooks
+- **useAccessibility**: Acessa as preferências de acessibilidade e o painel (`AccessibilityContext`)
 - **useAsync**: Gerencia requisições assíncronas
 - **useDeleteOportunidade**: Hook especializado para exclusão
 - **useOportunidadesFilter**: Gerencia filtros de oportunidades
@@ -130,6 +133,7 @@ import './styles/Home.css';
 npm run dev      # Inicia servidor de desenvolvimento
 npm run build    # Build para produção
 npm run lint     # Verifica código com ESLint
+npm test         # Testes unitários (node:test) do módulo de preferências de acessibilidade
 npm run preview  # Preview do build de produção
 npm run clean    # Remove arquivos temporários do macOS
 ```
@@ -148,6 +152,14 @@ Gerencia notificações globais:
 - Exibir mensagens de sucesso/erro
 - Toast notifications
 - Feedback de ações
+
+### AccessibilityContext
+Gerencia as preferências de acessibilidade (REQ-A29 a REQ-A32), fora do `AuthProvider`:
+- Tamanho do texto (100%, 125%, 150%), alto contraste escuro e espaçamento de linhas, letras, palavras e parágrafos
+- Estado do painel de acessibilidade (abrir/fechar, retorno do foco ao gatilho)
+- Persistência em `localStorage` (`@api-oportunidades:a11y-preferences`) e sincronização entre abas
+- A lógica de validação, leitura/gravação e aplicação fica em `src/accessibility/preferences.js` (sem React) e é aplicada em `main.jsx` antes do primeiro render
+- As preferências viram atributos `data-a11y-*` no `<html>`; os estilos correspondentes estão em `styles/accessibility-preferences.css` (importado por último). Sem preferência salva nenhum atributo existe e a plataforma renderiza como antes
 
 ## 🎨 Estilos
 

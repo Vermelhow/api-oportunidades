@@ -91,7 +91,10 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px;
+  /* REQ-A29: 100% (em vez de 16px) respeita o tamanho de fonte configurado no navegador.
+     Com o padrão de 16px o resultado é idêntico ao anterior. O painel de acessibilidade
+     escala em cima disso (125%/150%) via html[data-a11y-text]. */
+  font-size: 100%;
 }
 
 /* ========================================

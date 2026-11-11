@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import useFocusTrap from '../hooks/useFocusTrap';
+import AccessibilityButton from './AccessibilityButton';
 import '../styles/Header.css';
 
 export default function Header() {
@@ -69,6 +70,7 @@ export default function Header() {
 
         {/* Desktop Actions */}
         <div className="header-actions desktop-actions">
+          <AccessibilityButton className="a11y-trigger--header" />
           {signed ? (
             <div className="user-menu-wrapper">
               <button
@@ -172,6 +174,8 @@ export default function Header() {
         </div>
 
         <div className="mobile-menu-actions">
+          {/* O menu fecha ao abrir o painel: dois menus com foco preso ao mesmo tempo brigariam pelo Tab/Escape */}
+          <AccessibilityButton className="a11y-trigger--menu" onOpen={closeMobileMenu} />
           {signed ? (
             <button onClick={handleLogout} className="btn btn-outline btn-block">
               <span aria-hidden="true">🚪</span> Sair

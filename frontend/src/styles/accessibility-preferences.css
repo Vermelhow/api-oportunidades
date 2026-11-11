@@ -1,0 +1,623 @@
+/* ==========================================================================
+   Preferências de acessibilidade (REQ-A29 a REQ-A32)
+
+   Todas as regras reagem a atributos data-a11y-* definidos no <html> por
+   src/accessibility/preferences.js. Sem atributo (valores padrão), nada aqui
+   é aplicado e a plataforma renderiza como antes.
+
+   Este arquivo é importado por último em main.jsx. Como o CSS dos componentes é
+   global e tem classes repetidas em vários arquivos, os overrides usam
+   html[data-a11y-*] (mais específico) e !important, o mesmo precedente da regra
+   de prefers-reduced-motion (REQ-A22). Nenhuma regra daqui declara animation ou
+   transition, então a preferência por redução de movimento continua valendo.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   REQ-A29: tamanho do texto
+   Quase toda a tipografia e os espaçamentos da plataforma estão em rem, então
+   escalar o font-size da raiz amplia texto, ícones e espaços de forma proporcional.
+   -------------------------------------------------------------------------- */
+html[data-a11y-text="125"] {
+  font-size: 125%;
+}
+
+html[data-a11y-text="150"] {
+  font-size: 150%;
+}
+
+/* Header: o menu de desktop só cabe quando a janela comporta ~1024px na escala escolhida.
+   O zoom do navegador troca de menu sozinho (a media query usa px do viewport), mas aumentar
+   a fonte da raiz não: sem isto o "Olá, usuário" e o botão Acessibilidade estouram a largura.
+   125% => hambúrguer abaixo de 1280px; 150% => abaixo de 1536px.
+   Letras muito espaçadas (0,12em) alargam o texto de forma parecida com 125%, então valem a mesma faixa. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  html:is([data-a11y-text="125"], [data-a11y-letter="wide"]) .desktop-nav,
+  html:is([data-a11y-text="125"], [data-a11y-letter="wide"]) .desktop-actions {
+    display: none !important;
+  }
+
+  html:is([data-a11y-text="125"], [data-a11y-letter="wide"]) .mobile-menu-button {
+    display: flex !important;
+  }
+
+  html:is([data-a11y-text="125"], [data-a11y-letter="wide"]) .mobile-menu {
+    display: flex !important;
+  }
+
+  html:is([data-a11y-text="125"], [data-a11y-letter="wide"]) .mobile-menu-overlay {
+    display: block !important;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1535px) {
+  html[data-a11y-text="150"] .desktop-nav,
+  html[data-a11y-text="150"] .desktop-actions {
+    display: none !important;
+  }
+
+  html[data-a11y-text="150"] .mobile-menu-button {
+    display: flex !important;
+  }
+
+  html[data-a11y-text="150"] .mobile-menu {
+    display: flex !important;
+  }
+
+  html[data-a11y-text="150"] .mobile-menu-overlay {
+    display: block !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reflow com texto ampliado ou espaçado (A29/A31)
+   Rótulos de botão deixam de ser nowrap e palavras muito longas podem quebrar,
+   como acontece no zoom do navegador. Só vale quando alguma preferência de texto
+   está ativa; no padrão nada muda.
+   -------------------------------------------------------------------------- */
+html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+  :is(.btn, .btn-outline, .btn-clear-filters, .btn-toggle-filters, .btn-action, .badge) {
+  white-space: normal !important;
+}
+
+/* AdminOrganizacoesLista.css força min-width:max-content nos .btn-sm (global, até 768px). Aqui o botão passa a
+   poder quebrar o rótulo em linhas, mas nunca fica mais estreito que a maior palavra: assim a linha de botões
+   quebra para a linha de baixo em vez de espremer e partir a palavra ("oportunida-de") */
+html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+  :is(.btn, .btn-sm) {
+  min-width: min-content !important;
+  max-width: 100%;
+}
+
+/* Colunas de formulário (flex com quebra) calculam a largura pelo conteúdo, e um input date com texto
+   ampliado passa do cartão em 320px */
+html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+  :is(.form-group, .form-row > *) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Campos têm largura intrínseca (ex.: o select mais largo ou um input date definem a coluna). Com texto
+   maior ela passa da largura disponível em 320px; largura em % os torna "compressíveis" no cálculo
+   de largura mínima, então a coluna encolhe junto com o contêiner */
+html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+  :is(select, textarea, input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="hidden"])) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Palavras só quebram quando não cabem na própria caixa: antes disso o layout se adapta (colunas, quebra de linha) */
+html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+  :where(h1, h2, h3, h4, h5, h6, p, li, label, a, span, strong, td, th, dd, dt, legend, button) {
+  overflow-wrap: break-word;
+}
+
+/* Última linha de defesa em telas estreitas (inclui zoom de 400%): uma palavra longa pode ser mais larga que a
+   tela inteira, e quebrar é melhor do que criar rolagem horizontal. Com anywhere o contêiner pode encolher
+   abaixo da palavra, por isso só vale aqui e não em telas largas, onde o layout deve se adaptar. */
+@media (max-width: 480px) {
+  html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+    :where(h1, h2, h3, h4, h5, h6, p, li, label, a, span, strong, td, th, dd, dt, legend):not(.btn, .btn *, button *, .badge) {
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Em telas de até 360px (e zoom de 400%) botões e selos também podem partir a palavra: com 150% + letras amplas
+   a maior palavra de um botão pode passar de 320px, e o reflow sem rolagem horizontal tem prioridade */
+@media (max-width: 360px) {
+  html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+    :is(.btn, .btn-sm) {
+    min-width: 0 !important;
+  }
+
+  html:is([data-a11y-text], [data-a11y-line], [data-a11y-letter], [data-a11y-word], [data-a11y-paragraph])
+    :is(.btn, .btn *, button *, .badge, .btn-action) {
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Linhas com título + selos + botões (lista administrativa) e cabeçalhos com título + ação passam a quebrar
+   de linha quando o texto cresce, em vez de espremer o título até uma letra por linha */
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .opportunity-row {
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .opportunity-main {
+  flex: 1 1 18rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .opportunity-info {
+  flex: 1 1 14rem;
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) :is(.admin-header, .page-header, .dashboard-header) {
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Grupos de ações (botões lado a lado) quebram de linha em vez de ultrapassar a largura */
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) :is([class$="-actions"], [class*="-actions "], .modal-footer) {
+  flex-wrap: wrap;
+}
+
+/* Home: cartões de passo com largura em px (200–250px) não crescem com o texto */
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .step-card {
+  min-width: min(calc(12.5rem * var(--a11y-col)), 100%);
+  max-width: calc(15.625rem * var(--a11y-col));
+}
+
+/* Telas estreitas: os recuos em rem crescem com o texto, mas a tela não; sem reduzi-los o miolo dos cartões
+   (e-mail, nome, título) fica com ~150px e as palavras quebram */
+@media (max-width: 480px) {
+  html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) :is(.user-info-card, .perfil-card) {
+    padding: 1.25rem;
+  }
+
+  html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .info-item {
+    padding: 1rem;
+  }
+
+  html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .opportunity-row {
+    padding: 1rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Layouts que não acompanham o tamanho do texto (A29/A31)
+   O zoom do navegador faz as colunas diminuírem sozinhas (os px do viewport mudam). Aumentar só a fonte
+   da raiz não: os grids com número fixo de colunas ou mínimo em px ficam apertados e as palavras quebram
+   no meio. Aqui o mínimo de cada coluna passa para rem (mesmo valor em 100%), então cresce junto com o
+   texto e o grid reduz o número de colunas, como no zoom. Letras/palavras amplas alargam o texto em
+   ~15%, tratado com --a11y-col.
+   -------------------------------------------------------------------------- */
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) {
+  --a11y-col: 1;
+}
+
+html:is([data-a11y-letter="wide"], [data-a11y-word="wide"]) {
+  --a11y-col: 1.15;
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(16.25rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .insights-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(17.5rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .quick-actions-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(12.5rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .info-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(15.625rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) :is(.categorias-grid, .pessoas-grid) {
+  grid-template-columns: repeat(auto-fill, minmax(min(calc(16.25rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .organizacoes-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(calc(21.875rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .opportunities-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(calc(23.75rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) :is(.card-info-grid, .card-actions) {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(8.75rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .filter-bar-controls {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(13.75rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .footer-content {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(13.75rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) .about-content {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(18.75rem * var(--a11y-col)), 100%), 1fr));
+}
+
+html:is([data-a11y-text], [data-a11y-letter="wide"], [data-a11y-word="wide"]) :is(.benefits-grid, .steps-container) {
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(17.5rem * var(--a11y-col)), 100%), 1fr));
+}
+
+/* Página de detalhe: coluna lateral de 380px só cabe em janelas largas na escala escolhida (mesma lógica do Header) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  html[data-a11y-text="125"] .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1535px) {
+  html[data-a11y-text="150"] .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   REQ-A31: espaçamento do texto
+   "Amplo" cumpre os valores mínimos do WCAG 1.4.12: linhas 1,5x (aqui 1,9),
+   letras 0,12em, palavras 0,16em e parágrafos 2x o tamanho da fonte.
+
+   - !important: o CSS dos componentes declara line-height/letter-spacing por classe
+     (66 e 11 declarações) e vence qualquer valor herdado.
+   - Ícones (span com "icon" na classe, como no ajuste de emoji do index.css) ficam de fora:
+     têm line-height:1 e caixas de tamanho fixo.
+   - Campos de uma linha (input/select) não mudam de altura com line-height.
+   - letter-spacing e word-spacing em em são calculados em cada elemento, então títulos e
+     textos pequenos ficam proporcionais ao próprio tamanho de fonte.
+   -------------------------------------------------------------------------- */
+html[data-a11y-line="medium"] { --a11y-line-height: 1.7; }
+html[data-a11y-line="wide"] { --a11y-line-height: 1.9; }
+html[data-a11y-letter="medium"] { --a11y-letter-spacing: 0.06em; }
+html[data-a11y-letter="wide"] { --a11y-letter-spacing: 0.12em; }
+html[data-a11y-word="medium"] { --a11y-word-spacing: 0.08em; }
+html[data-a11y-word="wide"] { --a11y-word-spacing: 0.16em; }
+html[data-a11y-paragraph="medium"] { --a11y-paragraph-gap: 1em; }
+html[data-a11y-paragraph="wide"] { --a11y-paragraph-gap: 2em; }
+
+html[data-a11y-line] :is(body, body :not(span[class*="icon"], input, select, svg, svg *, br, hr)) {
+  line-height: var(--a11y-line-height) !important;
+}
+
+html[data-a11y-letter] :is(body, body :not(span[class*="icon"], svg, svg *)) {
+  letter-spacing: var(--a11y-letter-spacing) !important;
+}
+
+html[data-a11y-word] :is(body, body :not(span[class*="icon"], svg, svg *)) {
+  word-spacing: var(--a11y-word-spacing) !important;
+}
+
+/* Os ícones não recebem a regra acima, mas herdariam o espaçamento do pai e alargariam suas caixas */
+html[data-a11y-letter] span[class*="icon"] {
+  letter-spacing: normal !important;
+}
+
+html[data-a11y-word] span[class*="icon"] {
+  word-spacing: normal !important;
+}
+
+/* Espaço ADICIONAL abaixo do parágrafo (padding): quem já tem margem maior (ex.: 2,5rem no CTA da Home)
+   nunca perde espaço, o que aconteceria ao sobrescrever margin-bottom */
+html[data-a11y-paragraph] body p:not(:last-child) {
+  padding-bottom: var(--a11y-paragraph-gap) !important;
+}
+
+/* --------------------------------------------------------------------------
+   REQ-A30: alto contraste (modo escuro)
+   Fundo preto, texto branco, links/ações em amarelo, foco em ciano, status em
+   verde/vermelho/âmbar sempre acompanhados de texto, borda ou ícone.
+
+   Estratégia: o CSS dos componentes tem 400+ cores literais, gradientes e estilos
+   inline (Dashboard), então não dá para trocar só as variáveis. A base deixa tudo
+   transparente sobre o preto da página e faz a cor de texto ser herdada; depois,
+   regras explícitas devolvem fundo opaco onde algo se sobrepõe ao conteúdo
+   (cabeçalho, menus, modais) e desenham bordas onde o fundo/sombra delimitava a
+   superfície. Regras de base usam :where() (especificidade mínima) para que as
+   explícitas, mais específicas, sempre vençam. Nada aqui declara animation/transition.
+   -------------------------------------------------------------------------- */
+html[data-a11y-contrast="high"] {
+  color-scheme: dark;
+  accent-color: #ffff00;
+  background: #000000;
+}
+
+html[data-a11y-contrast="high"] body {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] :where(body *) {
+  color: inherit !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  /* títulos com gradiente usam text-fill transparente: sem isto o texto some */
+  -webkit-text-fill-color: currentColor !important;
+}
+
+html[data-a11y-contrast="high"] :where(body *)::before,
+html[data-a11y-contrast="high"] :where(body *)::after {
+  color: inherit !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+/* Superfícies que se sobrepõem ao conteúdo precisam ser opacas */
+html[data-a11y-contrast="high"] :is(
+  .header, .footer, .sidebar, .sidebar-mobile-bar, .mobile-menu, .user-menu-dropdown,
+  .modal-container, .toast, .a11y-panel, .oportunidade-sidebar, .loading-overlay
+) {
+  background-color: #000000 !important;
+}
+
+html[data-a11y-contrast="high"] .header { border-bottom: 2px solid #ffffff !important; }
+html[data-a11y-contrast="high"] .footer { border-top: 2px solid #ffffff !important; }
+html[data-a11y-contrast="high"] .sidebar { border-right: 2px solid #ffffff !important; }
+html[data-a11y-contrast="high"] .sidebar-mobile-bar { border-bottom: 2px solid #ffffff !important; }
+html[data-a11y-contrast="high"] .mobile-menu { border-left: 2px solid #ffffff !important; }
+html[data-a11y-contrast="high"] .a11y-panel { border-left: 2px solid #ffffff !important; }
+html[data-a11y-contrast="high"] :is(.user-menu-dropdown, .modal-container, .toast) { border: 2px solid #ffffff !important; }
+
+/* Camadas translúcidas atrás de menus e modais */
+html[data-a11y-contrast="high"] :is(.mobile-menu-overlay, .sidebar-overlay, .modal-overlay, .a11y-panel-overlay, .loading-overlay) {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* Cartões e blocos: a borda substitui a sombra e o fundo que delimitavam a superfície */
+html[data-a11y-contrast="high"] :is(
+  [class$="-card"], [class*="-card "], .alert-card, .filter-bar, .filters-bar, .stat-item, .activity-list, .activity-item,
+  .opportunity-row, .form-section, .info-item, .search-input-wrapper, .page-header, .dashboard-header,
+  .oportunidade-header, .cadastro-benefits, .benefit-item, .feature-item, .content-section, .list-counter,
+  .organizacao-detalhe-oportunidades, .card-organization, .skeleton
+) {
+  border: 2px solid #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] .modal-footer {
+  border-top: 2px solid #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] .skeleton { border-style: dashed !important; }
+
+/* Avatar de iniciais e números de passo perdem o círculo colorido; a borda o recompõe */
+html[data-a11y-contrast="high"] :is(.perfil-avatar, .step-number) {
+  border: 2px solid #ffffff !important;
+}
+
+/* Selos e etiquetas: nunca só cor; a borda acompanha o texto */
+html[data-a11y-contrast="high"] :is(.badge, .pessoa-badge, .card-category, .hero-badge, .section-badge, .stat-badge, .interesse-status, .oportunidade-category, .user-role) {
+  border: 2px solid currentColor !important;
+}
+
+/* Links: amarelo e sublinhado (não dependem só da cor). Botões em forma de link (.btn) seguem a regra de botões */
+html[data-a11y-contrast="high"] a:where(:not(.btn)) {
+  color: #ffff00 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 0.2em;
+}
+
+html[data-a11y-contrast="high"] a:where(:not(.btn)):hover {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+}
+
+/* Navegação, logotipo e cartões-link: texto branco, sem sublinhado em tudo; a página atual é destacada */
+html[data-a11y-contrast="high"] :is(.nav-link, .mobile-nav-link, .dropdown-item, .logo, a[class$="-card"], a[class*="-card "]) {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+html[data-a11y-contrast="high"] :is(.nav-link, .mobile-nav-link, .dropdown-item, .logo, a[class$="-card"], a[class*="-card "]):hover {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+}
+
+html[data-a11y-contrast="high"] :is([aria-current="page"], .nav-link.active) {
+  color: #ffff00 !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 0.18em !important;
+  text-underline-offset: 0.25em;
+}
+
+html[data-a11y-contrast="high"] .nav-link.active {
+  border-left-color: #ffff00 !important;
+}
+
+html[data-a11y-contrast="high"] :is([aria-current="page"], .nav-link.active):hover {
+  color: #000000 !important;
+}
+
+/* Botões (especificidade mínima, para as variantes abaixo sempre vencerem) */
+html[data-a11y-contrast="high"] :where(button, .btn, input[type="button"], input[type="submit"], input[type="reset"]) {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  text-decoration: none !important;
+}
+
+html[data-a11y-contrast="high"] :is(.dropdown-item, .mobile-menu-button, .search-clear, .toggle-password, .toast-close) {
+  border-width: 0 !important;
+}
+
+html[data-a11y-contrast="high"] .hamburger-line {
+  background-color: #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] :is(.btn-primary, .btn-submit, .btn-confirm) {
+  background-color: #ffff00 !important;
+  border-color: #ffff00 !important;
+  color: #000000 !important;
+}
+
+html[data-a11y-contrast="high"] :is(.btn-success, .btn-confirm.btn-info) {
+  background-color: #4dff88 !important;
+  border-color: #4dff88 !important;
+  color: #000000 !important;
+}
+
+html[data-a11y-contrast="high"] :is(.btn-danger, .btn-confirm.btn-danger) {
+  background-color: #ff7a7a !important;
+  border-color: #ff7a7a !important;
+  color: #000000 !important;
+}
+
+html[data-a11y-contrast="high"] .btn-confirm.btn-warning {
+  background-color: #ffd23f !important;
+  border-color: #ffd23f !important;
+  color: #000000 !important;
+}
+
+html[data-a11y-contrast="high"] :is(button, .btn, input[type="button"], input[type="submit"]):hover:not(:disabled) {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html[data-a11y-contrast="high"] :is(button, .btn, a, input, select, textarea):disabled,
+html[data-a11y-contrast="high"] [aria-disabled="true"] {
+  background-color: #000000 !important;
+  border-color: #bfbfbf !important;
+  border-style: dashed !important;
+  color: #bfbfbf !important;
+  opacity: 1 !important;
+}
+
+html[data-a11y-contrast="high"] .skip-link {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+  text-decoration: none !important;
+}
+
+/* Formulários */
+html[data-a11y-contrast="high"] :is(input, select, textarea):not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"]) {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] ::placeholder {
+  color: #bfbfbf !important;
+  -webkit-text-fill-color: #bfbfbf !important;
+  opacity: 1;
+}
+
+/* Setas dos selects personalizados (o fundo é removido na base) */
+html[data-a11y-contrast="high"] :is(select.filter-select, select.form-select) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+}
+
+html[data-a11y-contrast="high"] :is(.form-input.error, .form-select.error, .form-textarea.error, .input-error, [aria-invalid="true"]) {
+  border-color: #ff7a7a !important;
+  border-width: 3px !important;
+}
+
+html[data-a11y-contrast="high"] :is(.form-input.success, .form-select.success) {
+  border-color: #4dff88 !important;
+}
+
+html[data-a11y-contrast="high"] :is(.error-message, .error-text, .field-error, .form-error-summary-title, .form-error-summary-list a) {
+  color: #ff7a7a !important;
+}
+
+html[data-a11y-contrast="high"] .form-error-summary {
+  border: 3px solid #ff7a7a !important;
+}
+
+/* Foco sempre visível, em ciano (contraste 16,7:1 com o preto) */
+html[data-a11y-contrast="high"] :focus-visible,
+html[data-a11y-contrast="high"] :is(input, select, textarea):focus {
+  outline: 3px solid #00ffff !important;
+  outline-offset: 3px !important;
+}
+
+/* Dentro de contêineres com overflow oculto o anel externo seria cortado */
+html[data-a11y-contrast="high"] :is(.sidebar, .nav-link, .mobile-menu, .a11y-panel, .sidebar-mobile-bar) :focus-visible,
+html[data-a11y-contrast="high"] .nav-link:focus-visible {
+  outline-offset: -3px !important;
+}
+
+html[data-a11y-contrast="high"] .a11y-panel :is(input, select, textarea):focus {
+  outline-offset: 2px !important;
+}
+
+/* Status: cor + texto + borda (a cor nunca é o único indicador) */
+html[data-a11y-contrast="high"] :is(.status-ativa, .status-active, .status-aceito, .stat-badge.up, .alert-success, .toast-success, .alert-card.alert-info) {
+  color: #4dff88 !important;
+  border-color: #4dff88 !important;
+}
+
+html[data-a11y-contrast="high"] :is(.status-encerrada, .status-closed, .status-rejeitado, .stat-badge.down, .alert-error, .toast-error, .alert-card.alert-danger) {
+  color: #ff7a7a !important;
+  border-color: #ff7a7a !important;
+}
+
+html[data-a11y-contrast="high"] :is(.status-pausada, .status-paused, .status-pendente, .toast-warning, .alert-card.alert-warning) {
+  color: #ffd23f !important;
+  border-color: #ffd23f !important;
+}
+
+html[data-a11y-contrast="high"] .toast-info {
+  color: #66ccff !important;
+  border-color: #66ccff !important;
+}
+
+html[data-a11y-contrast="high"] :is(.alert, .alert-error, .alert-success) {
+  border: 2px solid currentColor !important;
+}
+
+/* Painel de acessibilidade */
+html[data-a11y-contrast="high"] .a11y-panel-header {
+  border-bottom: 2px solid #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] :is(.a11y-choice, .a11y-switch-row, .a11y-select) {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] :is(.a11y-choice:has(input:checked), .a11y-switch-row:has(input:checked)) {
+  border-color: #ffff00 !important;
+  border-width: 3px !important;
+}
+
+html[data-a11y-contrast="high"] .a11y-choice input {
+  accent-color: #ffff00;
+}
+
+html[data-a11y-contrast="high"] .a11y-note {
+  border: 2px solid #ffd23f !important;
+}
+
+html[data-a11y-contrast="high"] .a11y-switch-input {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] .a11y-switch-input::after {
+  background-color: #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] .a11y-switch-input:checked {
+  background-color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+html[data-a11y-contrast="high"] .a11y-switch-input:checked::after {
+  background-color: #000000 !important;
+}

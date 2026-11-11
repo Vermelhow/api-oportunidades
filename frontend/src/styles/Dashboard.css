@@ -24,7 +24,7 @@
 
 .dashboard-content {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 17.5rem;
   padding: 2rem 2rem;
   overflow-x: hidden;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -34,7 +34,7 @@
 
 /* Adjust layout when sidebar is collapsed */
 body.sidebar-collapsed .dashboard-content {
-  margin-left: 80px;
+  margin-left: 5rem;
 }
 
 /* Modern Dashboard Header with Glassmorphism */
@@ -976,7 +976,8 @@ body.sidebar-collapsed .dashboard-content {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* min(250px, 100%): com texto ampliado a coluna mínima não pode passar da largura do contêiner */
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
 }
@@ -1039,11 +1040,11 @@ body.sidebar-collapsed .dashboard-content {
 /* Desktop to Tablet */
 @media (max-width: 1279px) {
   .dashboard-content {
-    margin-left: 260px;
+    margin-left: 16.25rem;
   }
   
   body.sidebar-collapsed .dashboard-content {
-    margin-left: 80px;
+    margin-left: 5rem;
   }
 
   .stats-grid {

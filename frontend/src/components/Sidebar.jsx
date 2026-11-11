@@ -2,6 +2,7 @@ import { useState, useEffect, useId } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import useFocusTrap from '../hooks/useFocusTrap';
+import AccessibilityButton from './AccessibilityButton';
 import '../styles/Sidebar.css';
 
 export default function Sidebar() {
@@ -109,6 +110,7 @@ export default function Sidebar() {
         >
           <span className="sidebar-menu-icon" aria-hidden="true">☰</span>
         </button>
+        <AccessibilityButton className="a11y-trigger--bar" iconOnly onOpen={closeMobileMenu} />
       </div>
 
       {/* Mobile Overlay */}
@@ -181,6 +183,7 @@ export default function Sidebar() {
 
       {/* Logout Button */}
       <div className="sidebar-footer">
+        <AccessibilityButton className="a11y-trigger--sidebar" iconOnly={isCollapsed} />
         <button
           onClick={handleLogout}
           className="btn-logout"
