@@ -4,7 +4,7 @@ import { getOportunidadeById, getInteressesByPessoa, createInteresse } from '../
 import { useNotification } from '../context/NotificationContext';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
-import { Loading, ErrorMessage, ButtonLoading } from '../components';
+import { Loading, ErrorMessage, ButtonLoading, ReadAloud } from '../components';
 import '../styles/OportunidadeDetalhe.css';
 
 export default function OportunidadeDetalhe() {
@@ -70,7 +70,11 @@ export default function OportunidadeDetalhe() {
   const formatDate = (dateString) => {
     if (!dateString) return null;
     try {
-      return new Date(dateString).toLocaleDateString('pt-BR', {
+      // AAAA-MM-DD sem horário seria interpretado como UTC e exibido um dia antes no Brasil
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
+        ? new Date(`${dateString}T00:00:00`)
+        : new Date(dateString);
+      return date.toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'long',
         year: 'numeric'
@@ -200,6 +204,9 @@ export default function OportunidadeDetalhe() {
             </div>
           )}
         </header>
+
+        {/* REQ-A33: leitura em voz alta, só por ação do usuário. key={id} interrompe a leitura assim que a rota troca de oportunidade */}
+        <ReadAloud key={id} oportunidade={oportunidade} />
 
         {/* Grid de Conteúdo */}
         <div className="content-grid">

@@ -621,3 +621,30 @@ html[data-a11y-contrast="high"] .a11y-switch-input:checked {
 html[data-a11y-contrast="high"] .a11y-switch-input:checked::after {
   background-color: #000000 !important;
 }
+
+/* Leitura em voz alta (REQ-A33): botões já seguem as regras de .btn; aqui só o cartão e a região de estado.
+   O estilo da borda (sólida/tracejada) vem de ReadAloud.css e continua distinguindo "pausado" sem depender de cor */
+html[data-a11y-contrast="high"] .read-aloud {
+  border: 2px solid #ffffff !important;
+}
+
+html[data-a11y-contrast="high"] .read-aloud-status--active {
+  border-width: 2px !important;
+  border-color: currentColor !important;
+}
+
+html[data-a11y-contrast="high"] .read-aloud-status--error {
+  border-width: 3px !important;
+  border-color: #ffd23f !important;
+  color: #ffd23f !important;
+}
+
+html[data-a11y-contrast="high"] .read-aloud-note {
+  border: 2px solid #ffd23f !important;
+}
+
+html[data-a11y-contrast="high"] .read-aloud-controls .btn[aria-disabled="true"]:hover {
+  background-color: #000000 !important;
+  border-color: #bfbfbf !important;
+  color: #bfbfbf !important;
+}

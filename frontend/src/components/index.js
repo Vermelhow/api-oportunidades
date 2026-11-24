@@ -10,6 +10,7 @@ export { default as SearchBar } from './SearchBar';
 export { default as FilterBar } from './FilterBar';
 export { default as AccessibilityButton } from './AccessibilityButton';
 export { default as AccessibilityPanel } from './AccessibilityPanel';
+export { default as ReadAloud } from './ReadAloud';
 
 // Novos componentes de feedback e loading
 export { default as Loading, ButtonLoading, SkeletonCard, SkeletonList } from './Loading';

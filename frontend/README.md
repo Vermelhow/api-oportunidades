@@ -75,6 +75,7 @@ Este projeto foi desenvolvido como parte de um **projeto de extensão universit�
   - Dados da organização responsável
   - Requisitos e descrição detalhada
   - Botão de candidatura/interesse
+  - Leitura em voz alta (opcional): ouvir título, informações principais e descrição em português do Brasil, com pausar, continuar e parar
 
 ### 🔐 Área Autenticada
 
@@ -143,8 +144,10 @@ frontend/
 │   │   ├── ErrorBoundary.jsx
 │   │   ├── FormField.jsx
 │   │   └── index.js        # Barrel exports
-│   ├── accessibility/      # Preferências de acessibilidade (módulo sem React + testes)
-│   │   └── preferences.js
+│   ├── accessibility/      # Preferências (A29–A32) e leitura em voz alta (A33): módulos sem React + testes
+│   │   ├── preferences.js
+│   │   ├── speech.js
+│   │   └── opportunityReading.js
 │   ├── context/            # Context API (Estado Global)
 │   │   ├── AuthContext.jsx
 │   │   ├── NotificationContext.jsx

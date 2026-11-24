@@ -27,7 +27,8 @@ frontend/src/
 - **OpportunityCard**: Card para exibir oportunidades
 - **Sidebar**: Menu lateral para área administrativa
 - **AccessibilityButton**: Gatilho do painel de acessibilidade (Header e Sidebar)
-- **AccessibilityPanel**: Painel único de personalização (gaveta lateral): tamanho do texto, alto contraste e espaçamento
+- **AccessibilityPanel**: Painel único de personalização (gaveta lateral): tamanho do texto, alto contraste e espaçamento; inclui uma seção informativa sobre a leitura em voz alta
+- **ReadAloud**: Leitura em voz alta de uma oportunidade (REQ-A33), na página de detalhes: iniciar, pausar, continuar e parar, com estado visual e aviso quando o navegador não oferece síntese de voz
 
 ### Componentes de Feedback
 - **Loading**: Indicadores de carregamento
@@ -63,6 +64,7 @@ frontend/src/
 
 ### Custom Hooks
 - **useAccessibility**: Acessa as preferências de acessibilidade e o painel (`AccessibilityContext`)
+- **useSpeechReader**: Estado e controles do leitor em voz alta (REQ-A33); o leitor é único na aplicação (`useSyncExternalStore`)
 - **useAsync**: Gerencia requisições assíncronas
 - **useDeleteOportunidade**: Hook especializado para exclusão
 - **useOportunidadesFilter**: Gerencia filtros de oportunidades
@@ -133,7 +135,7 @@ import './styles/Home.css';
 npm run dev      # Inicia servidor de desenvolvimento
 npm run build    # Build para produção
 npm run lint     # Verifica código com ESLint
-npm test         # Testes unitários (node:test) do módulo de preferências de acessibilidade
+npm test         # Testes unitários (node:test): preferências de acessibilidade (A29–A32) e leitura em voz alta (A33)
 npm run preview  # Preview do build de produção
 npm run clean    # Remove arquivos temporários do macOS
 ```
@@ -160,6 +162,14 @@ Gerencia as preferências de acessibilidade (REQ-A29 a REQ-A32), fora do `AuthPr
 - Persistência em `localStorage` (`@api-oportunidades:a11y-preferences`) e sincronização entre abas
 - A lógica de validação, leitura/gravação e aplicação fica em `src/accessibility/preferences.js` (sem React) e é aplicada em `main.jsx` antes do primeiro render
 - As preferências viram atributos `data-a11y-*` no `<html>`; os estilos correspondentes estão em `styles/accessibility-preferences.css` (importado por último). Sem preferência salva nenhum atributo existe e a plataforma renderiza como antes
+
+### Leitura em voz alta (REQ-A33)
+Não usa contexto nem preferência salva: é uma ação do usuário, sem estado persistente.
+- Usa a Web Speech API do navegador (`speechSynthesis`), sem serviços externos, sem custo e sem alterar o backend
+- `src/accessibility/speech.js` (sem React): leitor único (`speechReader`), com trechos de até 180 caracteres (o Chromium corta falas longas), escolha de voz pt-BR, pausa/continuação, cancelamento seguro (eventos de falas canceladas são descartados) e aviso quando o motor de voz não responde
+- `src/accessibility/opportunityReading.js` (sem React): monta o roteiro a partir de uma lista fixa de campos públicos da oportunidade (título, situação, tipo, categoria, organização, localização, formato, vagas, período, remuneração, descrição, requisitos e benefícios). Ids, link de inscrição e dados do usuário nunca são lidos; URLs viram "link" e emojis são removidos
+- `components/ReadAloud.jsx` fica abaixo do cabeçalho da página de detalhes; `<ReadAloud key={id}>` interrompe a leitura ao trocar de oportunidade ou sair da página
+- Nunca inicia sozinha. O painel de acessibilidade apenas orienta e informa se o navegador oferece o recurso, sem repetir os botões
 
 ## 🎨 Estilos
 

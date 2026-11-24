@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
 import useAccessibility from '../hooks/useAccessibility';
 import useFocusTrap from '../hooks/useFocusTrap';
+import useSpeechReader from '../hooks/useSpeechReader';
 import { getSpacingPreset, withSpacingPreset } from '../accessibility/preferences';
 import '../styles/AccessibilityPanel.css';
 
@@ -33,12 +34,14 @@ function choiceLabel(choices, value) {
 
 function PanelContent() {
   const { preferences, updatePreferences, resetPreferences, storageFailed, closePanel, panelId } = useAccessibility();
+  const { supported: speechSupported, voiceMissing } = useSpeechReader();
   // Montado só com o painel aberto: o texto anunciado começa vazio a cada abertura
   const [announcement, setAnnouncement] = useState('');
 
   const contrastId = useId();
   const contrastGroupId = useId();
   const contrastHintId = useId();
+  const speechGroupId = useId();
   const spacingPresetHintId = useId();
   const fieldIdBase = useId();
 
@@ -181,6 +184,24 @@ function PanelContent() {
             })}
           </div>
         </fieldset>
+
+        {/* REQ-A33: só orienta e informa suporte. Os controles de leitura ficam na página da oportunidade, para não duplicá-los aqui */}
+        <div className="a11y-group" role="group" aria-labelledby={speechGroupId}>
+          <p className="a11y-legend" id={speechGroupId}>Leitura em voz alta</p>
+          <p className="a11y-hint">
+            Na página de uma oportunidade, use o botão “Ouvir oportunidade” para ouvir o título, as informações
+            principais e a descrição em português do Brasil. A leitura só começa quando você pedir.
+          </p>
+          {!speechSupported && (
+            <p className="a11y-note">Este navegador não oferece leitura em voz alta. As demais opções continuam funcionando.</p>
+          )}
+          {speechSupported && voiceMissing && (
+            <p className="a11y-note">
+              Este dispositivo não tem voz em português instalada; a leitura pode usar outra voz e a pronúncia pode ficar
+              diferente.
+            </p>
+          )}
+        </div>
 
         {storageFailed && (
           <p className="a11y-note">{STORAGE_WARNING}</p>
